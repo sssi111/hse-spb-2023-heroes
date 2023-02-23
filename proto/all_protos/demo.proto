@@ -1,0 +1,11 @@
+ syntax = "proto3";
+
+ package name;
+
+ message Ok {
+    bool ok = 1;
+ }
+
+ service ClientToServer {
+     rpc GetOk(Ok) returns (Ok) {}
+ }
