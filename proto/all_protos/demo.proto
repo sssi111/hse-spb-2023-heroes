@@ -1,0 +1,13 @@
+ syntax = "proto3";
+
+ package demo_name;
+
+ import "all_protos/demo_client.proto";
+
+ message GetOk {
+    bool ok = 1;
+ }
+
+ service ClientToServer {
+     rpc SendOk(GetOk) returns (Ok) {}
+ }
