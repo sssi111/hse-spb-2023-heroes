@@ -23,7 +23,9 @@ add_executable(sfml-draft src/main.cpp
         src/window.cpp
         src/game.cpp)
 
-set(SOURCES src/main.cpp)
+set(SOURCES
+        src/main.cpp
+        )
 
 target_include_directories(sfml-draft PRIVATE "${PROJECT_BINARY_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -40,10 +42,6 @@ install(TARGETS sfml-draft DESTINATION bin)
 
 install(DIRECTORY content
         DESTINATION "${CMAKE_INSTALL_PREFIX}/share/${CMAKE_PROJECT_NAME}"
-        )
-
-set(SOURCES
-        src/main.cpp
         )
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
