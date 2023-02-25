@@ -2,16 +2,6 @@ cmake_minimum_required(VERSION 3.17)
 
 set(CMAKE_CXX_STANDARD 17)
 
-option(USE_INSTALL_RESOURCE_PATH "Set resource path to install location" OFF)
-
-if(NOT USE_INSTALL_RESOURCE_PATH)
-    set(RESOURCE_PATH "${PROJECT_SOURCE_DIR}/client/content/")
-else()
-    set(RESOURCE_PATH "${CMAKE_INSTALL_PREFIX}/share/${CMAKE_PROJECT_NAME}/client/content/")
-endif()
-
-configure_file(include/config.hpp.in config.hpp)
-
 find_package(SFML 2.5 COMPONENTS system window graphics network audio REQUIRED)
 
 set(SOURCES
