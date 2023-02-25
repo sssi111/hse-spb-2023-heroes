@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(project LANGUAGES CXX)
+project(hse-spb-2023-heroes LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
