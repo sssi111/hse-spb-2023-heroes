@@ -1,6 +1,5 @@
 #include "game.hpp"
 #include "board.hpp"
-#include "config.hpp"
 
 Game::Game()
     : m_window("Battle of Heroes and Villains", sf::Vector2u(1920, 1080)),

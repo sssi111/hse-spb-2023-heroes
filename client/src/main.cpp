@@ -4,26 +4,17 @@
 #include <grpcpp/create_channel.h>
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "game.hpp"
 
 int main(int argc, char *argv[]) {
     auto local_channel = grpc::CreateChannel(
         "localhost:50051", grpc::InsecureChannelCredentials()
     );
 
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
+    Game game;
+    while (!game.get_window()->is_done()) {
+        game.update();
+        game.render();
     }
 
     ::demo_name::GetOk request;
