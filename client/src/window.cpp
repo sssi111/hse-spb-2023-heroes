@@ -77,3 +77,9 @@ bool Window::is_done() const {
 bool Window::is_fullscreen() const {
     return m_is_fullscreen;
 }
+
+void Window::handle_input(bool &is_done) {
+    if (is_done) {
+        m_is_done = true;
+    }
+}

@@ -13,6 +13,7 @@ struct Window {
     void begin_draw();
     void end_draw();
 
+    void handle_input(bool &is_done);
     void update();
 
     bool is_done() const;

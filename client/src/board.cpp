@@ -4,11 +4,11 @@
 
 std::string source_dir = RESOURCE_PATH;
 
-Board::Board(sf::Vector2u l_windSize) {
+Board::Board(sf::Vector2u l_wind_size, unsigned int l_menu_height) {
     m_board_size = 10;
-    m_window_size = l_windSize;
+    m_window_size = l_wind_size;
     m_cell_width = m_window_size.x / m_board_size;
-    m_cell_height = m_window_size.y / m_board_size;
+    m_cell_height = (m_window_size.y - l_menu_height) / m_board_size;
     m_board.resize(m_board_size, std::vector<Cell>(m_board_size));
     m_texture.loadFromFile(source_dir + "grass.jpg");
     for (int row = 0; row < m_board_size; row++) {

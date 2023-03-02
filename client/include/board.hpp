@@ -7,9 +7,10 @@
 #include "unit.hpp"
 
 struct Board {
-    Board(sf::Vector2u l_windSize);
+    Board(sf::Vector2u l_windSize, unsigned int l_menu_height);
     ~Board();
 
+    void handle_input(bool &is_done);
     void render(sf::RenderWindow &l_window);
 
 private:

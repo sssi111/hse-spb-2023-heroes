@@ -3,11 +3,13 @@
 
 #include "board.hpp"
 #include "window.hpp"
+#include "game_menu_bar.hpp"
 
 struct Game {
     Game();
     ~Game();
 
+    void handle_input();
     void update();
     void render();
 
@@ -16,6 +18,9 @@ struct Game {
 private:
     Window m_window;
     Board m_board;
+    GameMenuBar m_game_menu_bar;
+
+    unsigned int m_menu_height;
 };
 
 #endif  // BATTLE_OF_HEROES_GAME_HPP

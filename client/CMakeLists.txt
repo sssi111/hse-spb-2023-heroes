@@ -10,7 +10,8 @@ set(SOURCES
         src/board.cpp
         src/window.cpp
         src/game.cpp
-        src/unit.cpp)
+        src/unit.cpp
+        src/game_menu_bar.cpp)
 
 add_executable(client ${SOURCES})
 
