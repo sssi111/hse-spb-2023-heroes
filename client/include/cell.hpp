@@ -21,6 +21,7 @@ private:
     sf::Sprite m_cell;
     Unit m_unit;
     bool m_is_unit;
+    int m_capacity_cell;
 };
 
 #endif  // BATTLE_OF_HEROES_CELL_HPP

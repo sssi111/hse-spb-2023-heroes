@@ -3,21 +3,18 @@
 
 Game::Game()
     : m_window("Battle of Heroes and Villains", sf::Vector2u(1920, 1080)),
-      m_board(sf::Vector2u(1920, 1080), 100), m_menu_height(100),
-        m_game_menu_bar(sf::Vector2f(1920, 1080), 100){
+      m_board(sf::Vector2u(1920, 1080), 100),
+      m_game_menu_bar(sf::Vector2f(1920, 1080), 100),
+      m_event_manager(&m_window, &m_game_menu_bar) {
 }
 
-Game::~Game() {
-}
-
-void Game::handle_input() {
-    bool is_done = false;
-    m_game_menu_bar.handle_input(is_done, *m_window.get_render_window());
-    m_window.handle_input(is_done);
-}
+Game::~Game() = default;
 
 void Game::update() {
-    m_window.update();
+    sf::Event event;
+    while (m_window.get_render_window()->pollEvent(event)) {
+        m_event_manager.update(event);
+    }
 }
 
 void Game::render() {

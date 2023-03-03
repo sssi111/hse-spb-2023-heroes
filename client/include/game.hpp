@@ -2,14 +2,14 @@
 #define BATTLE_OF_HEROES_GAME_HPP
 
 #include "board.hpp"
-#include "window.hpp"
+#include "event_manager.hpp"
 #include "game_menu_bar.hpp"
+#include "window.hpp"
 
 struct Game {
     Game();
     ~Game();
 
-    void handle_input();
     void update();
     void render();
 
@@ -19,8 +19,7 @@ private:
     Window m_window;
     Board m_board;
     GameMenuBar m_game_menu_bar;
-
-    unsigned int m_menu_height;
+    EventManager m_event_manager;
 };
 
 #endif  // BATTLE_OF_HEROES_GAME_HPP

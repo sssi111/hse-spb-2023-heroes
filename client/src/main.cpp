@@ -13,7 +13,6 @@ int main(int argc, char *argv[]) {
 
     Game game;
     while (!game.get_window()->is_done()) {
-        game.handle_input();
         game.update();
         game.render();
     }

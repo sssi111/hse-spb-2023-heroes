@@ -1,5 +1,6 @@
 #include "window.hpp"
 #include <utility>
+#include "event_manager.hpp"
 
 Window::Window() {
     setup("Heroes", sf::Vector2u(1920, 1080));
@@ -33,14 +34,11 @@ void Window::destroy() {
     m_window.close();
 }
 
-void Window::update() {
-    sf::Event event;
-    while (m_window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            m_is_done = true;
-        } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
-            toggle_fullscreen();
-        }
+void Window::update(sf::Event event) {
+    if (event.type == sf::Event::Closed) {
+        m_is_done = true;
+    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
+        toggle_fullscreen();
     }
 }
 
@@ -76,10 +74,4 @@ bool Window::is_done() const {
 
 bool Window::is_fullscreen() const {
     return m_is_fullscreen;
-}
-
-void Window::handle_input(bool &is_done) {
-    if (is_done) {
-        m_is_done = true;
-    }
 }

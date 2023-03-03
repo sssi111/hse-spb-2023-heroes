@@ -4,6 +4,7 @@
 #include <SFML/Window.hpp>
 #include <string>
 #include <utility>
+#include "event_manager_fwd.hpp"
 
 struct Window {
     Window();
@@ -13,8 +14,7 @@ struct Window {
     void begin_draw();
     void end_draw();
 
-    void handle_input(bool &is_done);
-    void update();
+    void update(sf::Event event);
 
     bool is_done() const;
     bool is_fullscreen() const;
@@ -25,6 +25,8 @@ struct Window {
 
     sf::RenderWindow *get_render_window();
     sf::Vector2u get_size();
+
+    friend EventManager;
 
 private:
     void create();

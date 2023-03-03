@@ -10,7 +10,6 @@ GameMenuBar::GameMenuBar() {
 GameMenuBar::GameMenuBar(sf::Vector2f l_wind_size, float l_menu_height) {
     m_font.loadFromFile(source_dir_1 + "Montserrat-SemiBold.otf");
 
-    //
     m_button_size = sf::Vector2f(100.0f,62.0f);
     m_button_pos = sf::Vector2f(m_button_size.x,l_wind_size.y - l_menu_height / 2);
     m_button_padding = (l_wind_size.x - m_button_size.x * 4) / 5; // 4px.
@@ -46,21 +45,20 @@ GameMenuBar::GameMenuBar(sf::Vector2f l_wind_size, float l_menu_height) {
     }
 }
 
-void GameMenuBar::handle_input(bool &is_done, sf::Window &window) {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+bool GameMenuBar::update(sf::Event event, sf::Window &window) {
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
         std::cout << mouse_position.x <<  ' ' << mouse_position.y << '\n';
         std::cout << m_rects[3].getPosition().x <<  ' ' << m_rects[3].getPosition().y << '\n';
         std::cout << m_rects[3].getPosition().x + m_rects[3].getSize().x<<  ' ' << m_rects[3].getPosition().y+ m_rects[3].getSize().y << '\n';
         if (mouse_position.x >= m_rects[3].getPosition().x && mouse_position.x - m_rects[3].getSize().x / 2 <= m_rects[3].getPosition().x + m_rects[3].getSize().x / 2 &&
             mouse_position.y >= m_rects[3].getPosition().y && mouse_position.y - m_rects[3].getSize().y / 2 <= m_rects[3].getPosition().y + m_rects[3].getSize().y / 2) {
-            is_done = true;
+            return true;
         }
     }
 }
 
-GameMenuBar::~GameMenuBar() {
-}
+GameMenuBar::~GameMenuBar() = default;
 
 void GameMenuBar::render(sf::RenderWindow &l_window) {
     l_window.draw(m_background);

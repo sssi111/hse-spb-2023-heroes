@@ -13,6 +13,7 @@ struct Unit {
 private:
     sf::Sprite m_unit;
     sf::Texture m_texture;
+    int m_squad;
 };
 
 #endif  // BATTLE_OF_HEROES_UNIT_HPP

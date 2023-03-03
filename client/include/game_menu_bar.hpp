@@ -9,7 +9,7 @@ struct GameMenuBar {
     GameMenuBar(sf::Vector2f l_windSize, float l_menu_height);
     ~GameMenuBar();
 
-    void handle_input(bool &is_done, sf::Window &window);
+    bool update(sf::Event event, sf::Window &window);
     void render(sf::RenderWindow &l_window);
 
 private:
