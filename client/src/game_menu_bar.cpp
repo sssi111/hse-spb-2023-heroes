@@ -48,14 +48,14 @@ GameMenuBar::GameMenuBar(sf::Vector2f l_wind_size, float l_menu_height) {
 bool GameMenuBar::update(sf::Event event, sf::Window &window) {
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
-        std::cout << mouse_position.x <<  ' ' << mouse_position.y << '\n';
-        std::cout << m_rects[3].getPosition().x <<  ' ' << m_rects[3].getPosition().y << '\n';
-        std::cout << m_rects[3].getPosition().x + m_rects[3].getSize().x<<  ' ' << m_rects[3].getPosition().y+ m_rects[3].getSize().y << '\n';
-        if (mouse_position.x >= m_rects[3].getPosition().x && mouse_position.x - m_rects[3].getSize().x / 2 <= m_rects[3].getPosition().x + m_rects[3].getSize().x / 2 &&
-            mouse_position.y >= m_rects[3].getPosition().y && mouse_position.y - m_rects[3].getSize().y / 2 <= m_rects[3].getPosition().y + m_rects[3].getSize().y / 2) {
+        mouse_position.x += m_rects[3].getSize().x / 2;
+        mouse_position.y += m_rects[3].getSize().y / 2;
+        if (mouse_position.x >= m_rects[3].getPosition().x && mouse_position.x <= m_rects[3].getPosition().x + m_rects[3].getSize().x &&
+            mouse_position.y >= m_rects[3].getPosition().y && mouse_position.y <= m_rects[3].getPosition().y + m_rects[3].getSize().y) {
             return true;
         }
     }
+    return false;
 }
 
 GameMenuBar::~GameMenuBar() = default;
