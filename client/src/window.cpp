@@ -21,7 +21,7 @@ void Window::create() {
     );
 }
 
-void Window::setup(std::string title, sf::Vector2<unsigned int> size) {
+void Window::setup(std::string title, sf::Vector2u size) {
     m_window_title = std::move(title);
     m_window_size = size;
     m_is_done = false;
@@ -46,10 +46,6 @@ sf::RenderWindow *Window::get_render_window() {
     return &m_window;
 }
 
-sf::Vector2u Window::get_size() {
-    return m_window_size;
-}
-
 void Window::begin_draw() {
     m_window.clear(sf::Color::Black);
 }
@@ -58,8 +54,8 @@ void Window::end_draw() {
     m_window.display();
 }
 
-void Window::draw(sf::Drawable &l_drawable) {
-    m_window.draw(l_drawable);
+void Window::draw(sf::Drawable &drawable_object) {
+    m_window.draw(drawable_object);
 }
 
 void Window::toggle_fullscreen() {

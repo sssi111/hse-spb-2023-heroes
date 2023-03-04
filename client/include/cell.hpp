@@ -2,26 +2,35 @@
 #define BATTLE_OF_HEROES_CELL_HPP
 
 #include <SFML/Graphics.hpp>
+#include "enum_classes_fwd.hpp"
 #include "unit.hpp"
 
-struct Cell {
+class Cell {
+public:
     Cell();
 
     sf::Sprite *get_cell();
-
     Unit *get_unit();
-
-    bool *is_have_unit();
+    sf::Text *get_label();
+    bool get_is_have_unit() const;
+    std::string &get_name();
 
     void set_unit();
+    void set_type(CellTextures type, int width, int height);
 
-    void set_texture(const sf::Texture &texture);
+    void draw(sf::RenderWindow *window);
 
 private:
     sf::Sprite m_cell;
+
+private:
     Unit m_unit;
-    bool m_is_unit;
-    int m_capacity_cell;
+    sf::Text m_label;
+
+    CellTextures m_type;
+    bool m_is_have_unit;
+    int m_cell_strength{};
+    std::string m_name;
 };
 
 #endif  // BATTLE_OF_HEROES_CELL_HPP

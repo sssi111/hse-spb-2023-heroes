@@ -6,19 +6,20 @@
 #include "cell.hpp"
 #include "unit.hpp"
 
-struct Board {
-    Board(sf::Vector2u l_windSize, unsigned int l_menu_height);
-    ~Board();
+class Board {
+public:
+    Board(sf::Vector2i window_size, int menu_height);
+    ~Board() = default;
 
-    void render(sf::RenderWindow &l_window);
+    void render(sf::RenderWindow *window);
 
 private:
-    sf::Vector2u m_window_size;
-    int m_board_size;
-    unsigned int m_cell_width;
-    unsigned int m_cell_height;
     std::vector<std::vector<Cell>> m_board;
-    sf::Texture m_texture;
+
+    sf::Vector2i m_window_size;
+    sf::Vector2i m_cell_size;
+    sf::Vector2i m_boarder_size;
+    int m_cell_amount;
 };
 
 #endif  // BATTLE_OF_HEROES_BOARD_HPP

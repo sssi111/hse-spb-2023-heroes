@@ -6,7 +6,8 @@
 #include <utility>
 #include "event_manager_fwd.hpp"
 
-struct Window {
+class Window {
+public:
     Window();
     Window(std::string title, const sf::Vector2u &size);
     ~Window();
@@ -24,13 +25,12 @@ struct Window {
     void draw(sf::Drawable &l_drawable);
 
     sf::RenderWindow *get_render_window();
-    sf::Vector2u get_size();
 
     friend EventManager;
 
 private:
     void create();
-    void setup(std::string title, sf::Vector2<unsigned int> size);
+    void setup(std::string title, sf::Vector2u size);
     void destroy();
 
     sf::RenderWindow m_window;

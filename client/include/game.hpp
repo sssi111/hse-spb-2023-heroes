@@ -6,7 +6,8 @@
 #include "game_menu_bar.hpp"
 #include "window.hpp"
 
-struct Game {
+class Game {
+public:
     Game();
     ~Game();
 
