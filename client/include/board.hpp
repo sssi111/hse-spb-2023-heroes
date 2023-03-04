@@ -8,7 +8,7 @@
 
 class Board {
 public:
-    Board(sf::Vector2i window_size, int menu_height);
+    Board(sf::Vector2i window_size);
     ~Board() = default;
 
     void render(sf::RenderWindow *window);

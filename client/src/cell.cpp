@@ -1,13 +1,6 @@
 #include "cell.hpp"
 #include <string>
 
-Cell::Cell() {
-    m_is_have_unit = false;
-    m_type = CellTextures::Default;
-    m_cell_strength = 10;
-    m_name = std::to_string(m_cell_strength);
-}
-
 sf::Sprite *Cell::get_cell() {
     return &m_cell;
 }
@@ -42,6 +35,6 @@ void Cell::draw(sf::RenderWindow *window) {
     window->draw(m_label);
 }
 
-std::string &Cell::get_name() {
+const std::string &Cell::get_name() {
     return m_name;
 }

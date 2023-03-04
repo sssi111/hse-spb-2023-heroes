@@ -1,10 +1,5 @@
 #include "window.hpp"
 #include <utility>
-#include "event_manager.hpp"
-
-Window::Window() {
-    setup("Heroes", sf::Vector2u(1920, 1080));
-}
 
 Window::Window(std::string title, const sf::Vector2u &size) {
     setup(std::move(title), size);
@@ -70,4 +65,8 @@ bool Window::is_done() const {
 
 bool Window::is_fullscreen() const {
     return m_is_fullscreen;
+}
+
+void Window::set_is_done() {
+    m_is_done = true;
 }

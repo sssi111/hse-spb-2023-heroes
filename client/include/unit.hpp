@@ -6,7 +6,13 @@
 
 class Unit {
 public:
-    Unit();
+    Unit()
+        : m_type(UnitTextures::Default),
+          m_unit(resource_manager()->load_unit_texture(UnitTextures::Default)),
+          m_squad(10) {
+    }
+
+    ~Unit() = default;
 
     sf::Sprite *get_unit();
 

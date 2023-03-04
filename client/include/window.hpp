@@ -4,11 +4,10 @@
 #include <SFML/Window.hpp>
 #include <string>
 #include <utility>
-#include "event_manager_fwd.hpp"
 
 class Window {
 public:
-    Window();
+    Window() = default;
     Window(std::string title, const sf::Vector2u &size);
     ~Window();
 
@@ -20,13 +19,13 @@ public:
     bool is_done() const;
     bool is_fullscreen() const;
 
+    void set_is_done();
+
     void toggle_fullscreen();
 
     void draw(sf::Drawable &l_drawable);
 
     sf::RenderWindow *get_render_window();
-
-    friend EventManager;
 
 private:
     void create();

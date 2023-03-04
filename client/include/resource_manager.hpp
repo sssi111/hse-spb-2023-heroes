@@ -8,6 +8,7 @@
 class ResourceManager {
 public:
     ResourceManager();
+    ~ResourceManager() = default;
 
     const sf::Texture &load_cell_texture(CellTextures texture);
 

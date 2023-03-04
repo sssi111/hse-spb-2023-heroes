@@ -7,13 +7,18 @@
 
 class Cell {
 public:
-    Cell();
+    Cell()
+        : m_is_have_unit(false),
+          m_type(CellTextures::Default),
+          m_cell_strength(10),
+          m_name(std::to_string(m_cell_strength)){};
+    ~Cell() = default;
 
     sf::Sprite *get_cell();
     Unit *get_unit();
     sf::Text *get_label();
     bool get_is_have_unit() const;
-    std::string &get_name();
+    const std::string &get_name();
 
     void set_unit();
     void set_type(CellTextures type, int width, int height);

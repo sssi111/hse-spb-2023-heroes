@@ -13,7 +13,9 @@ ResourceManager::ResourceManager() {
     );
 
     // load unit texture
-    m_unit_textures[UnitTextures::Default].loadFromFile(source_dir + "hero.png");
+    m_unit_textures[UnitTextures::Default].loadFromFile(
+        source_dir + "hero.png"
+    );
 
     // load fonts
     m_fonts[Fonts::Montserrat].loadFromFile(

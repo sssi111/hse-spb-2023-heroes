@@ -1,11 +1,5 @@
 #include "unit.hpp"
 
-Unit::Unit() {
-    m_type = UnitTextures::Default;
-    m_unit.setTexture(resource_manager()->load_unit_texture(m_type));
-    m_squad = 10;
-}
-
 sf::Sprite *Unit::get_unit() {
     return &m_unit;
 }

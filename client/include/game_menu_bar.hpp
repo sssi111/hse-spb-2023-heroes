@@ -6,25 +6,15 @@
 
 class GameMenuBar {
 public:
-    GameMenuBar() = default;
-
-    GameMenuBar(sf::Vector2f l_windSize, float l_menu_height);
-    ~GameMenuBar();
+    GameMenuBar(sf::Vector2f wind_size, float menu_height);
+    ~GameMenuBar() = default;
 
     bool update(sf::Event event, sf::Window *window);
     void render(sf::RenderWindow *window);
 
 private:
     sf::RectangleShape m_background;
-    std::vector<Button> m_buttons;
-    sf::Font m_font;
-
-    sf::Text m_button_labels[4];
-    sf::RectangleShape m_rects[4];
-
-    sf::Vector2f m_button_size;
-    sf::Vector2f m_button_pos;
-    float m_button_padding{};
+    std::vector<Button> m_buttons{4};
 };
 
 #endif  // BATTLE_OF_HEROES_GAME_MENU_BAR_HPP
