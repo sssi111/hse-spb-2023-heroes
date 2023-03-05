@@ -15,15 +15,13 @@ std::thread Server::start() {
     while (true) {
         while (get_server_state()->wait_list.size() >= 2) {
             namespace_proto::User first_user =
-                get_server_state()->wait_list.front();
-            get_server_state()->wait_list.pop_front();
+                get_server_state()->wait_list.pop();
             namespace_proto::User second_user =
-                get_server_state()->wait_list.front();
-            get_server_state()->wait_list.pop_front();
+                get_server_state()->wait_list.pop();
             std::thread t([&first_user, &second_user]() {
                 // todo game logic
             });
-            game_threads.push_back(std::move(t));
+            games_threads.push_back(std::move(t));
         }
     }
 }
@@ -32,7 +30,7 @@ void Server::stop() {
     server->Shutdown();
     server_queue->Shutdown();
 
-    for (auto &worker : game_threads) {
+    for (auto &worker : games_threads) {
         worker.join();
     }
 }

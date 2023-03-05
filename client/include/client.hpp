@@ -7,7 +7,7 @@
 
 class Client final {
 public:
-    Client(const std::shared_ptr<grpc::Channel> &channel)
+    explicit Client(const std::shared_ptr<grpc::Channel> &channel)
         : stub(namespace_proto::Server::NewStub(channel)) {
     }
 

@@ -3,18 +3,6 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 package namespace_proto;
 
-message Ok {
-  bool ok = 1;
-}
-
-message GetOk {
-  bool ok = 1;
-}
-
-message CallMe{
-  bool need_call = 1;
-}
-
 message User{
   int32 id = 1;
   int32 rate = 2;
@@ -41,21 +29,31 @@ message GameBoard{
   repeated Cell game_board = 1;
 }
 
-message FromTo{
+message GameId{
+  int32 game_id = 1;
+  int32 first_player = 2;
+  int32 second_player = 3;
+}
+
+message GameIdAndHero{
+  int32 game_id = 1;
+  int32 position_in_call_queue = 2;
+}
+
+message MoveFromTo{
   Cell start = 1;
   Cell finish = 2;
   GameId id = 3;
 }
 
-message GameId{
+message GameState{
   int32 game_id = 1;
+  GameBoard game_board = 2;
 }
 
 service Server {
-  rpc SendOk(GetOk) returns (Ok) {}
-  rpc CallClient(google.protobuf.Empty) returns(stream CallMe) {}
-  rpc SendGameBoardToSecond(google.protobuf.Empty) returns(GameBoard) {}
-  rpc ReceiveGameBoard(GameId) returns(GameBoard) {}
+  rpc CallServer(GameIdAndHero) returns(stream GameState) {}
+  rpc ReceiveGameState(GameId) returns(GameState) {}
   rpc AddToLobby(User) returns(GameId) {}
-  rpc MoveFromTo(FromTo) returns(GameBoard) {}
+  rpc MoveUnit(MoveFromTo) returns(GameBoard) {}
 }
