@@ -1,35 +1,41 @@
-#include <all_protos/demo.pb.h>
-
 #include <SFML/Graphics.hpp>
-#include <grpcpp/create_channel.h>
+#include <future>
 #include <iostream>
-#include <grpcpp/client_context.h>
+#include "client.hpp"
+#include "game.hpp"
 
+enum class request_type { SendOk, ReceiveGameBoard, AddToLobby };
 
-int main(int argc, char* argv[])
-{
+struct Request {
+    request_type type;
+    grpc::ClientContext context;
+};
 
-    auto channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+void run_request(Client *client, const Request &request) {
+    //    if (request.type == request_type::SendOk) {
+    //        client->getStub()->SendOk();
+    //    } else if (request.type == request_type::ReceiveGameBoard) {
+    //        client->getStub()->AsyncReceiveGameBoard();
+    //    } else if (request.type == request_type::AddToLobby){
+    //        client->getStub()->AddToLobby();
+    //    }
+}
 
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+int main(int argc, char *argv[]) {
+    auto channel = grpc::CreateChannel(
+        "localhost:55555", grpc::InsecureChannelCredentials()
+    );
+    Request request;
+    std::unique_ptr<Client> client = std::make_unique<Client>(channel);
+    std::async(
+        std::launch::async, run_request, client.get(), std::cref(request)
+    );
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
+    Game game;
+    while (!game.get_window()->is_done()) {
+        game.update();
+        game.render();
     }
-
-
 
     return 0;
 }

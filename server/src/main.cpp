@@ -1,18 +1,10 @@
-#include <all_protos/demo.pb.h>
+#include <thread>
+#include "server.hpp"
 
-#include <grpc/grpc.h>
-#include <grpcpp/server_builder.h>
+int main(int argc, char *argv[]) {
+    ServerServices services;
+    Server s("0.0.0.0:50051", &services, 2);
 
-#include <iostream>
-
-
-int main(int argc, char* argv[])
-{
-    grpc::ServerBuilder builder;
-    builder.AddListeningPort("0.0.0.0:50051", grpc::InsecureServerCredentials());
-
-    std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-    server->Wait();
-    
+    std::thread server = std::thread(s.start());
     return 0;
 }

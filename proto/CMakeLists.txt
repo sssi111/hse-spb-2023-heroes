@@ -4,7 +4,7 @@ find_package(Threads)
 
 set(PROTO_FILES
         all_protos/demo.proto
-)
+        )
 
 
 add_library(all_protos ${PROTO_FILES})
@@ -12,7 +12,7 @@ target_link_libraries(all_protos
         protobuf::libprotobuf
         gRPC::grpc
         gRPC::grpc++
-)
+        )
 target_include_directories(all_protos PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 get_target_property(grpc_cpp_plugin_location gRPC::grpc_cpp_plugin LOCATION)
