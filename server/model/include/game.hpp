@@ -1,10 +1,11 @@
 #ifndef MODEL_GAME_HPP
 #define MODEL_GAME_HPP
 
-#include <board.hpp>
 #include <memory>
-#include <player.hpp>
 #include <vector>
+#include "board.hpp"
+#include "cell.hpp"
+#include "player.hpp"
 
 namespace game_model {
 
@@ -15,15 +16,16 @@ private:
     int m_current_player_index = 0;
 
 public:
-    Game(
-        const std::vector<std::unique_ptr<Player>> &players_list,
-        const &Board board
-    )
-        : m_players_list(players_list), m_board(board) {
+    Game(std::vector<std::unique_ptr<Player>> players_list, const Board &board)
+        : m_players_list(std::move(players_list)), m_board(board) {
     }
-    bool can_move(int player_index);
+
+    bool is_can_move(int player_index);
     void change_player();
-    bool can_choose_cell();
+    Board get_board() const;
+    Cell &get_cell(Coordinates cell_coordinates) const;
+    std::vector<Cell> reachable_cells(Coordinates cell_coordinates, int id)
+        const;
 };
 
 }  // namespace game_model

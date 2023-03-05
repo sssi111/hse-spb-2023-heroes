@@ -16,6 +16,9 @@ private:
     int m_player_index;
     int m_unit_index;
     Movement_type m_movement_type;
+
+public:
+    int get_movement_range() const;
 };
 
 }  // namespace game_model
