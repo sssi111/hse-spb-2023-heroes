@@ -26,7 +26,6 @@ public:
         sf::Vector2f size
     );
 
-    sf::Sprite *get_unit();
     bool get_is_have_unit() const;
 
     void set_unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size);

@@ -41,7 +41,7 @@ void Board::render(sf::RenderWindow *window) {
         for (auto &cell : row) {
             cell.draw(window);
             if (cell.get_is_have_unit()) {
-                window->draw(*cell.get_unit());
+                cell.draw(window);
             }
         }
     }

@@ -16,11 +16,13 @@ public:
 
     ~Unit() = default;
 
-    sf::Sprite *get_unit();
+    void draw(sf::RenderWindow *window);
 
 private:
     sf::Sprite m_unit;
     UnitType m_type;
+    sf::RectangleShape m_table;
+    sf::Text m_label;
     int m_squad;
 };
 
