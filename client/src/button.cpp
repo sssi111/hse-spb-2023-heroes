@@ -1,39 +1,25 @@
 #include "button.hpp"
 
-void Button::draw(sf::RenderWindow *window) {
-    window->draw(m_rect);
-    window->draw(m_label);
-}
-
-Button::Button(
-    sf::Vector2f position,
-    sf::Vector2f size,
-    sf::Color color,
-    Fonts font,
-    unsigned int character_size,
-    const std::string &label
-) {
+Button::Button(sf::Vector2f position, sf::Vector2f size) {
     m_rect.setSize(size);
-    m_rect.setFillColor(color);
     m_rect.setOrigin(size.x / 2.0f, size.y / 2.0f);
     m_rect.setPosition(position);
-
-    m_label.setFont(resource_manager()->load_font(font));
-    m_label.setString(sf::String(label));
-    m_label.setCharacterSize(character_size);
-
-    sf::FloatRect rect = m_label.getLocalBounds();
-    m_label.setOrigin(
-        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
-    );
-
-    m_label.setPosition(position);
 }
 
-sf::Vector2f Button::get_position() const {
-    return m_rect.getPosition();
-}
-
-sf::Vector2f Button::get_size() const {
-    return m_rect.getSize();
+bool Button::update(sf::Event event, sf::Window *window) {
+    if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left) {
+        sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
+        auto rect_size = sf::Vector2i(m_rect.getSize());
+        auto rect_position = sf::Vector2i(m_rect.getPosition());
+        mouse_position.x += rect_size.x / 2;
+        mouse_position.y += rect_size.y / 2;
+        if (mouse_position.x >= rect_position.x &&
+            mouse_position.x <= rect_position.x + rect_size.x &&
+            mouse_position.y >= rect_position.y &&
+            mouse_position.y <= rect_position.y + rect_size.y) {
+            return true;
+        }
+    }
+    return false;
 }

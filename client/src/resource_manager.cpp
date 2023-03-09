@@ -7,27 +7,20 @@ ResourceManager *resource_manager() {
 }
 
 ResourceManager::ResourceManager() {
-    // load cell textures
-    m_cell_textures[CellTextures::Default].loadFromFile(
-        source_dir + "grass.jpg"
-    );
+    m_cell_textures[CellType::Default].loadFromFile(source_dir + "grass.jpg");
 
-    // load unit texture
-    m_unit_textures[UnitTextures::Default].loadFromFile(
-        source_dir + "hero.png"
-    );
+    m_unit_textures[UnitType::Mushroom].loadFromFile(source_dir + "hero.png");
 
-    // load fonts
     m_fonts[Fonts::Montserrat].loadFromFile(
         source_dir + "Montserrat-SemiBold.otf"
     );
 }
 
-const sf::Texture &ResourceManager::load_cell_texture(CellTextures texture) {
+const sf::Texture &ResourceManager::load_cell_texture(CellType texture) {
     return m_cell_textures[texture];
 }
 
-const sf::Texture &ResourceManager::load_unit_texture(UnitTextures texture) {
+const sf::Texture &ResourceManager::load_unit_texture(UnitType texture) {
     return m_unit_textures[texture];
 }
 

@@ -4,7 +4,9 @@
 void Game::update() {
     sf::Event event{};
     while (m_window.get_render_window()->pollEvent(event)) {
-        m_event_manager.update(event);
+        m_window.update(event);
+        m_game_menu_bar.update(event, &m_window);
+        m_board.update(event, m_window.get_render_window());
     }
 }
 

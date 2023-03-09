@@ -7,22 +7,20 @@
 class Unit {
 public:
     Unit()
-        : m_type(UnitTextures::Default),
-          m_unit(resource_manager()->load_unit_texture(UnitTextures::Default)),
+        : m_type(UnitType::Mushroom),
+          m_unit(resource_manager()->load_unit_texture(UnitType::Mushroom)),
           m_squad(10) {
     }
+
+    explicit Unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size);
 
     ~Unit() = default;
 
     sf::Sprite *get_unit();
 
-    void set_type(UnitTextures type);
-    void set_position(int pos_x, int pos_y);
-    void set_origin(int pos_x, int pos_y);
-
 private:
     sf::Sprite m_unit;
-    UnitTextures m_type;
+    UnitType m_type;
     int m_squad;
 };
 

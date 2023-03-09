@@ -12,8 +12,8 @@ public:
         : m_window("Battle of Heroes and Villains", sf::Vector2u(1920, 1080)),
           m_game_menu_bar(sf::Vector2f(1920, 1080), 100),
           m_board(sf::Vector2i(1920, 1080 - 100)
-          ),  // '- 100' is subtraction of menu_height
-          m_event_manager(&m_window, &m_game_menu_bar){};
+          )  // '- 100' is subtraction of menu_height
+          {};
     ~Game() = default;
 
     void update();
@@ -25,7 +25,6 @@ private:
     Window m_window;
     GameMenuBar m_game_menu_bar;
     Board m_board;
-    EventManager m_event_manager;
 };
 
 #endif  // BATTLE_OF_HEROES_GAME_HPP

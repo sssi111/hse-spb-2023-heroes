@@ -8,9 +8,10 @@
 
 class Board {
 public:
-    Board(sf::Vector2i window_size);
+    explicit Board(sf::Vector2i window_size);
     ~Board() = default;
 
+    void update(sf::Event event, sf::Window *window);
     void render(sf::RenderWindow *window);
 
 private:

@@ -10,15 +10,15 @@ public:
     ResourceManager();
     ~ResourceManager() = default;
 
-    const sf::Texture &load_cell_texture(CellTextures texture);
+    const sf::Texture &load_cell_texture(CellType texture);
 
-    const sf::Texture &load_unit_texture(UnitTextures texture);
+    const sf::Texture &load_unit_texture(UnitType texture);
 
     const sf::Font &load_font(Fonts font);
 
 private:
-    std::unordered_map<CellTextures, sf::Texture> m_cell_textures{1};
-    std::unordered_map<UnitTextures, sf::Texture> m_unit_textures{1};
+    std::unordered_map<CellType, sf::Texture> m_cell_textures{1};
+    std::unordered_map<UnitType, sf::Texture> m_unit_textures{1};
     std::unordered_map<Fonts, sf::Font> m_fonts{1};
 };
 

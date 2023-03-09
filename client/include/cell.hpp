@@ -2,40 +2,50 @@
 #define BATTLE_OF_HEROES_CELL_HPP
 
 #include <SFML/Graphics.hpp>
+#include "button.hpp"
 #include "enum_classes_fwd.hpp"
 #include "unit.hpp"
 
+class Coords {
+public:
+    Coords() : m_row(0), m_column(0){};
+    Coords(int row, int column) : m_row(row), m_column(column){};
+
+private:
+    int m_row;
+    int m_column;
+};
+
 class Cell {
 public:
-    Cell()
-        : m_is_have_unit(false),
-          m_type(CellTextures::Default),
-          m_cell_strength(10),
-          m_name(std::to_string(m_cell_strength)){};
-    ~Cell() = default;
+    Cell() = default;
+    explicit Cell(
+        Coords coords,
+        CellType type,
+        sf::Vector2f position,
+        sf::Vector2f size
+    );
 
-    sf::Sprite *get_cell();
-    Unit *get_unit();
-    sf::Text *get_label();
+    sf::Sprite *get_unit();
     bool get_is_have_unit() const;
-    const std::string &get_name();
 
-    void set_unit();
-    void set_type(CellTextures type, int width, int height);
+    void set_unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size);
 
+    void update(sf::Event event, sf::Window *window);
     void draw(sf::RenderWindow *window);
 
 private:
     sf::Sprite m_cell;
-
-private:
-    Unit m_unit;
-    sf::Text m_label;
-
-    CellTextures m_type;
-    bool m_is_have_unit;
+    Coords m_coords;
+    CellType m_type{CellType::Default};
     int m_cell_strength{};
-    std::string m_name;
+
+    Unit m_unit;
+    bool m_is_have_unit{};
+    bool m_is_unit_active{};
+
+    Button m_button;
+    sf::Text m_label;
 };
 
 #endif  // BATTLE_OF_HEROES_CELL_HPP

@@ -7,6 +7,9 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
     sf::Vector2f button_pos(button_size.x, wind_size.y - menu_height / 2);
     float button_padding = (wind_size.x - button_size.x * 4) / 5;  // 4px.
 
+    ButtonType button_types[4] = {
+        ButtonType::Play, ButtonType::Pass, ButtonType::Menu, ButtonType::Exit};
+
     std::string labels[4];
     labels[0] = "PLAY";
     labels[1] = "PASS";
@@ -23,29 +26,17 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
                 i * (button_size.x + button_padding),
             button_pos.y
         );
-        m_buttons[i] = Button(
+        m_buttons[i] = MenuButton(
             button_position, button_size, sf::Color(139, 69, 19),
-            Fonts::Montserrat, 24, labels[i]
+            Fonts::Montserrat, 24, labels[i], button_types[i]
         );
     }
 }
 
-bool GameMenuBar::update(sf::Event event, sf::Window *window) {
-    if (event.type == sf::Event::MouseButtonPressed &&
-        event.mouseButton.button == sf::Mouse::Left) {
-        sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
-        mouse_position.x += m_buttons[3].get_size().x / 2;
-        mouse_position.y += m_buttons[3].get_size().y / 2;
-        if (mouse_position.x >= m_buttons[3].get_position().x &&
-            mouse_position.x <=
-                m_buttons[3].get_position().x + m_buttons[3].get_size().x &&
-            mouse_position.y >= m_buttons[3].get_position().y &&
-            mouse_position.y <=
-                m_buttons[3].get_position().y + m_buttons[3].get_size().y) {
-            return true;
-        }
+void GameMenuBar::update(sf::Event event, Window *window) {
+    for (auto &button : m_buttons) {
+        button.update(event, window);
     }
-    return false;
 }
 
 void GameMenuBar::render(sf::RenderWindow *window) {

@@ -3,11 +3,15 @@
 
 #include "config.hpp"
 
-enum class UnitTextures { Default };
+enum class UnitType { Mushroom };
 
-enum class CellTextures { Default };
+enum class CellType { Default };
 
 enum class Fonts { Montserrat };
+
+enum class CellEventType { None, Press, Move };
+
+enum class ButtonType { None, Play, Pass, Menu, Exit };
 
 static std::string source_dir = RESOURCE_PATH;
 
