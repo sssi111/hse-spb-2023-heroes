@@ -1,24 +1,41 @@
 #ifndef MODEL_BOARD_HPP
 #define MODEL_BOARD_HPP
 
+#include <deque>
 #include <vector>
 #include "cell.hpp"
 #include "coordinates.hpp"
 
 namespace game_model {
 
-struct Board {
+class board {
 private:
-    std::vector<std::vector<Cell>> m_cells_matrix;
-    const std::vector<Coordinates> m_delta = {
-        Coordinates(0, 1), Coordinates(1, 0), Coordinates(0, -1),
-        Coordinates(-1, 0)};
-    const Coordinates m_size = Coordinates(10, 10);
+    std::vector<std::vector<cell>> m_cells_matrix =
+        std::vector<std::vector<cell>>(10, std::vector<cell>(10));
+    const coordinates m_size = coordinates(10, 10);
+
+    [[nodiscard]] std::vector<cell> coordinates_to_cells(
+        const std::vector<coordinates> &coordinates_array
+    ) const;
 
 public:
-    Cell &get_cell(Coordinates cell_coordinates) const;
-    std::vector<Cell> reachable_cells(Coordinates cell_coordinates, int id)
-        const;
+    board() {
+        int x_size = m_size.get_x();
+        int y_size = m_size.get_y();
+        for (int x = 0; x < x_size; ++x) {
+            for (int y = 0; y < y_size; ++y)
+                m_cells_matrix[x][y].set_coordinates(coordinates{x, y});
+            m_cells_matrix[x][0].set_player_index(0);
+            m_cells_matrix[x][y_size - 1].set_player_index(1);
+            m_cells_matrix[x][0].set_unit_index(x);
+            m_cells_matrix[x][y_size - 1].set_unit_index(x);
+        }
+    }
+
+    [[nodiscard]] coordinates get_size() const;
+    [[nodiscard]] cell get_cell(const coordinates &cell_coordinates) const;
+    [[nodiscard]] std::vector<cell>
+    get_reachable_cells(coordinates cell_coordinates, int id, int max_distance);
 };
 
 }  // namespace game_model

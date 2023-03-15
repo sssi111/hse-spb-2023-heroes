@@ -1,20 +1,27 @@
 #ifndef MODEL_PLAYER_HPP
 #define MODEL_PLAYER_HPP
 
+#include <vector>
+#include "board.hpp"
 #include "hero.hpp"
 #include "unit.hpp"
-#include <vector>
 
 namespace game_model {
 
-struct Player {
+class player {
 private:
-    std::vector<Unit> m_units_list;
-    Hero m_hero;
-    int id;
+    std::vector<unit> m_units_list{};
+    hero m_hero{};
+    int m_id;
+
 public:
-    int get_id() const;
-    Unit get_unit(int index) const;
+    explicit player(int account_id) : m_id(account_id) {
+    }
+
+    void set_start_units(int player_index, const board &game_board);
+    [[nodiscard]] int get_id() const;
+    [[nodiscard]] unit &get_unit(int index);
+    virtual ~player() = default;
 };
 
 }  // namespace game_model

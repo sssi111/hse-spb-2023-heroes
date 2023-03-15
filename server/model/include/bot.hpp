@@ -5,7 +5,7 @@
 
 namespace game_model {
 
-struct Bot : Player {};
+class bot : public player {};
 
 }  // namespace game_model
 

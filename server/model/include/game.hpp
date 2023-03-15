@@ -2,30 +2,30 @@
 #define MODEL_GAME_HPP
 
 #include <memory>
+#include <utility>
 #include <vector>
 #include "board.hpp"
 #include "cell.hpp"
 #include "player.hpp"
+#include "user.hpp"
 
 namespace game_model {
 
-struct Game {
+class game {
 private:
-    std::vector<std::unique_ptr<Player>> m_players_list;
-    Board m_board;
-    int m_current_player_index = 0;
+    std::vector<std::unique_ptr<player>> m_players_list;
+    board m_board{};
 
 public:
-    Game(std::vector<std::unique_ptr<Player>> players_list, const Board &board)
-        : m_players_list(std::move(players_list)), m_board(board) {
+    explicit game(int account_id_first, int account_id_second) {
+        m_players_list.emplace_back(std::make_unique<user>(account_id_first));
+        m_players_list.emplace_back(std::make_unique<user>(account_id_second));
     }
 
-    bool is_can_move(int player_index);
-    void change_player();
-    Board get_board() const;
-    Cell &get_cell(Coordinates cell_coordinates) const;
-    std::vector<Cell> reachable_cells(Coordinates cell_coordinates, int id)
-        const;
+    [[nodiscard]] board get_board() const;
+    [[nodiscard]] cell get_cell(const coordinates &cell_coordinates) const;
+    [[nodiscard]] std::vector<cell>
+    get_reachable_cells(const coordinates &cell_coordinates, int user_id);
 };
 
 }  // namespace game_model
