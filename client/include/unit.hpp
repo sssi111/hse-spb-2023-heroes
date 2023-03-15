@@ -2,17 +2,28 @@
 #define BATTLE_OF_HEROES_UNIT_HPP
 
 #include <SFML/Graphics.hpp>
+#include "resource_manager.hpp"
 
-struct Unit {
-    Unit();
+class Unit {
+public:
+    Unit()
+        : m_type(UnitType::Mushroom),
+          m_unit(resource_manager()->load_unit_texture(UnitType::Mushroom)),
+          m_squad(10) {
+    }
 
-    sf::Sprite *get_unit();
+    explicit Unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size);
 
-    void set_texture(const std::string texture);
+    ~Unit() = default;
+
+    void draw(sf::RenderWindow *window);
 
 private:
     sf::Sprite m_unit;
-    sf::Texture m_texture;
+    UnitType m_type;
+    sf::RectangleShape m_table;
+    sf::Text m_label;
+    int m_squad;
 };
 
 #endif  // BATTLE_OF_HEROES_UNIT_HPP

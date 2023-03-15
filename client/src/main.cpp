@@ -2,7 +2,6 @@
 #include <all_protos/demo_client.pb.h>
 #include <grpcpp/client_context.h>
 #include <grpcpp/create_channel.h>
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include "game.hpp"
 

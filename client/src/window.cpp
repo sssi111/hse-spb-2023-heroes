@@ -1,10 +1,6 @@
 #include "window.hpp"
 #include <utility>
 
-Window::Window() {
-    setup("Heroes", sf::Vector2u(1920, 1080));
-}
-
 Window::Window(std::string title, const sf::Vector2u &size) {
     setup(std::move(title), size);
 }
@@ -20,7 +16,7 @@ void Window::create() {
     );
 }
 
-void Window::setup(std::string title, sf::Vector2<unsigned int> size) {
+void Window::setup(std::string title, sf::Vector2u size) {
     m_window_title = std::move(title);
     m_window_size = size;
     m_is_done = false;
@@ -33,23 +29,16 @@ void Window::destroy() {
     m_window.close();
 }
 
-void Window::update() {
-    sf::Event event;
-    while (m_window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            m_is_done = true;
-        } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
-            toggle_fullscreen();
-        }
+void Window::update(sf::Event event) {
+    if (event.type == sf::Event::Closed) {
+        m_is_done = true;
+    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
+        toggle_fullscreen();
     }
 }
 
 sf::RenderWindow *Window::get_render_window() {
     return &m_window;
-}
-
-sf::Vector2u Window::get_size() {
-    return m_window_size;
 }
 
 void Window::begin_draw() {
@@ -60,8 +49,8 @@ void Window::end_draw() {
     m_window.display();
 }
 
-void Window::draw(sf::Drawable &l_drawable) {
-    m_window.draw(l_drawable);
+void Window::draw(sf::Drawable &drawable_object) {
+    m_window.draw(drawable_object);
 }
 
 void Window::toggle_fullscreen() {
@@ -76,4 +65,8 @@ bool Window::is_done() const {
 
 bool Window::is_fullscreen() const {
     return m_is_fullscreen;
+}
+
+void Window::set_is_done() {
+    m_is_done = true;
 }

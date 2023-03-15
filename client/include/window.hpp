@@ -5,29 +5,31 @@
 #include <string>
 #include <utility>
 
-struct Window {
-    Window();
+class Window {
+public:
+    Window() = default;
     Window(std::string title, const sf::Vector2u &size);
     ~Window();
 
     void begin_draw();
     void end_draw();
 
-    void update();
+    void update(sf::Event event);
 
     bool is_done() const;
     bool is_fullscreen() const;
+
+    void set_is_done();
 
     void toggle_fullscreen();
 
     void draw(sf::Drawable &l_drawable);
 
     sf::RenderWindow *get_render_window();
-    sf::Vector2u get_size();
 
 private:
     void create();
-    void setup(std::string title, sf::Vector2<unsigned int> size);
+    void setup(std::string title, sf::Vector2u size);
     void destroy();
 
     sf::RenderWindow m_window;
