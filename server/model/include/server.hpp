@@ -1,8 +1,11 @@
 #include <grpc/grpc.h>
 #include <grpcpp/server_builder.h>
 #include <atomic>
+#include <game_session.hpp>
 #include <iostream>
+#include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 #include <utility>
@@ -10,12 +13,60 @@
 #include "TSqueue.hpp"
 #include "proto/all_protos/demo.grpc.pb.h"
 
+class Player final {
+    int id;
+    ::grpc::ServerWriter<namespace_proto::GameState> *stream;
+
+public:
+    Player(int id, ::grpc::ServerWriter<namespace_proto::GameState> *stream)
+        : id(id), stream(stream) {
+    }
+
+    [[nodiscard]] int get_id() const {
+        return id;
+    }
+
+    [[nodiscard]] ::grpc::ServerWriter<namespace_proto::GameState> *get_stream(
+    ) const {
+        return stream;
+    }
+};
+
+class GameSession {
+    Player first_player;
+    Player second_player;
+    std::unordered_map<int, TSQueue<namespace_proto::GameState>>
+        response_queues;
+    namespace_proto::GameState game_state;
+
+public:
+    GameSession(Player first_player, Player second_player)
+        : first_player(first_player), second_player(second_player) {
+    }
+
+    Player get_first_player() const {
+        return first_player;
+    }
+
+    Player get_second_player() const {
+        return second_player;
+    }
+
+    std::unordered_map<int, TSQueue<namespace_proto::GameState>>
+        *get_response_queues() {
+        return &response_queues;
+    }
+
+    namespace_proto::GameState *get_game_state() {
+        return &game_state;
+    }
+};
+
 class ServerState {
 public:
-    int last_game_id = 0;
-    std::vector<namespace_proto::GameState> games;
-    std::vector<std::vector<TSQueue<bool>>> call_queues;
-    TSQueue<namespace_proto::User> wait_list;
+    std::vector<GameSession> game_sessions;
+    TSQueue<Player> wait_list;
+    mutable std::mutex server_mutex;
 };
 
 ServerState *get_server_state();
@@ -25,75 +76,53 @@ ServerState *get_server_state();
 class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status CallServer(
         ::grpc::ServerContext *context,
-        const namespace_proto::GameIdAndHero *request,
+        const namespace_proto::User *request,
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
-        std::thread([&request, &response]() mutable {
-            while (true) {
-                if (!get_server_state()
-                         ->call_queues[request->game_id()]
-                                      [request->position_in_call_queue()]
-                         .empty()) {
-                    response->Write(
-                        get_server_state()->games[request->game_id()]
-                    );
-                }
-            }
-        }).detach();
-        return ::grpc::Status::OK;
-    }
-
-    ::grpc::Status ReceiveGameState(
-        ::grpc::ServerContext *context,
-        const ::namespace_proto::GameId *request,
-        ::namespace_proto::GameState *response
-    ) override {
-        *response = get_server_state()->games[request->game_id()];
-        return ::grpc::Status::OK;
-    }
-
-    ::grpc::Status AddToLobby(
-        ::grpc::ServerContext *context,
-        const namespace_proto::User *request,
-        ::namespace_proto::GameId *response
-    ) override {
-        get_server_state()->wait_list.push(*request);
-        std::thread([&request, &response]() mutable {
-            while (true) {
-                if (get_server_state()->wait_list.front().id() !=
-                        request->id() &&
-                    get_server_state()->wait_list.size() > 2) {
-                    break;
-                }
-            }
-        }).detach();
+        get_server_state()->wait_list.push(Player{request->id(), response});
+        while (true) {
+        }
         return ::grpc::Status::OK;
     }
 
     ::grpc::Status MoveUnit(
         ::grpc::ServerContext *context,
         const ::namespace_proto::MoveFromTo *request,
-        ::namespace_proto::GameBoard *response
+        ::namespace_proto::GameState *response
     ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        namespace_proto::GameState *game_state_ref =
+            game_session_ref->get_game_state();
+        namespace_proto::Unit *unit =
+            game_state_ref
+                ->mutable_game_cells(
+                    request->start().y() * 10 + request->start().x()
+                )
+                ->mutable_unit();
+        game_state_ref
+            ->mutable_game_cells(
+                request->finish().y() * 10 + request->finish().x()
+            )
+            ->set_allocated_unit(unit);
+        game_state_ref
+            ->mutable_game_cells(
+                request->start().y() * 10 + request->start().x()
+            )
+            ->set_allocated_unit(nullptr);
+        if (request->user_id() !=
+            game_session_ref->get_first_player().get_id()) {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_first_player().get_id()]
+                .push(*game_state_ref);
+        } else {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_second_player().get_id()]
+                .push(*game_state_ref);
+        }
+        response = game_state_ref;
         return ::grpc::Status::OK;
     }
 };
 
-class Server {
-private:
-    ServerServices *service;
-    std::unique_ptr<grpc::ServerCompletionQueue> server_queue;
-    std::unique_ptr<grpc::Server> server;
-    std::string address;
-    std::vector<std::thread> games_threads;
-
-public:
-    Server(std::string address, ServerServices *services, int number_of_threads)
-        : address(std::move(address)) {
-        service = services;
-        games_threads.resize(number_of_threads);
-    }
-
-    std::thread start();
-    void stop();
-};
+void RunServer(const std::string &address, ServerServices *services);

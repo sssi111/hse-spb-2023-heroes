@@ -1,7 +1,11 @@
 set(SOURCES
         src/server.cpp
+        src/game_session.cpp
         src/main.cpp
         )
+
+add_link_options(-fsanitize=address)
+add_compile_options(-fsanitize=address)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 

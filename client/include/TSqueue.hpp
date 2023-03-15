@@ -6,47 +6,35 @@
 #include <mutex>
 #include <queue>
 
-// Thread-safe queue
-template <typename T>
+template<typename T>
 class TSQueue {
-private:
-    // Underlying queue
-    std::queue<T> m_queue;
+    std::queue<T> queue_;
+    mutable std::mutex mutex_;// Moved out of public interface to prevent races between this
+    // and pop().
+    bool empty() const {
+        return queue_.empty();
+    }public:
+    TSQueue() = default;
+    TSQueue(const TSQueue<T> &) = delete ;
+    TSQueue & operator=(const TSQueue<T> &) = delete ;
 
-    // mutex for thread synchronization
-    std::mutex m_mutex;
-
-    // Condition variable for signaling
-    std::condition_variable m_cond;
-
-public:
-    // Pushes an element to the queue
-    void push(T item) {
-        // Acquire lock
-        std::unique_lock<std::mutex> lock(m_mutex);
-
-        // Add item
-        m_queue.push(item);
-
-        // Notify one thread that
-        // is waiting
-        m_cond.notify_one();
-    }
-
-    // Pops an element off the queue
-    T pop() {
-        // acquire lock
-        std::unique_lock<std::mutex> lock(m_mutex);
-
-        // wait until queue is not empty
-        m_cond.wait(lock, [this]() { return !m_queue.empty(); });
-
-        // retrieve item
-        T item = m_queue.front();
-        m_queue.pop();
-
-        // return item
-        return item;
+    TSQueue(TSQueue<T>&& other)  noexcept {
+        std::lock_guard<std::mutex> lock(mutex_);
+        queue_ = std::move(other.queue_);
+    }virtual ~TSQueue() { }unsigned long size() const {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return queue_.size();
+    }T pop() {
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (queue_.empty()) {
+            return {};
+        }
+        T tmp = queue_.front();
+        queue_.pop();
+        return tmp;
+    }void push(const T &item) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        queue_.push(item);
     }
 };
 
