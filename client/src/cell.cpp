@@ -17,12 +17,12 @@ Cell::Cell(
 
     m_button = Button(position, size);
 
-    m_cell_strength = 10;
+    m_strength = 10;
 
     m_unit = nullptr;
 
     m_label.setFont(resource_manager()->load_font(Fonts::Montserrat));
-    m_label.setString(std::to_string(m_cell_strength));
+    m_label.setString(std::to_string(m_strength));
     m_label.setCharacterSize(24);
 
     sf::FloatRect label_bounds = m_label.getLocalBounds();
@@ -46,9 +46,9 @@ void Cell::set_unit(Unit *unit) {
 }
 
 void Cell::decrease_strength() {
-    m_cell_strength--;
-    m_label.setString(std::to_string(m_cell_strength));
-    if (m_cell_strength == 5) {
+    m_strength--;
+    m_label.setString(std::to_string(m_strength));
+    if (m_strength == 5) {
         m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Broken
         ));
     }

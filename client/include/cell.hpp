@@ -36,9 +36,9 @@ private:
     sf::Sprite m_cell;
     Coords m_coords;
     CellType m_type{CellType::Default};
-    int m_cell_strength{};
+    int m_strength{};
 
-    Unit *m_unit;
+    Unit *m_unit{};
 
     Button m_button;
     sf::Text m_label;

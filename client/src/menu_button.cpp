@@ -1,10 +1,5 @@
 #include "menu_button.hpp"
 
-void MenuButton::draw(sf::RenderWindow *window) {
-    window->draw(m_rect);
-    window->draw(m_label);
-}
-
 MenuButton::MenuButton(
     sf::Vector2f position,
     sf::Vector2f size,
@@ -40,4 +35,9 @@ ButtonType MenuButton::update(sf::Event event, Window *window) {
         EventManager::update_game_menu(m_button_type, window);
     }
     return ButtonType::None;
+}
+
+void MenuButton::draw(sf::RenderWindow *window) {
+    window->draw(m_rect);
+    window->draw(m_label);
 }
