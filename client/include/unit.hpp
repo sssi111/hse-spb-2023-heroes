@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "resource_manager.hpp"
+#include "coordinates.hpp"
 
 class Unit {
 public:
@@ -12,13 +13,17 @@ public:
           m_squad(10) {
     }
 
-    explicit Unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size);
+    explicit Unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size, Coords coords);
 
     ~Unit() = default;
+
+    Coords get_coords() const;
+    void set_coords(Coords new_position, sf::Vector2f position, sf::Vector2f size);
 
     void draw(sf::RenderWindow *window);
 
 private:
+    Coords m_coords;
     sf::Sprite m_unit;
     UnitType m_type;
     sf::RectangleShape m_table;

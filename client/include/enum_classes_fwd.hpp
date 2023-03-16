@@ -9,7 +9,7 @@ enum class CellType { Default };
 
 enum class Fonts { Montserrat };
 
-enum class CellEventType { None, Press, Move };
+enum class CellEventType { None, FirstPress, SecondPress, Move };
 
 enum class ButtonType { None, Play, Pass, Menu, Exit };
 

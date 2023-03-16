@@ -11,11 +11,16 @@ public:
     explicit Board(sf::Vector2i window_size);
     ~Board() = default;
 
+    void move_unit(Unit **unit, Coords new_position);
+
     void update(sf::Event event, sf::Window *window);
     void render(sf::RenderWindow *window);
 
 private:
     std::vector<std::vector<Cell>> m_board;
+    std::vector<Unit> m_units;
+
+    Unit *selected_unit;
 
     sf::Vector2i m_window_size;
     sf::Vector2i m_cell_size;

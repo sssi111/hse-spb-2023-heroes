@@ -9,8 +9,10 @@ class EventManager {
 public:
     static void update_cell(
         CellEventType event_type,
-        Coords prev_position,
-        Coords new_position = {-1, -1}
+        Unit **selected_unit,
+        Unit **unit,
+        Coords new_position = {-1, -1},
+        Board *board = nullptr
     );
     static void update_game_menu(ButtonType event_type, Window *window);
 };

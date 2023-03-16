@@ -6,15 +6,7 @@
 #include "enum_classes_fwd.hpp"
 #include "unit.hpp"
 
-class Coords {
-public:
-    Coords() : m_row(0), m_column(0){};
-    Coords(int row, int column) : m_row(row), m_column(column){};
-
-private:
-    int m_row;
-    int m_column;
-};
+class Board;
 
 class Cell {
 public:
@@ -26,11 +18,11 @@ public:
         sf::Vector2f size
     );
 
-    bool get_is_have_unit() const;
+    bool is_have_unit() const;
 
-    void set_unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size);
+    void set_unit(Unit *unit);
 
-    void update(sf::Event event, sf::Window *window);
+    void update(Unit **selected_unit, Board *board, sf::Event event, sf::Window *window);
     void draw(sf::RenderWindow *window);
 
 private:
@@ -39,9 +31,7 @@ private:
     CellType m_type{CellType::Default};
     int m_cell_strength{};
 
-    Unit m_unit;
-    bool m_is_have_unit{};
-    bool m_is_unit_active{};
+    Unit *m_unit;
 
     Button m_button;
     sf::Text m_label;

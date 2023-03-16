@@ -19,6 +19,8 @@ Cell::Cell(
 
     m_cell_strength = 10;
 
+    m_unit = nullptr;
+
     m_label.setFont(resource_manager()->load_font(Fonts::Montserrat));
     m_label.setString(std::to_string(m_cell_strength));
     m_label.setCharacterSize(24);
@@ -35,33 +37,45 @@ Cell::Cell(
     );
 }
 
-bool Cell::get_is_have_unit() const {
-    return m_is_have_unit;
+bool Cell::is_have_unit() const {
+    return m_unit != nullptr;
 }
 
-void Cell::set_unit(
-    UnitType unit_type,
-    sf::Vector2f position,
-    sf::Vector2f size
-) {
-    m_is_have_unit = true;
-    m_is_unit_active = false;
-    m_unit = Unit(unit_type, position, size);
+void Cell::set_unit(Unit *unit) {
+    m_unit = unit;
 }
 
 void Cell::draw(sf::RenderWindow *window) {
     window->draw(m_cell);
-    if (m_is_have_unit) {
-        m_unit.draw(window);
+    if (is_have_unit()) {
+        m_unit->draw(window);
     }
     window->draw(m_label);
 }
 
-void Cell::update(sf::Event event, sf::Window *window) {
+void Cell::update(
+    Unit **selected_unit,
+    Board *board,
+    sf::Event event,
+    sf::Window *window
+) {
     if (m_button.update(event, window)) {
-        EventManager::update_cell(
-            (m_is_have_unit ? CellEventType::Move : CellEventType::Press),
-            m_coords
-        );
+        if (is_have_unit()) {
+            if (*selected_unit != m_unit) {
+                EventManager::update_cell(
+                    CellEventType::FirstPress, selected_unit, &m_unit
+                );
+            } else {
+                EventManager::update_cell(
+                    CellEventType::SecondPress, selected_unit, &m_unit
+                );
+            }
+        } else {
+            if (selected_unit) {
+                EventManager::update_cell(
+                    CellEventType::Move, selected_unit, &m_unit, m_coords, board
+                );
+            }
+        }
     }
 }
