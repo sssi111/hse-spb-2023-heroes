@@ -12,6 +12,7 @@ public:
     ~Board() = default;
 
     void move_unit(Unit **unit, Coords new_position);
+    void decrease_cell_strength(Coords position);
 
     void update(sf::Event event, sf::Window *window);
     void render(sf::RenderWindow *window);

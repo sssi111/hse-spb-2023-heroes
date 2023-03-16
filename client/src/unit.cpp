@@ -8,6 +8,10 @@ Unit::Unit(
 ) {
     m_type = unit_type;
     m_unit.setTexture(resource_manager()->load_unit_texture(m_type));
+    m_unit.scale(
+        size.y / m_unit.getTexture()->getSize().y,
+        size.y / m_unit.getTexture()->getSize().y
+    );
     m_unit.setPosition(position);
     m_unit.setOrigin(size.x / 2, size.y / 2);
     m_squad = 11;
@@ -59,9 +63,12 @@ void Unit::draw(sf::RenderWindow *window) {
 }
 
 void Unit::set_selection() {
-    m_unit.setTexture(resource_manager()->load_unit_texture(UnitType::SelectedMushroom));
+    m_unit.setTexture(
+        resource_manager()->load_unit_texture(UnitType::SelectedMushroom)
+    );
 }
 
 void Unit::disable_selection() {
-    m_unit.setTexture(resource_manager()->load_unit_texture(UnitType::Mushroom));
+    m_unit.setTexture(resource_manager()->load_unit_texture(UnitType::Mushroom)
+    );
 }

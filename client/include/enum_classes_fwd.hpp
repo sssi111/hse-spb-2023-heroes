@@ -5,7 +5,7 @@
 
 enum class UnitType { Mushroom, SelectedMushroom };
 
-enum class CellType { Default };
+enum class CellType { Default, Broken };
 
 enum class Fonts { Montserrat };
 

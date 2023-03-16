@@ -2,8 +2,8 @@
 #define BATTLE_OF_HEROES_UNIT_HPP
 
 #include <SFML/Graphics.hpp>
-#include "resource_manager.hpp"
 #include "coordinates.hpp"
+#include "resource_manager.hpp"
 
 class Unit {
 public:
@@ -13,12 +13,18 @@ public:
           m_squad(10) {
     }
 
-    explicit Unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size, Coords coords);
+    explicit Unit(
+        UnitType unit_type,
+        sf::Vector2f position,
+        sf::Vector2f size,
+        Coords coords
+    );
 
     ~Unit() = default;
 
     Coords get_coords() const;
-    void set_coords(Coords new_position, sf::Vector2f position, sf::Vector2f size);
+    void
+    set_coords(Coords new_position, sf::Vector2f position, sf::Vector2f size);
     void set_selection();
     void disable_selection();
 

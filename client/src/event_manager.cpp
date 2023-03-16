@@ -21,10 +21,9 @@ void EventManager::update_cell(
         (*unit)->disable_selection();
     } else if (event_type == CellEventType::Move) {
         std::cout << "You wanna move?\n";
-        // send(selected_unit.get_coords(), new_position)
-        // decrease_cell_strength()
         *unit = *selected_unit;
         board->move_unit(selected_unit, new_position);
+        board->decrease_cell_strength(new_position);
         *selected_unit = nullptr;
         (*unit)->disable_selection();
     }

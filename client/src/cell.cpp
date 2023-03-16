@@ -45,12 +45,13 @@ void Cell::set_unit(Unit *unit) {
     m_unit = unit;
 }
 
-void Cell::draw(sf::RenderWindow *window) {
-    window->draw(m_cell);
-    if (is_have_unit()) {
-        m_unit->draw(window);
+void Cell::decrease_strength() {
+    m_cell_strength--;
+    m_label.setString(std::to_string(m_cell_strength));
+    if (m_cell_strength == 5) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Broken
+        ));
     }
-    window->draw(m_label);
 }
 
 void Cell::update(
@@ -78,4 +79,12 @@ void Cell::update(
             }
         }
     }
+}
+
+void Cell::draw(sf::RenderWindow *window) {
+    window->draw(m_cell);
+    if (is_have_unit()) {
+        m_unit->draw(window);
+    }
+    window->draw(m_label);
 }

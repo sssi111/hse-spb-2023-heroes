@@ -57,6 +57,10 @@ void Board::move_unit(Unit **unit, Coords new_position) {
     );
 }
 
+void Board::decrease_cell_strength(Coords position) {
+    m_board[position.get_row()][position.get_column()].decrease_strength();
+}
+
 void Board::update(sf::Event event, sf::Window *window) {
     int row =
         (sf::Mouse::getPosition(*window).y - m_boarder_size.y) / m_cell_size.y;

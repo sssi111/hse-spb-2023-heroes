@@ -22,7 +22,14 @@ public:
 
     void set_unit(Unit *unit);
 
-    void update(Unit **selected_unit, Board *board, sf::Event event, sf::Window *window);
+    void decrease_strength();
+
+    void update(
+        Unit **selected_unit,
+        Board *board,
+        sf::Event event,
+        sf::Window *window
+    );
     void draw(sf::RenderWindow *window);
 
 private:
