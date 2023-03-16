@@ -71,7 +71,7 @@ void Cell::update(
                 );
             }
         } else {
-            if (selected_unit) {
+            if (*selected_unit) {
                 EventManager::update_cell(
                     CellEventType::Move, selected_unit, &m_unit, m_coords, board
                 );

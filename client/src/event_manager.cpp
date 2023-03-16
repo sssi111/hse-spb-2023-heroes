@@ -10,10 +10,15 @@ void EventManager::update_cell(
 ) {
     if (event_type == CellEventType::FirstPress) {
         std::cout << "FirstPress is caught!\n";
+        if (*selected_unit != nullptr) {
+            (*selected_unit)->disable_selection();
+        }
         *selected_unit = *unit;
+        (*unit)->set_selection();
     } else if (event_type == CellEventType::SecondPress) {
         std::cout << "SecondPress is caught!\n";
         *selected_unit = nullptr;
+        (*unit)->disable_selection();
     } else if (event_type == CellEventType::Move) {
         std::cout << "You wanna move?\n";
         // send(selected_unit.get_coords(), new_position)
@@ -21,6 +26,7 @@ void EventManager::update_cell(
         *unit = *selected_unit;
         board->move_unit(selected_unit, new_position);
         *selected_unit = nullptr;
+        (*unit)->disable_selection();
     }
 }
 

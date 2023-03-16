@@ -57,3 +57,11 @@ void Unit::draw(sf::RenderWindow *window) {
     window->draw(m_table);
     window->draw(m_label);
 }
+
+void Unit::set_selection() {
+    m_unit.setTexture(resource_manager()->load_unit_texture(UnitType::SelectedMushroom));
+}
+
+void Unit::disable_selection() {
+    m_unit.setTexture(resource_manager()->load_unit_texture(UnitType::Mushroom));
+}

@@ -19,6 +19,8 @@ public:
 
     Coords get_coords() const;
     void set_coords(Coords new_position, sf::Vector2f position, sf::Vector2f size);
+    void set_selection();
+    void disable_selection();
 
     void draw(sf::RenderWindow *window);
 

@@ -10,6 +10,7 @@ ResourceManager::ResourceManager() {
     m_cell_textures[CellType::Default].loadFromFile(source_dir + "grass.jpg");
 
     m_unit_textures[UnitType::Mushroom].loadFromFile(source_dir + "hero.png");
+    m_unit_textures[UnitType::SelectedMushroom].loadFromFile(source_dir + "selected_hero.png");
 
     m_fonts[Fonts::Montserrat].loadFromFile(
         source_dir + "Montserrat-SemiBold.otf"

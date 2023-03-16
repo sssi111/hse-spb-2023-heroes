@@ -3,7 +3,7 @@
 
 #include "config.hpp"
 
-enum class UnitType { Mushroom };
+enum class UnitType { Mushroom, SelectedMushroom };
 
 enum class CellType { Default };
 
