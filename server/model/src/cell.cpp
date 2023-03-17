@@ -24,11 +24,4 @@ void cell::set_unit_index(int unit_index) {
 void cell::set_coordinates(const coordinates &coordinates_new) {
     m_coordinates = coordinates_new;
 }
-
-void cell::move(cell &current_cell, cell &new_cell) {
-    new_cell.set_player_index(current_cell.get_player_index());
-    new_cell.set_unit_index(current_cell.get_unit_index());
-    current_cell.set_player_index(-1);
-    current_cell.set_unit_index(-1);
-}
 }  // namespace game_model

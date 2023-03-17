@@ -20,7 +20,6 @@ public:
     void set_player_index(int player_index);
     void set_unit_index(int unit_index);
     void set_coordinates(const coordinates &coordinates_new);
-    static void move(cell &current_cell, cell &new_cell);
 };
 
 }  // namespace game_model

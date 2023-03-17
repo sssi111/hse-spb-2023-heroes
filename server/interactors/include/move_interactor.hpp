@@ -5,17 +5,19 @@
 #include "game.hpp"
 
 namespace interactors {
-class Mover {
+class mover {
 private:
-    std::unique_ptr<game_model::Game> m_game;
+    game_model::game &m_game;
 
 public:
-    Mover(const game_model::Game &game)
-        : m_game(std::make_unique<game_model::Game>(game)) {
+    explicit mover(game_model::game &current_game_state)
+        : m_game(current_game_state) {
     }
 
-    /* игровая доска */
-    operator()(/* клетка */ current_cell, /* клетка */ new_cell);
+    void operator()(
+        const game_model::coordinates &current_cell_coordinates,
+        const game_model::coordinates &new_cell_coordinates
+    );
 };
 }  // namespace interactors
 

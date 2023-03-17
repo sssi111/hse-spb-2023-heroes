@@ -6,7 +6,10 @@ set(SOURCES
         model/src/game.cpp
         model/src/player.cpp
         model/src/unit.cpp
-        model/src/bfs_state.cpp)
+        model/src/bfs_state.cpp
+        interactors/src/choose_interactor.cpp
+        interactors/src/move_interactor.cpp
+        )
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})
 
@@ -15,4 +18,5 @@ target_link_libraries(server
         all_protos
         )
 target_include_directories(server PRIVATE
-        "${CMAKE_CURRENT_SOURCE_DIR}/model/include")
+        "${CMAKE_CURRENT_SOURCE_DIR}/model/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/interactors/include")

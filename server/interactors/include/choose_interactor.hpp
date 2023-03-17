@@ -5,17 +5,19 @@
 #include "game.hpp"
 
 namespace interactors {
-class Chooser {
+class chooser {
 private:
-    std::unique_ptr<game_model::Game> m_game;
+    game_model::game &m_game;
 
 public:
-    Chooser(const game_model::Game &game)
-        : m_game(std::make_unique<game_model::Game>(game)) {
+    explicit chooser(game_model::game &current_game_state)
+        : m_game(current_game_state) {
     }
 
-    /* массив клеток */
-    operator()(/* клетка */ current_cell);
+    std::vector<std::reference_wrapper<game_model::cell>> operator()(
+        const game_model::coordinates &current_cell_coordinates,
+        int user_id
+    );
 };
 }  // namespace interactors
 

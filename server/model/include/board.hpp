@@ -14,9 +14,8 @@ private:
         std::vector<std::vector<cell>>(10, std::vector<cell>(10));
     const coordinates m_size = coordinates(10, 10);
 
-    [[nodiscard]] std::vector<cell> coordinates_to_cells(
-        const std::vector<coordinates> &coordinates_array
-    ) const;
+    [[nodiscard]] std::vector<std::reference_wrapper<cell>>
+    coordinates_to_cells(const std::vector<coordinates> &coordinates_array);
 
 public:
     board() {
@@ -32,9 +31,9 @@ public:
         }
     }
 
-    [[nodiscard]] coordinates get_size() const;
-    [[nodiscard]] cell get_cell(const coordinates &cell_coordinates) const;
-    [[nodiscard]] std::vector<cell>
+    [[nodiscard]] const coordinates &get_size();
+    [[nodiscard]] cell &get_cell(const coordinates &cell_coordinates);
+    [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     get_reachable_cells(coordinates cell_coordinates, int id, int max_distance);
 };
 

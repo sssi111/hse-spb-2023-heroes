@@ -4,23 +4,23 @@
 #include "cell.hpp"
 
 namespace game_model {
-cell board::get_cell(const coordinates &cell_coordinates) const {
+cell &board::get_cell(const coordinates &cell_coordinates) {
     int x = cell_coordinates.get_x();
     int y = cell_coordinates.get_y();
     return m_cells_matrix[x][y];
 }
 
-std::vector<cell> board::coordinates_to_cells(
+std::vector<std::reference_wrapper<cell>> board::coordinates_to_cells(
     const std::vector<coordinates> &coordinates_array
-) const {
-    std::vector<cell> result;
+) {
+    std::vector<std::reference_wrapper<cell>> result;
     for (const auto &cell_coordinates : coordinates_array) {
         result.emplace_back(get_cell(cell_coordinates));
     }
     return result;
 }
 
-std::vector<cell> board::get_reachable_cells(
+std::vector<std::reference_wrapper<cell>> board::get_reachable_cells(
     coordinates cell_coordinates,
     int current_player_id,
     int max_distance
@@ -36,7 +36,7 @@ std::vector<cell> board::get_reachable_cells(
     return coordinates_to_cells(bfs.get_reachable_coordinates());
 }
 
-coordinates board::get_size() const {
+const coordinates &board::get_size() {
     return m_size;
 }
 }  // namespace game_model
