@@ -30,8 +30,12 @@ void Client::run_receiver() {
 }
 
 void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
-    namespace_proto::MoveFromTo *request;
-    request->set_allocated_start(&from);
-    request->set_allocated_finish(&to);
-    request->set_allocated_user(&(get_client_state()->user_));
+    grpc::ClientContext *context{};
+    namespace_proto::MoveFromTo request;
+    request.set_allocated_start(&from);
+    request.set_allocated_finish(&to);
+    request.set_allocated_user(&(get_client_state()->user_));
+    get_client_state()->stub_->MoveUnit(
+        context, request, &(get_client_state()->game_state_)
+    );
 }
