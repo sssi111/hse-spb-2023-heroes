@@ -1,13 +1,64 @@
- syntax = "proto3";
+syntax = "proto3";
 
- package demo_name;
+import "google/protobuf/empty.proto";
+package namespace_proto;
 
- import "all_protos/demo_client.proto";
+message User{
+  int32 id = 1;
+  int32 rate = 2;
+}
 
- message GetOk {
-    bool ok = 1;
- }
+message Unit{
+  int32 id_unit = 1;
+  int32 amount_unit = 2;
+  int32 sum_of_health = 3;
+}
 
- service ClientToServer {
-     rpc SendOk(GetOk) returns (Ok) {}
- }
+message Cell{
+  int32 x = 1;
+  int32 y = 2;
+  int32 id_hero = 3;
+  Unit unit = 4;
+}
+
+message EnableCell{
+  repeated Cell cells = 1;
+}
+
+message UserState{
+  int32 game_id = 1;
+  int32 user_id = 2;
+}
+
+message GameIdAndHero{
+  int32 game_id = 1;
+  int32 position_in_call_queue = 2;
+}
+
+message MoveSelectUnit{
+  Cell unit = 1;
+  UserState user = 2;
+}
+
+message MoveFromTo{
+  Cell start = 1;
+  Cell finish = 2;
+  UserState user = 3;
+}
+
+message GameState{
+  int32 game_id = 1;
+  repeated Cell game_cells = 2;
+}
+
+message EnableCells{
+  repeated Cell enable_cells = 1;
+}
+
+service Server {
+  rpc CallServer(User) returns(stream GameState) {}
+  rpc ReceiveId(google.protobuf.Empty) returns(User) {}
+  rpc AddToLobby(User) returns(GameIdAndHero) {}
+  rpc MoveUnit(MoveFromTo) returns(GameState) {}
+  rpc SelectUnit(MoveSelectUnit) returns(EnableCell) {}
+}
