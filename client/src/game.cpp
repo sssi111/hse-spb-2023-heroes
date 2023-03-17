@@ -20,3 +20,12 @@ void Game::render() {
 Window *Game::get_window() {
     return &m_window;
 }
+
+Board *Game::get_board() {
+    return &m_board;
+}
+
+Game *get_game_state() {
+    static Game game_state;
+    return &game_state;
+}

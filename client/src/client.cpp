@@ -1,4 +1,5 @@
 #include "client.hpp"
+#include "game.hpp"
 
 ClientState *get_client_state() {
     static ClientState clientState;
@@ -17,6 +18,7 @@ void Client::run_receiver() {
         {
             std::unique_lock lock{get_client_state()->mutex_};
             get_client_state()->game_state_ = response;
+            get_game_state()->get_board()->update_board(get_client_state()->game_state_);
         }
         std::cout << get_client_state()->game_state_.game_id() << '\n';
     }

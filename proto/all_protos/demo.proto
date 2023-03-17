@@ -48,7 +48,9 @@ message MoveFromTo{
 
 message GameState{
   int32 game_id = 1;
-  repeated Cell game_cells = 2;
+  int32 first_user = 2;
+  int32 second_user = 3;
+  repeated Cell game_cells = 4;
 }
 
 message EnableCells{

@@ -9,6 +9,7 @@ void start_game_session(int game_id) {
         *response_queues_ref = game_session->get_response_queues();
     namespace_proto::GameState *game_state_ref = game_session->get_game_state();
 
+    game_state_ref->set_first_user(first_player.get_id());
     for (int i = 0; i < 100; ++i) {
         namespace_proto::Cell *new_cell = game_state_ref->add_game_cells();
         new_cell->set_allocated_unit(nullptr);

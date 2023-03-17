@@ -1,4 +1,5 @@
 #include "event_manager.hpp"
+#include "client.hpp"
 #include <iostream>
 
 void EventManager::update_cell(

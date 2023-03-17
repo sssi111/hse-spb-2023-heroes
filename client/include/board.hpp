@@ -5,6 +5,7 @@
 #include <vector>
 #include "cell.hpp"
 #include "unit.hpp"
+#include "client.hpp"
 
 class Board {
 public:
@@ -13,6 +14,7 @@ public:
 
     void move_unit(Unit **unit, Coords new_position);
     void decrease_cell_strength(Coords position);
+    void update_board(const namespace_proto::GameState& game_state);
 
     void update(sf::Event event, sf::Window *window);
     void render(sf::RenderWindow *window);

@@ -79,3 +79,12 @@ void Board::render(sf::RenderWindow *window) {
         }
     }
 }
+
+void Board::update_board(const namespace_proto::GameState& game_state) {
+    for (int cell_index = 0; cell_index < 100; cell_index++) {
+        int row = game_state.game_cells(cell_index).row();
+        int column = game_state.game_cells(cell_index).column();
+        if (game_state.);
+    }
+
+}

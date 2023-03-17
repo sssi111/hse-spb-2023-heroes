@@ -20,11 +20,14 @@ public:
     void render();
 
     Window *get_window();
+    Board *get_board();
 
 private:
     Window m_window;
     GameMenuBar m_game_menu_bar;
     Board m_board;
 };
+
+Game *get_game_state();
 
 #endif  // BATTLE_OF_HEROES_GAME_HPP
