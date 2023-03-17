@@ -12,9 +12,15 @@ void start_game_session(int game_id) {
     for (int i = 0; i < 100; ++i) {
         namespace_proto::Cell *new_cell = game_state_ref->add_game_cells();
         new_cell->set_allocated_unit(nullptr);
-        new_cell->set_id_hero(-1);
-        new_cell->set_x(i % 10);
-        new_cell->set_y(i / 10);
+        new_cell->set_column(i % 10);
+        new_cell->set_row(i / 10);
+        if (i % 10 == 0 || i % 10 == 9) {
+            namespace_proto::Unit *unit = new namespace_proto::Unit;
+            unit->set_id_unit(1);
+            unit->set_amount_unit(10);
+            unit->set_id_hero(i % 2);
+            new_cell->set_allocated_unit(unit);
+        }
     }
 
     game_state_ref->set_game_id(game_id);

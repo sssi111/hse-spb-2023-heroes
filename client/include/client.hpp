@@ -12,7 +12,7 @@ public:
     std::unique_ptr<namespace_proto::Server::Stub> stub_ = nullptr;
     namespace_proto::User user_;
     namespace_proto::GameState game_state_;
-    std::mutex mutex_;
+    mutable std::mutex mutex_;
 };
 
 ClientState *get_client_state();

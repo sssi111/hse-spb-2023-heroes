@@ -10,6 +10,7 @@ void EventManager::update_cell(
 ) {
     if (event_type == CellEventType::FirstPress) {
         std::cout << "FirstPress is caught!\n";
+        // get server response
         if (*selected_unit != nullptr) {
             (*selected_unit)->disable_selection();
         }

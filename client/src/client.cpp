@@ -14,8 +14,10 @@ void Client::run_receiver() {
         )
     );
     while (reader->Read(&response)) {
-        std::unique_lock l{get_client_state()->mutex_};
-        get_client_state()->game_state_ = response;
+        {
+            std::unique_lock lock{get_client_state()->mutex_};
+            get_client_state()->game_state_ = response;
+        }
         std::cout << get_client_state()->game_state_.game_id() << '\n';
     }
 }

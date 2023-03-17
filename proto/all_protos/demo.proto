@@ -12,13 +12,13 @@ message Unit{
   int32 id_unit = 1;
   int32 amount_unit = 2;
   int32 sum_of_health = 3;
+  int32 id_hero = 4;
 }
 
 message Cell{
-  int32 x = 1;
-  int32 y = 2;
-  int32 id_hero = 3;
-  Unit unit = 4;
+  int32 row = 1;
+  int32 column = 2;
+  Unit unit = 3;
 }
 
 message EnableCell{

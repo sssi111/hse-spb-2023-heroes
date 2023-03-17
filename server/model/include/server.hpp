@@ -98,17 +98,17 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         namespace_proto::Unit *unit =
             game_state_ref
                 ->mutable_game_cells(
-                    request->start().y() * 10 + request->start().x()
+                    request->start().row() * 10 + request->start().column()
                 )
                 ->mutable_unit();
         game_state_ref
             ->mutable_game_cells(
-                request->finish().y() * 10 + request->finish().x()
+                request->finish().row() * 10 + request->finish().column()
             )
             ->set_allocated_unit(unit);
         game_state_ref
             ->mutable_game_cells(
-                request->start().y() * 10 + request->start().x()
+                request->start().row() * 10 + request->start().column()
             )
             ->set_allocated_unit(nullptr);
         if (request->user().user_id() !=

@@ -15,7 +15,10 @@ int main() {
     std::thread receiver(&Client::run_receiver);
     Game game;
     while (!game.get_window()->is_done()) {
-        game.update();
+        {
+            std::unique_lock lock{get_client_state()->mutex_};
+            game.update();
+        }
         game.render();
     }
     receiver.join();
