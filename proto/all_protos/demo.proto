@@ -9,10 +9,11 @@ message User{
 }
 
 message Unit{
-  int32 id_unit = 1;
-  int32 amount_unit = 2;
-  int32 sum_of_health = 3;
-  int32 id_hero = 4;
+  int32 type_unit = 1;
+  int32 id_unit = 2;
+  int32 amount_unit = 3;
+  int32 sum_of_health = 4;
+  int32 id_hero = 5;
 }
 
 message Cell{
@@ -58,8 +59,7 @@ message EnableCells{
 }
 
 service Server {
-  rpc CallServer(User) returns(stream GameState) {}
-  rpc ReceiveId(google.protobuf.Empty) returns(User) {}
+  rpc CallServer(UserState) returns(stream GameState) {}
   rpc AddToLobby(User) returns(GameIdAndHero) {}
   rpc MoveUnit(MoveFromTo) returns(GameState) {}
   rpc SelectUnit(MoveSelectUnit) returns(EnableCell) {}

@@ -76,10 +76,11 @@ ServerState *get_server_state();
 class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status CallServer(
         ::grpc::ServerContext *context,
-        const namespace_proto::User *request,
+        const namespace_proto::UserState *request,
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
-        get_server_state()->wait_list.push(Player{request->id(), response});
+        get_server_state()->wait_list.push(Player{request->user_id(), response}
+        );
         std::cout << get_server_state()->wait_list.size();
         while (true) {
         }

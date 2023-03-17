@@ -80,11 +80,22 @@ void Board::render(sf::RenderWindow *window) {
     }
 }
 
-void Board::update_board(const namespace_proto::GameState& game_state) {
+void Board::update_board(const namespace_proto::GameState &game_state) {
+    bool is_second =
+        (game_state.second_user() == get_client_state()->user_.user_id());
     for (int cell_index = 0; cell_index < 100; cell_index++) {
-        int row = game_state.game_cells(cell_index).row();
-        int column = game_state.game_cells(cell_index).column();
-        if (game_state.);
+        const namespace_proto::Cell &server_cell =
+            game_state.game_cells(cell_index);
+        int row = server_cell.row();
+        int column = server_cell.column();
+        if (is_second) {
+            column = 9 - column;
+        }
+        Cell *client_cell = &m_board[row][column];
+        if (server_cell.unit().IsInitialized()) {
+            int unit_id = server_cell.unit().id_unit();
+            // update unit
+            // m_units[unit_id].set_coords();
+        }
     }
-
 }

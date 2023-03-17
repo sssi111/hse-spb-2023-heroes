@@ -1,6 +1,6 @@
 #include "event_manager.hpp"
-#include "client.hpp"
 #include <iostream>
+#include "client.hpp"
 
 void EventManager::update_cell(
     CellEventType event_type,
@@ -23,6 +23,11 @@ void EventManager::update_cell(
         (*unit)->disable_selection();
     } else if (event_type == CellEventType::Move) {
         std::cout << "You wanna move?\n";
+        // send smth, get response
+        // ((*selected_unit)->get_coords().get_row(),
+        // (*selected_unit)->get_coords().get_column() new_position.get_row(),
+        // new_position.get_column();
+
         *unit = *selected_unit;
         board->move_unit(selected_unit, new_position);
         board->decrease_cell_strength(new_position);

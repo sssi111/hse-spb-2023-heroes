@@ -10,6 +10,8 @@ void start_game_session(int game_id) {
     namespace_proto::GameState *game_state_ref = game_session->get_game_state();
 
     game_state_ref->set_first_user(first_player.get_id());
+    game_state_ref->set_second_user(second_player.get_id());
+    int unit_num = 0;
     for (int i = 0; i < 100; ++i) {
         namespace_proto::Cell *new_cell = game_state_ref->add_game_cells();
         new_cell->set_allocated_unit(nullptr);
@@ -17,7 +19,8 @@ void start_game_session(int game_id) {
         new_cell->set_row(i / 10);
         if (i % 10 == 0 || i % 10 == 9) {
             namespace_proto::Unit *unit = new namespace_proto::Unit;
-            unit->set_id_unit(1);
+            unit->set_id_unit(unit_num++);
+            unit->set_type_unit(1);
             unit->set_amount_unit(10);
             unit->set_id_hero(i % 2);
             new_cell->set_allocated_unit(unit);

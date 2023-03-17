@@ -10,7 +10,7 @@
 class ClientState final {
 public:
     std::unique_ptr<namespace_proto::Server::Stub> stub_ = nullptr;
-    namespace_proto::User user_;
+    namespace_proto::UserState user_;
     namespace_proto::GameState game_state_;
     mutable std::mutex mutex_;
 };
@@ -26,6 +26,7 @@ public:
 
 public:
     static void run_receiver();
+    static void move_unit(namespace_proto::Cell from, namespace_proto::Cell to);
 };
 
 #endif  // CLIENT_HPP_
