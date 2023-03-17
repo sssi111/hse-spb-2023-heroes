@@ -1,0 +1,7 @@
+ syntax = "proto3";
+
+ package demo_name;
+
+ message Ok {
+    bool ok = 1;
+ }
