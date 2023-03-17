@@ -4,17 +4,20 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "cell.hpp"
-#include "unit.hpp"
 #include "client.hpp"
+#include "unit.hpp"
 
 class Board {
 public:
     explicit Board(sf::Vector2i window_size);
     ~Board() = default;
 
+    [[nodiscard]] sf::Vector2f get_cell_size() const;
+    [[nodiscard]] sf::Vector2f get_cell_position(Coords coords) const;
+
     void move_unit(Unit **unit, Coords new_position);
     void decrease_cell_strength(Coords position);
-    void update_board(const namespace_proto::GameState& game_state);
+    void update_board(const namespace_proto::GameState &game_state);
 
     void update(sf::Event event, sf::Window *window);
     void render(sf::RenderWindow *window);

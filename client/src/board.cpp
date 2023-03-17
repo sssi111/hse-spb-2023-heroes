@@ -9,7 +9,7 @@ Board::Board(sf::Vector2i window_size) {
     m_cell_size.x = (m_window_size.x - 2 * m_boarder_size.x) / m_cell_amount;
     m_cell_size.y = (m_window_size.y - m_boarder_size.y) / m_cell_amount;
     m_board.resize(m_cell_amount, std::vector<Cell>(m_cell_amount));
-    m_units.resize(10);
+    m_units.resize(20);
     selected_unit = nullptr;
     for (int row = 0; row < m_cell_amount; row++) {
         for (int column = 0; column < m_cell_amount; column++) {
@@ -22,6 +22,8 @@ Board::Board(sf::Vector2i window_size) {
                 ),
                 sf::Vector2f(m_cell_size)
             );
+            // some plug before we get state from server
+            int unit_id = 0;
             if (column == 0) {
                 m_units[row] = Unit(
                     UnitType::Mushroom,
@@ -31,12 +33,28 @@ Board::Board(sf::Vector2i window_size) {
                         m_boarder_size.y + m_cell_size.y / 2 +
                             m_cell_size.y * row
                     ),
-                    sf::Vector2f(m_cell_size), Coords(row, column)
+                    sf::Vector2f(m_cell_size), Coords(row, column), unit_id++
                 );
                 m_board[row][column].set_unit(&m_units[row]);
             }
         }
     }
+}
+
+sf::Vector2f Board::get_cell_size() const {
+    return sf::Vector2f(m_cell_size);
+}
+
+sf::Vector2f Board::get_cell_position(Coords coords) const {
+    return {
+        static_cast<float>(
+            m_boarder_size.x + m_cell_size.x / 2 +
+            m_cell_size.x * coords.get_column()
+        ),
+        static_cast<float>(
+            m_boarder_size.y + m_cell_size.y / 2 +
+            m_cell_size.y * coords.get_row()
+        )};
 }
 
 void Board::move_unit(Unit **unit, Coords new_position) {
@@ -82,7 +100,7 @@ void Board::render(sf::RenderWindow *window) {
 
 void Board::update_board(const namespace_proto::GameState &game_state) {
     bool is_second =
-        (game_state.second_user() == get_client_state()->user_.user_id());
+        (game_state.second_user() == get_client_state()->m_user.user_id());
     for (int cell_index = 0; cell_index < 100; cell_index++) {
         const namespace_proto::Cell &server_cell =
             game_state.game_cells(cell_index);

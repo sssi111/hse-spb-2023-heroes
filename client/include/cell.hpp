@@ -19,9 +19,7 @@ public:
     );
 
     bool is_have_unit() const;
-
     void set_unit(Unit *unit);
-
     void decrease_strength();
 
     void update(
@@ -35,7 +33,7 @@ public:
 private:
     sf::Sprite m_cell;
     Coords m_coords;
-    CellType m_type{CellType::Default};
+    CellType m_cell_type{CellType::Default};
     int m_strength{};
 
     Unit *m_unit{};

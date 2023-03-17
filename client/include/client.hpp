@@ -9,10 +9,10 @@
 
 class ClientState final {
 public:
-    std::unique_ptr<namespace_proto::Server::Stub> stub_ = nullptr;
-    namespace_proto::UserState user_;
-    namespace_proto::GameState game_state_;
-    mutable std::mutex mutex_;
+    std::unique_ptr<namespace_proto::Server::Stub> m_stub = nullptr;
+    namespace_proto::UserState m_user;
+    namespace_proto::GameState m_game_state;
+    mutable std::mutex m_mutex;
 };
 
 ClientState *get_client_state();

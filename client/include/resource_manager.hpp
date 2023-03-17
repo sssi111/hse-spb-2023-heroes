@@ -17,9 +17,9 @@ public:
     const sf::Font &load_font(Fonts font);
 
 private:
-    std::unordered_map<CellType, sf::Texture> m_cell_textures{1};
-    std::unordered_map<UnitType, sf::Texture> m_unit_textures{1};
-    std::unordered_map<Fonts, sf::Font> m_fonts{1};
+    std::unordered_map<CellType, sf::Texture> m_cell_textures;
+    std::unordered_map<UnitType, sf::Texture> m_unit_textures;
+    std::unordered_map<Fonts, sf::Font> m_fonts;
 };
 
 ResourceManager *resource_manager();

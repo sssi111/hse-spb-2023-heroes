@@ -1,5 +1,6 @@
 #include "cell.hpp"
 #include <string>
+#include "client.hpp"
 #include "event_manager.hpp"
 
 Cell::Cell(
@@ -9,8 +10,8 @@ Cell::Cell(
     sf::Vector2f size
 ) {
     m_coords = coords;
-    m_type = type;
-    m_cell.setTexture(resource_manager()->load_cell_texture(m_type));
+    m_cell_type = type;
+    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
     m_cell.setTextureRect(sf::IntRect(0, 0, size.x, size.y));
     m_cell.setPosition(position);
     m_cell.setOrigin(size.x / 2, size.y / 2);
@@ -61,6 +62,8 @@ void Cell::update(
     sf::Window *window
 ) {
     if (m_button.update(event, window)) {
+        // if (is_have_unit() && m_unit->get_hero_id() ==
+        // get_client_state()->m_user.user_id()) {
         if (is_have_unit()) {
             if (*selected_unit != m_unit) {
                 EventManager::update_cell(

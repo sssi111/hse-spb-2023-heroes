@@ -3,13 +3,13 @@
 
 #include "config.hpp"
 
-enum class UnitType { Mushroom, SelectedMushroom };
+enum class UnitType { Empty, Mushroom, SelectedMushroom };
 
 enum class CellType { Default, Broken };
 
 enum class Fonts { Montserrat };
 
-enum class CellEventType { None, FirstPress, SecondPress, Move };
+enum class CellEventType { FirstPress, SecondPress, Move };
 
 enum class ButtonType { None, Play, Pass, Menu, Exit };
 

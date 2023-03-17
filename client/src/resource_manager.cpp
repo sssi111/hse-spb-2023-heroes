@@ -1,7 +1,7 @@
 #include "resource_manager.hpp"
 #include <SFML/Graphics.hpp>
 
-ResourceManager *resource_manager() {
+[[nodiscard]] ResourceManager *resource_manager() {
     static ResourceManager resource_manager;
     return &resource_manager;
 }
@@ -22,14 +22,18 @@ ResourceManager::ResourceManager() {
     );
 }
 
-const sf::Texture &ResourceManager::load_cell_texture(CellType texture) {
+[[nodiscard]] const sf::Texture &ResourceManager::load_cell_texture(
+    CellType texture
+) {
     return m_cell_textures[texture];
 }
 
-const sf::Texture &ResourceManager::load_unit_texture(UnitType texture) {
+[[nodiscard]] const sf::Texture &ResourceManager::load_unit_texture(
+    UnitType texture
+) {
     return m_unit_textures[texture];
 }
 
-const sf::Font &ResourceManager::load_font(Fonts font) {
+[[nodiscard]] const sf::Font &ResourceManager::load_font(Fonts font) {
     return m_fonts[font];
 }
