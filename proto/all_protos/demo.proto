@@ -25,10 +25,9 @@ message EnableCell{
   repeated Cell cells = 1;
 }
 
-message GameId{
+message UserState{
   int32 game_id = 1;
-  int32 first_player = 2;
-  int32 second_player = 3;
+  int32 user_id = 2;
 }
 
 message GameIdAndHero{
@@ -36,11 +35,15 @@ message GameIdAndHero{
   int32 position_in_call_queue = 2;
 }
 
+message MoveSelectUnit{
+  Cell unit = 1;
+  UserState user = 2;
+}
+
 message MoveFromTo{
   Cell start = 1;
   Cell finish = 2;
-  int32 game_id = 3;
-  int32 user_id = 4;
+  UserState user = 3;
 }
 
 message GameState{
@@ -48,9 +51,14 @@ message GameState{
   repeated Cell game_cells = 2;
 }
 
+message EnableCells{
+  repeated Cell enable_cells = 1;
+}
+
 service Server {
   rpc CallServer(User) returns(stream GameState) {}
   rpc ReceiveId(google.protobuf.Empty) returns(User) {}
   rpc AddToLobby(User) returns(GameIdAndHero) {}
   rpc MoveUnit(MoveFromTo) returns(GameState) {}
+  rpc SelectUnit(MoveSelectUnit) returns(EnableCell) {}
 }

@@ -13,8 +13,11 @@ void RunServer(const std::string &address, ServerServices *service) {
     grpc::ServerContext context;
     while (true) {
         while (get_server_state()->wait_list.size() >= 2) {
+            std::cout << "matched\n";
             Player first_player = get_server_state()->wait_list.pop();
             Player second_player = get_server_state()->wait_list.pop();
+            std::cout << first_player.get_id() << ' ' << second_player.get_id()
+                      << '\n';
             int game_id = 0;
             {
                 std::unique_lock lock{get_server_state()->server_mutex};

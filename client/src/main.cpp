@@ -10,7 +10,7 @@ int main() {
     get_client_state()->stub_ =
         std::make_unique<namespace_proto::Server::Stub>(channel);
     namespace_proto::User user;
-    user.set_id(1);
+    user.set_id(2);
     get_client_state()->user_ = user;
     std::thread receiver(&Client::run_receiver);
     Game game;

@@ -80,6 +80,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
         get_server_state()->wait_list.push(Player{request->id(), response});
+        std::cout << get_server_state()->wait_list.size();
         while (true) {
         }
         return ::grpc::Status::OK;
@@ -91,7 +92,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         ::namespace_proto::GameState *response
     ) override {
         GameSession *game_session_ref =
-            &(get_server_state()->game_sessions[request->game_id()]);
+            &(get_server_state()->game_sessions[request->user().game_id()]);
         namespace_proto::GameState *game_state_ref =
             game_session_ref->get_game_state();
         namespace_proto::Unit *unit =
@@ -110,7 +111,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
                 request->start().y() * 10 + request->start().x()
             )
             ->set_allocated_unit(nullptr);
-        if (request->user_id() !=
+        if (request->user().user_id() !=
             game_session_ref->get_first_player().get_id()) {
             (*(game_session_ref->get_response_queues())
             )[game_session_ref->get_first_player().get_id()]
@@ -121,6 +122,27 @@ class ServerServices final : public ::namespace_proto::Server::Service {
                 .push(*game_state_ref);
         }
         response = game_state_ref;
+        return ::grpc::Status::OK;
+    }
+
+    ::grpc::Status SelectUnit(
+        ::grpc::ServerContext *context,
+        const ::namespace_proto::MoveSelectUnit *request,
+        ::namespace_proto::EnableCell *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->user().game_id()]);
+        namespace_proto::GameState *game_state_ref =
+            game_session_ref->get_game_state();
+        // вызывает интерактор
+        //        for (int i = 0; i < 100; ++i) {
+        //            namespace_proto::Cell *new_cell =
+        //            game_state_ref->add_game_cells();
+        //            new_cell->set_allocated_unit(nullptr);
+        //            new_cell->set_id_hero(-1);
+        //            new_cell->set_x(i % 10);
+        //            new_cell->set_y(i / 10);
+        //        }
         return ::grpc::Status::OK;
     }
 };
