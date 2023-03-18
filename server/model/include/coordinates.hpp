@@ -13,7 +13,7 @@ public:
     coordinates(int x, int y) : m_x(x), m_y(y) {
     }
 
-    coordinates(const namespace_proto::Cell &cell)
+    explicit coordinates(const namespace_proto::Cell &cell)
         : m_x(cell.row()), m_y(cell.column()) {
     }
 

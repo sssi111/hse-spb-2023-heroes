@@ -158,19 +158,14 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     ) override {
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->user().game_id()]);
-        namespace_proto::GameState *game_state_ref =
-            game_session_ref->get_game_state();
         game_model::coordinates selected(request->unit());
-        auto enable_cells = (*game_session_ref->get_chooser())(selected, request->user().user_id());
-        // вызывает интерактор
-        //        for (int i = 0; i < 100; ++i) {
-        //            namespace_proto::Cell *new_cell =
-        //            game_state_ref->add_game_cells();
-        //            new_cell->set_allocated_unit(nullptr);
-        //            new_cell->set_id_hero(-1);
-        //            new_cell->set_x(i % 10);
-        //            new_cell->set_y(i / 10);
-        //        }
+        auto enable_cells = (*game_session_ref->get_chooser()
+        )(selected, request->user().user_id());
+        for (auto cell : enable_cells) {
+            namespace_proto::Cell *new_cell = response->add_cells();
+            new_cell->set_row(cell.get().get_coordinates().get_x());
+            new_cell->set_column(cell.get().get_coordinates().get_y());
+        }
         return ::grpc::Status::OK;
     }
 };
