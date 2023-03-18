@@ -40,16 +40,18 @@ void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
     );
 }
 
-std::set<std::pair<int, int>> select_unit(namespace_proto::Cell selected) {
+std::vector<std::pair<int, int>> Client::select_unit(
+    namespace_proto::Cell selected
+) {
     grpc::ClientContext *context{};
     namespace_proto::MoveSelectUnit request;
     request.set_allocated_unit(&selected);
     request.set_allocated_user(&(get_client_state()->m_user));
     namespace_proto::EnableCell response;
     get_client_state()->m_stub->SelectUnit(context, request, &response);
-    std::set<std::pair<int, int>> enable_set;
+    std::vector<std::pair<int, int>> enable_set;
     for (const auto &cell : response.cells()) {
-        enable_set.emplace(cell.row(), cell.column());
+        enable_set.emplace_back(cell.row(), cell.column());
     }
     return enable_set;
 }

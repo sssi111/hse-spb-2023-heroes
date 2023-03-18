@@ -5,7 +5,6 @@
 #include <grpcpp/create_channel.h>
 #include <memory>
 #include <mutex>
-#include <set>
 #include <thread>
 
 class ClientState final {
@@ -28,7 +27,7 @@ public:
 public:
     static void run_receiver();
     static void move_unit(namespace_proto::Cell from, namespace_proto::Cell to);
-    static std::set<std::pair<int, int>> select_unit(
+    static std::vector<std::pair<int, int>> select_unit(
         namespace_proto::Cell selected
     );
 };
