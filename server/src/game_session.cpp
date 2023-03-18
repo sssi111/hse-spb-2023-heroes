@@ -8,7 +8,6 @@ void start_game_session(int game_id) {
     std::unordered_map<int, TSQueue<namespace_proto::GameState>>
         *response_queues_ref = game_session->get_response_queues();
     namespace_proto::GameState *game_state_ref = game_session->get_game_state();
-
     game_state_ref->set_first_user(first_player.get_id());
     game_state_ref->set_second_user(second_player.get_id());
     int unit_num = 0;
