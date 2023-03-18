@@ -5,12 +5,19 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(SFML 2.5 COMPONENTS system window graphics network audio REQUIRED)
 
 set(SOURCES
+        src/client.cpp
         src/main.cpp
         src/cell.cpp
         src/board.cpp
         src/window.cpp
         src/game.cpp
-        src/unit.cpp)
+        src/unit.cpp
+        src/game_menu_bar.cpp
+        src/event_manager.cpp
+        src/resource_manager.cpp
+        src/menu_button.cpp
+        src/button.cpp
+        src/coordinates.cpp)
 
 add_executable(client ${SOURCES})
 

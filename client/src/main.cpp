@@ -1,33 +1,25 @@
-#include <all_protos/demo.grpc.pb.h>
-#include <all_protos/demo_client.pb.h>
-#include <grpcpp/client_context.h>
-#include <grpcpp/create_channel.h>
-#include <SFML/Graphics.hpp>
-#include <iostream>
+#include <future>
+#include "client.hpp"
 #include "game.hpp"
 
-int main(int argc, char *argv[]) {
-    auto local_channel = grpc::CreateChannel(
-        "localhost:50051", grpc::InsecureChannelCredentials()
-    );
-
-    Game game;
-    while (!game.get_window()->is_done()) {
-        game.update();
-        game.render();
+int main() {
+    const std::shared_ptr< ::grpc::ChannelInterface> &channel =
+        grpc::CreateChannel(
+            "localhost:50051", grpc::InsecureChannelCredentials()
+        );
+    get_client_state()->m_stub =
+        std::make_unique<namespace_proto::Server::Stub>(channel);
+    namespace_proto::UserState user;
+    user.set_user_id(2);
+    get_client_state()->m_user = user;
+    std::thread receiver(&Client::run_receiver);
+    while (!get_game_state()->get_window()->is_done()) {
+        {
+            std::unique_lock lock{get_client_state()->m_mutex};
+            get_game_state()->update();
+        }
+        get_game_state()->render();
     }
-
-    ::demo_name::GetOk request;
-    ::demo_name::Ok response;
-
-    response.set_ok(false);
-
-    std::unique_ptr<demo_name::ClientToServer::Stub> stub =
-        demo_name::ClientToServer::NewStub(local_channel);
-    grpc::ClientContext context;
-    grpc::Status status = stub->SendOk(&context, request, &response);
-
-    std::cout << "server response " << response.ok() << std::endl;
-
+    receiver.join();
     return 0;
 }

@@ -3,6 +3,7 @@
 
 namespace game_model {
 
+
 class hero {
     int m_mana;
     // Ability

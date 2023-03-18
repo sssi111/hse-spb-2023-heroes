@@ -1,5 +1,6 @@
 #ifndef MODEL_CELL_HPP
 #define MODEL_CELL_HPP
+
 #include "coordinates.hpp"
 
 namespace game_model {

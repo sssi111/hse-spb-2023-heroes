@@ -4,7 +4,6 @@ find_package(Threads)
 
 set(PROTO_FILES
         all_protos/demo.proto
-        all_protos/demo_client.proto
         )
 
 
