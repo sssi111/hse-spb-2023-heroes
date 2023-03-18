@@ -21,6 +21,8 @@ public:
     explicit game(int account_id_first, int account_id_second) {
         m_players_list.emplace_back(std::make_unique<user>(account_id_first));
         m_players_list.emplace_back(std::make_unique<user>(account_id_second));
+        m_players_list[0]->set_start_units(0, m_board);
+        m_players_list[1]->set_start_units(1, m_board);
     }
 
     [[nodiscard]] board &get_board();
