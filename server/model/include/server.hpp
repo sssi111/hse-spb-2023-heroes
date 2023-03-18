@@ -160,6 +160,8 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             &(get_server_state()->game_sessions[request->user().game_id()]);
         namespace_proto::GameState *game_state_ref =
             game_session_ref->get_game_state();
+        game_model::coordinates selected(request->unit());
+        auto enable_cells = (*game_session_ref->get_chooser())(selected, request->user().user_id());
         // вызывает интерактор
         //        for (int i = 0; i < 100; ++i) {
         //            namespace_proto::Cell *new_cell =
