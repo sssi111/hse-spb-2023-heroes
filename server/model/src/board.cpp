@@ -36,7 +36,7 @@ std::vector<std::reference_wrapper<cell>> board::get_reachable_cells(
     return coordinates_to_cells(bfs.get_reachable_coordinates());
 }
 
-const coordinates &board::get_size() {
+const coordinates &board::get_size() const {
     return m_size;
 }
 }  // namespace game_model
