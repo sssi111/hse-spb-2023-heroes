@@ -72,7 +72,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             )[game_session_ref->get_second_player().get_id()]
                 .push(*game_state_ref);
         }
-        response = game_state_ref;
+        *response = *game_state_ref;
         return ::grpc::Status::OK;
     }
 
