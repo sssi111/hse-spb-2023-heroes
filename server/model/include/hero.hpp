@@ -3,7 +3,8 @@
 
 namespace game_model {
 
-struct Hero {
+
+class hero {
     int m_mana;
     // Ability
 };

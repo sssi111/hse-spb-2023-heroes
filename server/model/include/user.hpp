@@ -1,11 +1,15 @@
 #ifndef MODEL_USER_HPP
 #define MODEL_USER_HPP
 
-#include <player.hpp>
+#include "player.hpp"
 
 namespace game_model {
 
-struct User : Player {};
+class user : public player {
+public:
+    explicit user(int account_id) : player(account_id) {
+    }
+};
 
 }  // namespace game_model
 

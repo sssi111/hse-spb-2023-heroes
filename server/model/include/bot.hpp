@@ -1,11 +1,11 @@
 #ifndef MODEL_BOT_HPP
 #define MODEL_BOT_HPP
 
-#include <player.hpp>
+#include "player.hpp"
 
 namespace game_model {
 
-struct Bot : Player {};
+class bot : public player {};
 
 }  // namespace game_model
 

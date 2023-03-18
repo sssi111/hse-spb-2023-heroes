@@ -1,21 +1,29 @@
 #ifndef MODEL_UNIT_HPP
 #define MODEL_UNIT_HPP
 
+#include <utility>
+#include "coordinates.hpp"
+
 namespace game_model {
 
-struct Unit {
-    enum class Movement_type = {walking, flying};
-
+class unit {
 private:
-    int m_health;
-    int m_damage;
-    int m_attack_range;
-    int m_movement_range;
-    int m_x;
-    int m_y;
+    int m_health{10};
+    int m_damage{1};
+    int m_attack_range{1};
+    int m_movement_range{2};
+    coordinates m_coordinates;
     int m_player_index;
     int m_unit_index;
-    Movement_type m_movement_type;
+
+public:
+    unit(const coordinates &cell_coordinates, int player_index, int unit_index)
+        : m_coordinates(cell_coordinates),
+          m_player_index(player_index),
+          m_unit_index(unit_index) {
+    }
+
+    [[nodiscard]] int get_movement_range() const;
 };
 
 }  // namespace game_model
