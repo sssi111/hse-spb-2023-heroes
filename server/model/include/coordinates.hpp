@@ -10,7 +10,7 @@ private:
     int m_column;
 
 public:
-    coordinates(int x, int y) : m_row(x), m_column(y) {
+    coordinates(int row, int column) : m_row(row), m_column(column) {
     }
 
     explicit coordinates(const namespace_proto::Cell &cell)
