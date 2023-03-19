@@ -5,9 +5,9 @@
 
 namespace game_model {
 cell &board::get_cell(const coordinates &cell_coordinates) {
-    int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_column();
-    return m_cells_matrix[x][y];
+    int row = cell_coordinates.get_row();
+    int column = cell_coordinates.get_column();
+    return m_cells_matrix[row][column];
 }
 
 std::vector<std::reference_wrapper<cell>> board::coordinates_to_cells(
