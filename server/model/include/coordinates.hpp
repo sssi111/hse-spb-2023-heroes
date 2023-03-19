@@ -7,14 +7,14 @@ namespace game_model {
 class coordinates {
 private:
     int m_row;
-    int m_y;
+    int m_column;
 
 public:
-    coordinates(int x, int y) : m_row(x), m_y(y) {
+    coordinates(int x, int y) : m_row(x), m_column(y) {
     }
 
     explicit coordinates(const namespace_proto::Cell &cell)
-        : m_row(cell.row()), m_y(cell.column()) {
+        : m_row(cell.row()), m_column(cell.column()) {
     }
 
     [[nodiscard]] int get_x() const;
