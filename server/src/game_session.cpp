@@ -18,7 +18,7 @@ void start_game_session(int game_id) {
         new_cell->set_row(i / 10);
         new_cell->set_strength(10);
         if (i % 10 == 0 || i % 10 == 9) {
-            namespace_proto::Unit *unit = new namespace_proto::Unit;
+            auto *unit = new namespace_proto::Unit;
             unit->set_id_unit(unit_num++);
             unit->set_type_unit(1);
             unit->set_amount_unit(10);

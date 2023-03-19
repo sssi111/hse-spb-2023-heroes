@@ -33,8 +33,12 @@ void Client::run_receiver() {
 void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
     grpc::ClientContext context;
     namespace_proto::MoveFromTo request;
-    request.set_allocated_start(&from);
-    request.set_allocated_finish(&to);
+    auto * request_from = new namespace_proto::Cell;
+    auto * request_to = new namespace_proto::Cell;
+    *request_from = from;
+    *request_to = to;
+    request.set_allocated_start(request_from);
+    request.set_allocated_finish(request_to);
     request.set_allocated_user(&(get_client_state()->m_user));
     get_client_state()->m_stub->MoveUnit(
         &context, request, &(get_client_state()->m_game_state)
@@ -46,10 +50,10 @@ std::vector<std::pair<int, int>> Client::select_unit(
 ) {
     grpc::ClientContext context;
     namespace_proto::MoveSelectUnit request;
-    namespace_proto::Cell *request_cell = new namespace_proto::Cell;
-    *request_cell = std::move(selected);
+    auto *request_cell = new namespace_proto::Cell;
+    *request_cell = selected;
     request.set_allocated_unit(request_cell);
-    namespace_proto::UserState *request_user = new namespace_proto::UserState;
+    auto *request_user = new namespace_proto::UserState;
     *request_user = (get_client_state()->m_user);
     request.set_allocated_user(request_user);
     namespace_proto::EnableCell response;

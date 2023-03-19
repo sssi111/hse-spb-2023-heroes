@@ -91,7 +91,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             new_cell->set_row(cell.get().get_coordinates().get_row());
             new_cell->set_column(cell.get().get_coordinates().get_column());
         }
-        response->add_cells();
         return ::grpc::Status::OK;
     }
 };
