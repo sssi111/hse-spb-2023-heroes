@@ -5,9 +5,9 @@ bool bfs_state::is_end() const {
     if (m_coordinates_deque.empty()) {
         return true;
     }
-    int x = m_coordinates_deque.front().get_row();
-    int y = m_coordinates_deque.front().get_column();
-    return m_cell_distance[x][y] > m_max_distance;
+    int row = m_coordinates_deque.front().get_row();
+    int column = m_coordinates_deque.front().get_column();
+    return m_cell_distance[row][column] > m_max_distance;
 }
 
 coordinates bfs_state::get_next_cell() {
@@ -17,25 +17,25 @@ coordinates bfs_state::get_next_cell() {
 }
 
 bool bfs_state::is_good_coordinates(const coordinates &cell_coordinates) const {
-    int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_column();
-    return x >= 0 && y >= 0 && x < m_board_size.get_row() &&
-           y < m_board_size.get_column();
+    int row = cell_coordinates.get_row();
+    int column = cell_coordinates.get_column();
+    return row >= 0 && column >= 0 && row < m_board_size.get_row() &&
+           column < m_board_size.get_column();
 }
 
 int bfs_state::get_cell_distance(const coordinates &cell_coordinates) const {
-    int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_column();
-    return m_cell_distance[x][y];
+    int row = cell_coordinates.get_row();
+    int column = cell_coordinates.get_column();
+    return m_cell_distance[row][column];
 }
 
 void bfs_state::set_cell_distance(
     const coordinates &cell_coordinates,
     int distance_new
 ) {
-    int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_column();
-    m_cell_distance[x][y] = distance_new;
+    int row = cell_coordinates.get_row();
+    int column = cell_coordinates.get_column();
+    m_cell_distance[row][column] = distance_new;
 }
 
 void bfs_state::check_cells_neighbours(const coordinates &cell_coordinates) {
