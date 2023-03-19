@@ -22,7 +22,12 @@ void start_game_session(int game_id) {
             unit->set_id_unit(unit_num++);
             unit->set_type_unit(1);
             unit->set_amount_unit(10);
-            unit->set_id_hero(i % 2);
+            if (i % 10 == 0) {
+                unit->set_id_hero(game_state_ref->first_user());
+            }
+            else{
+                unit->set_id_hero(game_state_ref->second_user());
+            }
             new_cell->set_allocated_unit(unit);
         }
     }
