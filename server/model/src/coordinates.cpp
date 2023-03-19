@@ -10,8 +10,8 @@ int coordinates::get_column() const {
 }
 
 coordinates coordinates::operator+(const coordinates &delta) const {
-    int x_new = m_row + delta.get_row();
-    int y_new = m_column + delta.get_column();
-    return {x_new, y_new};
+    int row_new = m_row + delta.get_row();
+    int column_new = m_column + delta.get_column();
+    return {row_new, column_new};
 }
 }  // namespace game_model
