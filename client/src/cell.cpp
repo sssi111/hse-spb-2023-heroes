@@ -73,11 +73,11 @@ void Cell::event_processing(
             m_unit->get_hero_id() == get_client_state()->m_user.user_id()) {
             if (*selected_unit != m_unit) {
                 EventManager::update_cell(
-                    CellEventType::FirstPress, selected_unit, &m_unit
+                    CellEventType::FirstPress, selected_unit, &m_unit, m_coords, board
                 );
             } else {
                 EventManager::update_cell(
-                    CellEventType::SecondPress, selected_unit, &m_unit
+                    CellEventType::SecondPress, selected_unit, &m_unit, m_coords, board
                 );
             }
         } else if (!is_have_unit()) {

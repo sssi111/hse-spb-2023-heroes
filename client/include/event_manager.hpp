@@ -11,7 +11,7 @@ public:
         CellEventType event_type,
         Unit **selected_unit,
         Unit **unit,
-        Coords new_position = {-1, -1},
+        Coords clicked_position = {-1, -1},
         Board *board = nullptr
     );
     static void update_game_menu(ButtonType event_type, Window *window);

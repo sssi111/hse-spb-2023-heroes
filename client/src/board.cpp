@@ -89,7 +89,7 @@ void Board::add_available_for_moving_cells(
     std::vector<std::pair<int, int>> selected_cells
 ) {
     remove_available_for_moving_cells();
-    m_available_for_moving_cells = std::move(selected_cells);
+    m_available_for_moving_cells = selected_cells;
     for (auto [row, column] : m_available_for_moving_cells) {
         m_board[row][column].add_selection();
     }

@@ -28,7 +28,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     ) override {
         get_server_state()->wait_list.push(Player{request->user_id(), response}
         );
-        std::cout << get_server_state()->wait_list.size();
         while (true) {
         }
         return ::grpc::Status::OK;
@@ -86,11 +85,13 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         game_model::coordinates selected(request->unit());
         auto enable_cells = (*game_session_ref->get_chooser()
         )(selected, request->user().user_id());
+        std::cout << enable_cells.size() << '\n';
         for (auto cell : enable_cells) {
             namespace_proto::Cell *new_cell = response->add_cells();
             new_cell->set_row(cell.get().get_coordinates().get_x());
             new_cell->set_column(cell.get().get_coordinates().get_y());
         }
+        response->add_cells();
         return ::grpc::Status::OK;
     }
 };

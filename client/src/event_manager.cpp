@@ -6,17 +6,16 @@ void EventManager::update_cell(
     CellEventType event_type,
     Unit **selected_unit,
     Unit **unit,
-    Coords new_position,
+    Coords clicked_position,
     Board *board
 ) {
     if (event_type == CellEventType::FirstPress) {
         std::cout << "FirstPress is caught!\n";
         namespace_proto::Cell selected_cell;
-        selected_cell.set_row(new_position.get_row());
-        selected_cell.set_column(new_position.get_column());
+        selected_cell.set_row(clicked_position.get_row());
+        selected_cell.set_column(clicked_position.get_column());
         board->add_available_for_moving_cells(Client::select_unit(selected_cell)
         );
-
         if (*selected_unit != nullptr) {
             (*selected_unit)->disable_selection();
         }
@@ -31,7 +30,13 @@ void EventManager::update_cell(
         (*unit)->disable_selection();
     } else if (event_type == CellEventType::Move) {
         std::cout << "You wanna move?\n";
-        // that's how it will be done with server
+        namespace_proto::Cell to;
+        to.set_row(clicked_position.get_row());
+        to.set_column(clicked_position.get_column());
+        namespace_proto::Cell from;
+        from.set_row((*selected_unit)->get_coords().get_row());
+        from.set_column((*selected_unit)->get_coords().get_column());
+        Client::move_unit(from, to);
         board->update_board(get_client_state()->m_game_state);
     }
 }

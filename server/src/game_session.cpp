@@ -34,7 +34,6 @@ void start_game_session(int game_id) {
     std::thread first_writer([response_queues_ref, &first_player]() {
         while (true) {
             if ((*response_queues_ref)[first_player.get_id()].size() > 0) {
-                std::cout << "send";
                 namespace_proto::GameState response =
                     (*response_queues_ref)[first_player.get_id()].pop();
                 first_player.get_stream()->Write(response);
@@ -45,7 +44,6 @@ void start_game_session(int game_id) {
     std::thread second_writer([response_queues_ref, &second_player]() {
         while (true) {
             if ((*response_queues_ref)[second_player.get_id()].size() > 0) {
-                std::cout << "send";
                 namespace_proto::GameState response =
                     (*response_queues_ref)[second_player.get_id()].pop();
                 second_player.get_stream()->Write(response);
