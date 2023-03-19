@@ -6,7 +6,7 @@ void Game::update() {
     while (m_window.get_render_window()->pollEvent(event)) {
         m_window.update(event);
         m_game_menu_bar.update(event, &m_window);
-        m_board.update(event, m_window.get_render_window());
+        m_board.event_processing(event, m_window.get_render_window());
     }
 }
 

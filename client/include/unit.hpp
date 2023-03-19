@@ -2,6 +2,7 @@
 #define BATTLE_OF_HEROES_UNIT_HPP
 
 #include <SFML/Graphics.hpp>
+#include "client.hpp"
 #include "coordinates.hpp"
 #include "resource_manager.hpp"
 
@@ -13,16 +14,9 @@ public:
           m_amount_of_units(),
           m_unit_id(),
           m_health(),
-          m_hero_id() {
+          m_hero_id(),
+          is_selected() {
     }
-
-    explicit Unit(
-        UnitType unit_type,
-        sf::Vector2f position,
-        sf::Vector2f size,
-        Coords coords,
-        int id_unit
-    );
 
     ~Unit() = default;
 
@@ -34,14 +28,10 @@ public:
     void set_selection();
     void disable_selection();
     void update_unit(
-        UnitType unit_type,
-        Coords new_position,
+        const namespace_proto::Cell &cell,
+        const namespace_proto::Unit &unit,
         sf::Vector2f position,
-        sf::Vector2f size,
-        int health,
-        int amount_of_units,
-        int id_unit,
-        int id_hero
+        sf::Vector2f size
     );
 
     void draw(sf::RenderWindow *window);
@@ -53,6 +43,7 @@ private:
     int m_amount_of_units;
     int m_unit_id;
     int m_hero_id;
+    bool is_selected;
 
     sf::Sprite m_unit;
     sf::RectangleShape m_table;

@@ -14,12 +14,14 @@ message Unit{
   int32 amount_unit = 3;
   int32 sum_of_health = 4;
   int32 id_hero = 5;
+  int32 is_selected = 6;
 }
 
 message Cell{
   int32 row = 1;
   int32 column = 2;
   Unit unit = 3;
+  int32 strength = 4;
 }
 
 message EnableCell{

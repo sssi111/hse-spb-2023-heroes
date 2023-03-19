@@ -6,7 +6,7 @@ Button::Button(sf::Vector2f position, sf::Vector2f size) {
     m_button.setPosition(position);
 }
 
-bool Button::update(sf::Event event, const sf::Window *window) {
+bool Button::event_processing(sf::Event event, const sf::Window *window) {
     if (event.type == sf::Event::MouseButtonPressed &&
         event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);

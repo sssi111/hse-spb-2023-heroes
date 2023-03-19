@@ -11,6 +11,9 @@ ResourceManager::ResourceManager() {
     m_cell_textures[CellType::Broken].loadFromFile(
         source_dir + "grass_broken.jpg"
     );
+    m_cell_textures[CellType::Selected].loadFromFile(
+        source_dir + "grass_broken.jpg"
+    );
 
     m_unit_textures[UnitType::Mushroom].loadFromFile(source_dir + "hero.png");
     m_unit_textures[UnitType::SelectedMushroom].loadFromFile(

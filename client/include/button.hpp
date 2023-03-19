@@ -9,7 +9,7 @@ public:
     Button() = default;
     Button(sf::Vector2f position, sf::Vector2f size);
 
-    bool update(sf::Event event, const sf::Window *window);
+    bool event_processing(sf::Event event, const sf::Window *window);
 
 private:
     sf::RectangleShape m_button;

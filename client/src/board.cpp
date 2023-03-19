@@ -1,4 +1,5 @@
 #include "board.hpp"
+#include <utility>
 #include "resource_manager.hpp"
 
 Board::Board(sf::Vector2i window_size) {
@@ -22,27 +23,8 @@ Board::Board(sf::Vector2i window_size) {
                 ),
                 sf::Vector2f(m_cell_size)
             );
-            // some plug before we get state from server
-            int unit_id = 0;
-            if (column == 0) {
-                m_units[row] = Unit(
-                    UnitType::Mushroom,
-                    sf::Vector2f(
-                        m_boarder_size.x + m_cell_size.x / 2 +
-                            m_cell_size.x * column,
-                        m_boarder_size.y + m_cell_size.y / 2 +
-                            m_cell_size.y * row
-                    ),
-                    sf::Vector2f(m_cell_size), Coords(row, column), unit_id++
-                );
-                m_board[row][column].set_unit(&m_units[row]);
-            }
         }
     }
-}
-
-sf::Vector2f Board::get_cell_size() const {
-    return sf::Vector2f(m_cell_size);
 }
 
 sf::Vector2f Board::get_cell_position(Coords coords) const {
@@ -57,36 +39,16 @@ sf::Vector2f Board::get_cell_position(Coords coords) const {
         )};
 }
 
-void Board::move_unit(Unit **unit, Coords new_position) {
-    Coords prev_position = (*unit)->get_coords();
-    m_board[new_position.get_row()][new_position.get_column()].set_unit(*unit);
-    m_board[prev_position.get_row()][prev_position.get_column()].set_unit(
-        nullptr
-    );
-    (*unit)->set_coords(
-        new_position,
-        sf::Vector2f(
-            m_boarder_size.x + m_cell_size.x / 2 +
-                m_cell_size.x * new_position.get_column(),
-            m_boarder_size.y + m_cell_size.y / 2 +
-                m_cell_size.y * new_position.get_row()
-        ),
-        sf::Vector2f(m_cell_size)
-    );
-}
-
-void Board::decrease_cell_strength(Coords position) {
-    m_board[position.get_row()][position.get_column()].decrease_strength();
-}
-
-void Board::update(sf::Event event, sf::Window *window) {
+void Board::event_processing(sf::Event event, sf::Window *window) {
     int row =
         (sf::Mouse::getPosition(*window).y - m_boarder_size.y) / m_cell_size.y;
     int column =
         (sf::Mouse::getPosition(*window).x - m_boarder_size.x) / m_cell_size.x;
     if (column >= 0 && row >= 0 && row < m_cell_amount &&
         column < m_cell_amount) {
-        m_board[row][column].update(&selected_unit, this, event, window);
+        m_board[row][column].event_processing(
+            &selected_unit, this, event, window
+        );
     }
 }
 
@@ -109,11 +71,33 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
         if (is_second) {
             column = 9 - column;
         }
-        Cell *client_cell = &m_board[row][column];
+        m_board[row][column].update_cell(server_cell);
         if (server_cell.unit().IsInitialized()) {
             int unit_id = server_cell.unit().id_unit();
-            // update unit
-            // m_units[unit_id].set_coords();
+            auto server_unit = game_state.game_cells(cell_index).unit();
+            m_units[unit_id].update_unit(
+                server_cell, server_unit,
+                get_cell_position({server_cell.row(), server_cell.column()}),
+                static_cast<sf::Vector2f>(m_cell_size)
+            );
+            m_board[row][column].set_unit(&m_units[unit_id]);
         }
     }
+}
+
+void Board::add_available_for_moving_cells(
+    std::vector<std::pair<int, int>> selected_cells
+) {
+    remove_available_for_moving_cells();
+    m_available_for_moving_cells = std::move(selected_cells);
+    for (auto [row, column] : m_available_for_moving_cells) {
+        m_board[row][column].add_selection();
+    }
+}
+
+void Board::remove_available_for_moving_cells() {
+    for (auto [row, column] : m_available_for_moving_cells) {
+        m_board[row][column].remove_selection();
+    }
+    m_available_for_moving_cells.clear();
 }
