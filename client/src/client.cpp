@@ -1,4 +1,5 @@
 #include "client.hpp"
+#include <utility>
 #include "game.hpp"
 
 [[nodiscard]] ClientState *get_client_state() {
@@ -45,10 +46,12 @@ std::vector<std::pair<int, int>> Client::select_unit(
 ) {
     grpc::ClientContext context;
     namespace_proto::MoveSelectUnit request;
-    namespace_proto::Cell request_cell = selected;
-    namespace_proto::UserState request_user = get_client_state()->m_user;
-    request.set_allocated_unit(&request_cell);
-    request.set_allocated_user(&request_user);
+    namespace_proto::Cell *request_unit = new namespace_proto::Cell;
+    *request_unit = std::move(selected);
+    request.set_allocated_unit(request_unit);
+    namespace_proto::UserState *request_user = new namespace_proto::UserState;
+    *request_user = (get_client_state()->m_user);
+    request.set_allocated_user(request_user);
     namespace_proto::EnableCell response;
     get_client_state()->m_stub->SelectUnit(&context, request, &response);
     std::vector<std::pair<int, int>> enable_set;
