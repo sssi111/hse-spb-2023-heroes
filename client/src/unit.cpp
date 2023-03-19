@@ -46,7 +46,7 @@ void Unit::update_unit(
     sf::Vector2f new_position,
     sf::Vector2f size
 ) {
-    if (static_cast<UnitType>(unit.type_unit()) ==
+    if (static_cast<UnitType>(unit.type_unit()) !=
         UnitType::Empty) {  // then initialize unit
         m_type = static_cast<UnitType>(unit.type_unit());
         m_coords = {cell.row(), cell.column()};

@@ -72,7 +72,7 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
             column = 9 - column;
         }
         m_board[row][column].update_cell(server_cell);
-        if (server_cell.unit().IsInitialized()) {
+        if (server_cell.unit().type_unit() != 0) {
             int unit_id = server_cell.unit().id_unit();
             auto server_unit = game_state.game_cells(cell_index).unit();
             m_units[unit_id].update_unit(
