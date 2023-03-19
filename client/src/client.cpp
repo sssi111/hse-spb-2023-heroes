@@ -46,9 +46,9 @@ std::vector<std::pair<int, int>> Client::select_unit(
 ) {
     grpc::ClientContext context;
     namespace_proto::MoveSelectUnit request;
-    namespace_proto::Cell *request_unit = new namespace_proto::Cell;
-    *request_unit = std::move(selected);
-    request.set_allocated_unit(request_unit);
+    namespace_proto::Cell *request_cell = new namespace_proto::Cell;
+    *request_cell = std::move(selected);
+    request.set_allocated_unit(request_cell);
     namespace_proto::UserState *request_user = new namespace_proto::UserState;
     *request_user = (get_client_state()->m_user);
     request.set_allocated_user(request_user);
