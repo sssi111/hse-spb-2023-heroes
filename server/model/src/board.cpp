@@ -39,4 +39,8 @@ std::vector<std::reference_wrapper<cell>> board::get_reachable_cells(
 const coordinates &board::get_size() const {
     return m_size;
 }
+
+void board::set_cell_coordinates(int row, int column) {
+    m_cells_matrix[row][column].set_coordinates(coordinates{row, column});
+}
 }  // namespace game_model

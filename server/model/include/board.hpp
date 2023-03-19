@@ -16,18 +16,19 @@ private:
 
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     coordinates_to_cells(const std::vector<coordinates> &coordinates_array);
+    void set_cell_coordinates(int row, int column);
 
 public:
     board() {
-        int x_size = m_size.get_row();
-        int y_size = m_size.get_column();
-        for (int x = 0; x < x_size; ++x) {
-            for (int y = 0; y < y_size; ++y)
-                m_cells_matrix[x][y].set_coordinates(coordinates{x, y});
-            m_cells_matrix[x][0].set_player_index(0);
-            m_cells_matrix[x][y_size - 1].set_player_index(1);
-            m_cells_matrix[x][0].set_unit_index(x);
-            m_cells_matrix[x][y_size - 1].set_unit_index(x);
+        int row_amount = m_size.get_row();
+        int column_amount = m_size.get_column();
+        for (int row = 0; row < row_amount; ++row) {
+            for (int column = 0; column < column_amount; ++column)
+                set_cell_coordinates(row, column);
+            m_cells_matrix[row][0].set_player_index(0);
+            m_cells_matrix[row][column_amount - 1].set_player_index(1);
+            m_cells_matrix[row][0].set_unit_index(row);
+            m_cells_matrix[row][column_amount - 1].set_unit_index(row);
         }
     }
 
