@@ -49,7 +49,6 @@ void Unit::update_unit(
     if (static_cast<UnitType>(unit.type_unit()) !=
         UnitType::Empty) {  // then initialize unit
         m_type = static_cast<UnitType>(unit.type_unit());
-        std::cout << cell.row() << ' ' << cell.column() << '\n';
         m_coords = {cell.row(), cell.column()};
         m_health = unit.sum_of_health();
         m_amount_of_units = unit.amount_unit();
