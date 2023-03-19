@@ -17,7 +17,7 @@ public:
         : m_row(cell.row()), m_column(cell.column()) {
     }
 
-    [[nodiscard]] int get_x() const;
+    [[nodiscard]] int get_row() const;
     [[nodiscard]] int get_y() const;
     coordinates operator+(const coordinates &delta) const;
 };

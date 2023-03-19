@@ -33,12 +33,13 @@ public:
     )
         : m_coordinates_deque({cell_coordinates}),
           m_cell_distance(
-              board_size.get_x(),
+              board_size.get_row(),
               std::vector<int>(board_size.get_y(), -1)
           ),
           m_max_distance(max_distance),
           m_board_size(board_size) {
-        m_cell_distance[cell_coordinates.get_x()][cell_coordinates.get_y()] = 0;
+        m_cell_distance[cell_coordinates.get_row()][cell_coordinates.get_y()] =
+            0;
     }
 
     [[nodiscard]] bool is_end() const;

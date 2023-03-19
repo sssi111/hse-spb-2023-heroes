@@ -88,7 +88,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         std::cout << enable_cells.size() << '\n';
         for (auto cell : enable_cells) {
             namespace_proto::Cell *new_cell = response->add_cells();
-            new_cell->set_row(cell.get().get_coordinates().get_x());
+            new_cell->set_row(cell.get().get_coordinates().get_row());
             new_cell->set_column(cell.get().get_coordinates().get_y());
         }
         response->add_cells();

@@ -19,7 +19,7 @@ private:
 
 public:
     board() {
-        int x_size = m_size.get_x();
+        int x_size = m_size.get_row();
         int y_size = m_size.get_y();
         for (int x = 0; x < x_size; ++x) {
             for (int y = 0; y < y_size; ++y)
