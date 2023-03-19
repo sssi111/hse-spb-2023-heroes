@@ -5,12 +5,12 @@
 #include "game.hpp"
 
 namespace interactors {
-class chooser {
+class selecter {
 private:
     game_model::game &m_game;
 
 public:
-    explicit chooser(game_model::game &current_game_state)
+    explicit selecter(game_model::game &current_game_state)
         : m_game(current_game_state) {
     }
 

@@ -2,10 +2,10 @@
 #define GAME_SESSION_HPP
 
 #include "TSqueue.hpp"
-#include "choose_interactor.hpp"
 #include "game.hpp"
 #include "move_interactor.hpp"
 #include "proto/all_protos/demo.grpc.pb.h"
+#include "select_interactor.hpp"
 
 class Player final {
     int id;
@@ -34,7 +34,7 @@ class GameSession {
     namespace_proto::GameState game_state;
     game_model::game model_game;
     interactors::mover move_unit;
-    interactors::chooser choose_unit;
+    interactors::selecter choose_unit;
 
 public:
     GameSession(Player first_player_, Player second_player_)
@@ -70,7 +70,7 @@ public:
         return &move_unit;
     }
 
-    interactors::chooser *get_chooser() {
+    interactors::selecter *get_chooser() {
         return &choose_unit;
     }
 };

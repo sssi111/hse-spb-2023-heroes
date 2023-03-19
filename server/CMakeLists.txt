@@ -9,7 +9,7 @@ set(SOURCES
         model/src/player.cpp
         model/src/unit.cpp
         model/src/bfs_state.cpp
-        interactors/src/choose_interactor.cpp
+        interactors/src/select_interactor.cpp
         interactors/src/move_interactor.cpp
         )
 

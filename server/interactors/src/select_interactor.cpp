@@ -1,9 +1,9 @@
-#include "choose_interactor.hpp"
+#include "select_interactor.hpp"
 #include <vector>
 #include "cell.hpp"
 
 namespace interactors {
-std::vector<std::reference_wrapper<game_model::cell>> chooser::operator()(
+std::vector<std::reference_wrapper<game_model::cell>> selecter::operator()(
     const game_model::coordinates &current_cell_coordinates,
     int user_id
 ) {
