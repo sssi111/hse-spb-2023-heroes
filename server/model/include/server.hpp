@@ -89,7 +89,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         for (auto cell : enable_cells) {
             namespace_proto::Cell *new_cell = response->add_cells();
             new_cell->set_row(cell.get().get_coordinates().get_row());
-            new_cell->set_column(cell.get().get_coordinates().get_y());
+            new_cell->set_column(cell.get().get_coordinates().get_column());
         }
         response->add_cells();
         return ::grpc::Status::OK;

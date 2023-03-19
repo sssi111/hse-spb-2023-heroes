@@ -18,7 +18,7 @@ public:
     }
 
     [[nodiscard]] int get_row() const;
-    [[nodiscard]] int get_y() const;
+    [[nodiscard]] int get_column() const;
     coordinates operator+(const coordinates &delta) const;
 };
 }  // namespace game_model

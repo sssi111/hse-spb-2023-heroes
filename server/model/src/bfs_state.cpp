@@ -6,7 +6,7 @@ bool bfs_state::is_end() const {
         return true;
     }
     int x = m_coordinates_deque.front().get_row();
-    int y = m_coordinates_deque.front().get_y();
+    int y = m_coordinates_deque.front().get_column();
     return m_cell_distance[x][y] > m_max_distance;
 }
 
@@ -18,14 +18,14 @@ coordinates bfs_state::get_next_cell() {
 
 bool bfs_state::is_good_coordinates(const coordinates &cell_coordinates) const {
     int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_y();
+    int y = cell_coordinates.get_column();
     return x >= 0 && y >= 0 && x < m_board_size.get_row() &&
-           y < m_board_size.get_y();
+           y < m_board_size.get_column();
 }
 
 int bfs_state::get_cell_distance(const coordinates &cell_coordinates) const {
     int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_y();
+    int y = cell_coordinates.get_column();
     return m_cell_distance[x][y];
 }
 
@@ -34,7 +34,7 @@ void bfs_state::set_cell_distance(
     int distance_new
 ) {
     int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_y();
+    int y = cell_coordinates.get_column();
     m_cell_distance[x][y] = distance_new;
 }
 

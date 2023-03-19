@@ -20,7 +20,7 @@ private:
 public:
     board() {
         int x_size = m_size.get_row();
-        int y_size = m_size.get_y();
+        int y_size = m_size.get_column();
         for (int x = 0; x < x_size; ++x) {
             for (int y = 0; y < y_size; ++y)
                 m_cells_matrix[x][y].set_coordinates(coordinates{x, y});

@@ -6,7 +6,7 @@
 namespace game_model {
 cell &board::get_cell(const coordinates &cell_coordinates) {
     int x = cell_coordinates.get_row();
-    int y = cell_coordinates.get_y();
+    int y = cell_coordinates.get_column();
     return m_cells_matrix[x][y];
 }
 
