@@ -1,7 +1,9 @@
+
 #include "board.hpp"
 #include <utility>
 #include "resource_manager.hpp"
 
+namespace game_view {
 Board::Board(sf::Vector2i window_size) {
     m_cell_amount = 10;
     m_window_size = window_size;
@@ -81,6 +83,8 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
                 static_cast<sf::Vector2f>(m_cell_size)
             );
             m_board[row][column].set_unit(&m_units[unit_id]);
+        } else {
+            m_board[row][column].set_unit(nullptr);
         }
     }
 }
@@ -101,3 +105,4 @@ void Board::remove_available_for_moving_cells() {
     }
     m_available_for_moving_cells.clear();
 }
+}  // namespace game_view

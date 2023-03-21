@@ -4,14 +4,16 @@
 #include <SFML/Graphics.hpp>
 #include "resource_manager.hpp"
 
-class Button {
-public:
-    Button() = default;
-    Button(sf::Vector2f position, sf::Vector2f size);
+namespace game_view {
+    class Button {
+    public:
+        Button() = default;
+        Button(sf::Vector2f position, sf::Vector2f size);
 
-    bool event_processing(sf::Event event, const sf::Window *window);
+        bool event_processing(sf::Event event, const sf::Window *window);
 
-private:
-    sf::RectangleShape m_button;
-};
+    private:
+        sf::RectangleShape m_button;
+    };
+}
 #endif  // BATTLE_OF_HEROES_BUTTON_HPP

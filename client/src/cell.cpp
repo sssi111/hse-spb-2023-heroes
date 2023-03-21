@@ -3,6 +3,7 @@
 #include "client.hpp"
 #include "event_manager.hpp"
 
+namespace game_view {
 Cell::Cell(
     Coords coords,
     CellType type,
@@ -73,11 +74,13 @@ void Cell::event_processing(
             m_unit->get_hero_id() == get_client_state()->m_user.user_id()) {
             if (*selected_unit != m_unit) {
                 EventManager::update_cell(
-                    CellEventType::FirstPress, selected_unit, &m_unit, m_coords, board
+                    CellEventType::FirstPress, selected_unit, &m_unit, m_coords,
+                    board
                 );
             } else {
                 EventManager::update_cell(
-                    CellEventType::SecondPress, selected_unit, &m_unit, m_coords, board
+                    CellEventType::SecondPress, selected_unit, &m_unit,
+                    m_coords, board
                 );
             }
         } else if (!is_have_unit()) {
@@ -97,3 +100,4 @@ void Cell::draw(sf::RenderWindow *window) {
     }
     window->draw(m_label);
 }
+}  // namespace game_view

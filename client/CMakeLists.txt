@@ -21,6 +21,7 @@ set(SOURCES
 
 add_executable(client ${SOURCES})
 
+
 target_include_directories(client PRIVATE
         "${PROJECT_BINARY_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/include")

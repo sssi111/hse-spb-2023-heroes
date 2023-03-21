@@ -19,7 +19,7 @@ void Client::run_receiver() {
         {
             std::unique_lock lock{get_client_state()->m_mutex};
             get_client_state()->m_game_state = response;
-            get_game_state()->get_board()->update_board(
+            game_view::get_game_state()->get_board()->update_board(
                 get_client_state()->m_game_state
             );
         }
@@ -33,18 +33,25 @@ void Client::run_receiver() {
 void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
     grpc::ClientContext context;
     namespace_proto::MoveFromTo request;
-    auto * request_from = new namespace_proto::Cell;
-    auto * request_to = new namespace_proto::Cell;
+    auto *request_from = new namespace_proto::Cell;
+    auto *request_to = new namespace_proto::Cell;
     *request_from = from;
     *request_to = to;
-    auto * request_user = new namespace_proto::UserState;
-    *request_user = get_client_state()->m_user;
+    auto *request_user = new namespace_proto::UserState;
+    *request_user = (get_client_state()->m_user);
     request.set_allocated_start(request_from);
     request.set_allocated_finish(request_to);
     request.set_allocated_user(request_user);
     get_client_state()->m_stub->MoveUnit(
         &context, request, &(get_client_state()->m_game_state)
     );
+    int cnt = 0;
+    for (auto i : get_client_state()->m_game_state.game_cells()) {
+        std::cout << i.unit().id_unit() << ' ';
+        if (cnt++ % 10 == 0) {
+            std::cout << '\n';
+        }
+    }
 }
 
 std::vector<std::pair<int, int>> Client::select_unit(

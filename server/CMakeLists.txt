@@ -13,9 +13,6 @@ set(SOURCES
         interactors/src/move_interactor.cpp
         )
 
-add_link_options(-fsanitize=address)
-add_compile_options(-fsanitize=address)
-
 add_executable(server ${SOURCES})
 
 target_include_directories(server PRIVATE

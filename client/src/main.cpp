@@ -13,12 +13,12 @@ int main() {
     user.set_user_id(1);
     get_client_state()->m_user = user;
     std::thread receiver(&Client::run_receiver);
-    while (!get_game_state()->get_window()->is_done()) {
+    while (!game_view::get_game_state()->get_window()->is_done()) {
         {
             std::unique_lock lock{get_client_state()->m_mutex};
-            get_game_state()->update();
+            game_view::get_game_state()->update();
         }
-        get_game_state()->render();
+        game_view::get_game_state()->render();
     }
     receiver.join();
     return 0;

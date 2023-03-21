@@ -6,28 +6,33 @@
 #include "game_menu_bar.hpp"
 #include "window.hpp"
 
-class Game {
-public:
-    Game()
-        : m_window("Battle of Heroes and Villains", sf::Vector2u(1920, 1080)),
-          m_game_menu_bar(sf::Vector2f(1920, 1080), 100),
-          m_board(sf::Vector2i(1920, 1080 - 100)
-          )  // '- 100' is subtraction of menu_height
-          {};
-    ~Game() = default;
+namespace game_view {
+    class Game {
+    public:
+        Game()
+            : m_window(
+                  "Battle of Heroes and Villains",
+                  sf::Vector2u(1920, 1080)
+              ),
+              m_game_menu_bar(sf::Vector2f(1920, 1080), 100),
+              m_board(sf::Vector2i(1920, 1080 - 100)
+              )  // '- 100' is subtraction of menu_height
+              {};
+        ~Game() = default;
 
-    void update();
-    void render();
+        void update();
+        void render();
 
-    Window *get_window();
-    Board *get_board();
+        Window *get_window();
+        Board *get_board();
 
-private:
-    Window m_window;
-    GameMenuBar m_game_menu_bar;
-    Board m_board;
-};
+    private:
+        Window m_window;
+        GameMenuBar m_game_menu_bar;
+        Board m_board;
+    };
 
-Game *get_game_state();
+    Game *get_game_state();
+}
 
 #endif  // BATTLE_OF_HEROES_GAME_HPP
