@@ -12,7 +12,7 @@ Board::Board(sf::Vector2i window_size) {
     m_cell_size.x = (m_window_size.x - 2 * m_boarder_size.x) / m_cell_amount;
     m_cell_size.y = (m_window_size.y - m_boarder_size.y) / m_cell_amount;
     m_board.resize(m_cell_amount, std::vector<Cell>(m_cell_amount));
-    m_units.resize(21);
+    m_units.resize(20);
     selected_unit = nullptr;
     for (int row = 0; row < m_cell_amount; row++) {
         for (int column = 0; column < m_cell_amount; column++) {
@@ -60,6 +60,11 @@ void Board::render(sf::RenderWindow *window) {
             cell.draw(window);
         }
     }
+    for (auto &unit : m_units) {
+        unit.draw(window);
+        // std::cout << "Unit: " << unit.get_coords().get_row() << ' ' <<
+        // unit.get_coords().get_column() << '\n';
+    }
 }
 
 void Board::update_board(const namespace_proto::GameState &game_state) {
@@ -74,17 +79,15 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
             column = 9 - column;
         }
         m_board[row][column].update_cell(server_cell);
-        if (server_cell.unit().type_unit() != 0) {
+        if (server_cell.is_unit()) {
             int unit_id = server_cell.unit().id_unit();
             auto server_unit = game_state.game_cells(cell_index).unit();
             m_units[unit_id].update_unit(
-                server_cell, server_unit,
-                get_cell_position({server_cell.row(), server_cell.column()}),
+                row, column, server_unit,
+                get_cell_position({row, column}),
                 static_cast<sf::Vector2f>(m_cell_size)
             );
             m_board[row][column].set_unit(&m_units[unit_id]);
-        } else {
-            m_board[row][column].set_unit(nullptr);
         }
     }
 }

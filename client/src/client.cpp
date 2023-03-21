@@ -42,16 +42,10 @@ void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
     request.set_allocated_start(request_from);
     request.set_allocated_finish(request_to);
     request.set_allocated_user(request_user);
+    namespace_proto::GameState response;
     get_client_state()->m_stub->MoveUnit(
-        &context, request, &(get_client_state()->m_game_state)
-    );
-    int cnt = 0;
-    for (auto i : get_client_state()->m_game_state.game_cells()) {
-        std::cout << i.unit().id_unit() << ' ';
-        if (cnt++ % 10 == 0) {
-            std::cout << '\n';
-        }
-    }
+        &context, request, &response);
+    get_client_state()->m_game_state = response;
 }
 
 std::vector<std::pair<int, int>> Client::select_unit(

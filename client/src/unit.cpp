@@ -23,6 +23,7 @@ namespace game_view {
     }
 
     void Unit::draw(sf::RenderWindow * window) {
+
         window->draw(m_unit);
         window->draw(m_table);
         window->draw(m_label);
@@ -41,13 +42,12 @@ namespace game_view {
     }
 
     void Unit::update_unit(
-        const namespace_proto::Cell &cell, const namespace_proto::Unit &unit,
+        const int row, const int column, const namespace_proto::Unit &unit,
         sf::Vector2f new_position, sf::Vector2f size
     ) {
-        if (static_cast<UnitType>(unit.type_unit()) !=
-            UnitType::Empty) {  // then initialize unit
+        if (unit.type_unit() != 0) {  // then initialize unit
             m_type = static_cast<UnitType>(unit.type_unit());
-            m_coords = {cell.row(), cell.column()};
+            m_coords = {row, column};
             m_health = unit.sum_of_health();
             m_amount_of_units = unit.amount_unit();
             m_unit_id = unit.id_unit();
@@ -84,7 +84,7 @@ namespace game_view {
             ));
         } else {  // then event_processing
             is_selected = unit.is_selected();
-            m_coords = {cell.row(), cell.column()};
+            m_coords = {row, column};
             m_unit.setPosition(new_position);
             m_label.setPosition(sf::Vector2f(
                 new_position.x + 13 * size.x / 16,

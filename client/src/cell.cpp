@@ -95,9 +95,6 @@ void Cell::event_processing(
 
 void Cell::draw(sf::RenderWindow *window) {
     window->draw(m_cell);
-    if (is_have_unit()) {
-        m_unit->draw(window);
-    }
     window->draw(m_label);
 }
 }  // namespace game_view

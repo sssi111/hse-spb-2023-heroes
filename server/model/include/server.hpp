@@ -58,9 +58,17 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             ->set_allocated_unit(unit);
         game_state_ref
             ->mutable_game_cells(
+                request->finish().row() * 10 + request->finish().column()
+            )->set_is_unit(true);
+        game_state_ref
+            ->mutable_game_cells(
                 request->start().row() * 10 + request->start().column()
             )
             ->set_allocated_unit(nullptr);
+        game_state_ref
+            ->mutable_game_cells(
+                request->start().row() * 10 + request->start().column()
+            )->set_is_unit(false);
         if (request->user().user_id() !=
             game_session_ref->get_first_player().get_id()) {
             (*(game_session_ref->get_response_queues())

@@ -29,6 +29,7 @@ void start_game_session(int game_id) {
                 unit->set_id_hero(game_state_ref->second_user());
             }
             new_cell->set_allocated_unit(unit);
+            new_cell->set_is_unit(true);
         }
     }
 
