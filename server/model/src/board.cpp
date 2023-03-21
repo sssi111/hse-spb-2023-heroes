@@ -31,7 +31,7 @@ std::vector<std::reference_wrapper<cell>> board::get_reachable_cells(
         int cell_player_id =
             get_cell(current_cell_coordinates).get_player_index();
         if (cell_player_id == -1 || cell_player_id == current_player_id)
-            bfs.check_cells_neighbours(cell_coordinates);
+            bfs.check_cells_neighbours(current_cell_coordinates);
     }
     return coordinates_to_cells(bfs.get_reachable_coordinates());
 }

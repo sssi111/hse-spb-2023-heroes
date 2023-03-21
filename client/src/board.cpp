@@ -10,7 +10,7 @@ Board::Board(sf::Vector2i window_size) {
     m_cell_size.x = (m_window_size.x - 2 * m_boarder_size.x) / m_cell_amount;
     m_cell_size.y = (m_window_size.y - m_boarder_size.y) / m_cell_amount;
     m_board.resize(m_cell_amount, std::vector<Cell>(m_cell_amount));
-    m_units.resize(20);
+    m_units.resize(21);
     selected_unit = nullptr;
     for (int row = 0; row < m_cell_amount; row++) {
         for (int column = 0; column < m_cell_amount; column++) {
