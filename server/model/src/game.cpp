@@ -32,10 +32,12 @@ void game::move(
 ) {
     cell &current_cell = get_cell(current_cell_coordinates);
     cell &new_cell = get_cell(new_cell_coordinates);
-    new_cell.set_player_index(current_cell.get_player_index());
-    new_cell.set_unit_index(current_cell.get_unit_index());
+    int player_index = current_cell.get_player_index();
+    int unit_index = current_cell.get_unit_index();
     current_cell.set_player_index(-1);
     current_cell.set_unit_index(-1);
+    new_cell.set_player_index(player_index);
+    new_cell.set_unit_index(unit_index);
 }
 
 }  // namespace game_model
