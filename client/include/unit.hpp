@@ -29,8 +29,7 @@ public:
     void set_selection();
     void disable_selection();
     void update_unit(
-        const int row,
-        const int column,
+        namespace_proto::Cell cell,
         const namespace_proto::Unit &unit,
         sf::Vector2f new_position,
         sf::Vector2f size

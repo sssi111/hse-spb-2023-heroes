@@ -70,14 +70,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
                 request->start().row() * 10 + request->start().column()
             )
             ->set_is_unit(false);
-        //        namespace_proto::GameState copy;
-        //        copy.set_first_user(game_state_ref->first_user());
-        //        copy.set_second_user(game_state_ref->second_user());
-        //        copy.set_game_id(game_state_ref->game_id());
-        //        for (int i = 0; i < 100; i++){
-        //            namespace_proto::Cell* new_cell = copy.add_game_cells();
-        //            *new_cell = game_state_ref->game_cells(i);
-        //        }
         if (request->user().user_id() !=
             game_session_ref->get_first_player().get_id()) {
             (*(game_session_ref->get_response_queues())

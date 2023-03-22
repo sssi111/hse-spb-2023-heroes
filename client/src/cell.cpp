@@ -97,4 +97,9 @@ void Cell::draw(sf::RenderWindow *window) {
     window->draw(m_cell);
     window->draw(m_label);
 }
+
+namespace_proto::Cell reverse_cell(namespace_proto::Cell cell) {
+    cell.set_column(9 - cell.column());
+    return cell;
+}
 }  // namespace game_view

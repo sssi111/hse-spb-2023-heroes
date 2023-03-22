@@ -71,19 +71,20 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
     bool is_second =
         (game_state.second_user() == get_client_state()->m_user.user_id());
     for (int cell_index = 0; cell_index < 100; cell_index++) {
-        const namespace_proto::Cell &server_cell =
+        namespace_proto::Cell server_cell =
             game_state.game_cells(cell_index);
         int row = server_cell.row();
         int column = server_cell.column();
         if (is_second) {
             column = 9 - column;
+            server_cell = reverse_cell(server_cell);
         }
         m_board[row][column].update_cell(server_cell);
         if (server_cell.is_unit()) {
             int unit_id = server_cell.unit().id_unit();
             auto server_unit = game_state.game_cells(cell_index).unit();
             m_units[unit_id].update_unit(
-                row, column, server_unit,
+                server_cell, server_unit,
                 get_cell_position({row, column}),
                 static_cast<sf::Vector2f>(m_cell_size)
             );
@@ -98,12 +99,22 @@ void Board::add_available_for_moving_cells(
     remove_available_for_moving_cells();
     m_available_for_moving_cells = selected_cells;
     for (auto [row, column] : m_available_for_moving_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user_id());
+        if (is_second){
+            column = 9 - column;
+        }
         m_board[row][column].add_selection();
     }
 }
 
 void Board::remove_available_for_moving_cells() {
     for (auto [row, column] : m_available_for_moving_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user_id());
+        if (is_second){
+            column = 9 - column;
+        }
         m_board[row][column].remove_selection();
     }
     m_available_for_moving_cells.clear();
