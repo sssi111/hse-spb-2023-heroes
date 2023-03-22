@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "../network/include/server.hpp"
 
 ServerState *get_server_state() {
     static ServerState server_state;

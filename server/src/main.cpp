@@ -1,5 +1,5 @@
 #include <thread>
-#include "server.hpp"
+#include "../network/include/server.hpp"
 
 int main(int argc, char *argv[]) {
     ServerServices service;

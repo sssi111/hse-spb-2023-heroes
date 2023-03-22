@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "../network/include/server.hpp"
 
 void start_game_session(int game_id) {
     GameSession *game_session = &(get_server_state()->game_sessions[game_id]);

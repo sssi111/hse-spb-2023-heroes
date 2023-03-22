@@ -18,7 +18,8 @@ add_executable(server ${SOURCES})
 target_include_directories(server PRIVATE
         "${PROJECT_BINARY_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/model/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/interactors/include")
+        "${CMAKE_CURRENT_SOURCE_DIR}/interactors/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/network/include")
 
 set_target_properties(server
         PROPERTIES
