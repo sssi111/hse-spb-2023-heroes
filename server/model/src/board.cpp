@@ -28,9 +28,7 @@ std::vector<std::reference_wrapper<cell>> board::get_reachable_cells(
     bfs_state bfs(cell_coordinates, m_size, max_distance);
     while (!bfs.is_end()) {
         coordinates current_cell_coordinates = bfs.get_next_cell();
-        int cell_player_id =
-            get_cell(current_cell_coordinates).get_player_index();
-        if (cell_player_id == -1 || cell_player_id == current_player_id)
+        if (is_cell_empty(current_cell_coordinates, cell_coordinates))
             bfs.check_cells_neighbours(current_cell_coordinates);
     }
     return coordinates_to_cells(bfs.get_reachable_coordinates());
@@ -42,5 +40,14 @@ const coordinates &board::get_size() const {
 
 void board::set_cell_coordinates(int row, int column) {
     m_cells_matrix[row][column].set_coordinates(coordinates{row, column});
+}
+
+bool board::is_cell_empty(
+    coordinates current_cell_coordinates,
+    coordinates start_cell_coordinates
+) {
+    int cell_player_id = get_cell(current_cell_coordinates).get_player_index();
+    return cell_player_id == -1 ||
+           current_cell_coordinates == start_cell_coordinates;
 }
 }  // namespace game_model

@@ -17,6 +17,10 @@ private:
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     coordinates_to_cells(const std::vector<coordinates> &coordinates_array);
     void set_cell_coordinates(int row, int column);
+    bool is_cell_empty(
+        coordinates current_cell_coordinates,
+        coordinates start_cell_coordinates
+    );
 
 public:
     board() {

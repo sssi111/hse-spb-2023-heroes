@@ -20,6 +20,7 @@ public:
     [[nodiscard]] int get_row() const;
     [[nodiscard]] int get_column() const;
     coordinates operator+(const coordinates &delta) const;
+    bool operator==(const coordinates &other_coordinates) const;
 };
 }  // namespace game_model
 

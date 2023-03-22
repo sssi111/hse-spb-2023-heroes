@@ -14,4 +14,9 @@ coordinates coordinates::operator+(const coordinates &delta) const {
     int column_new = m_column + delta.get_column();
     return {row_new, column_new};
 }
+
+bool coordinates::operator==(const coordinates &other_coordinates) const {
+    return m_row == other_coordinates.get_row() &&
+           m_column == other_coordinates.get_column();
+}
 }  // namespace game_model
