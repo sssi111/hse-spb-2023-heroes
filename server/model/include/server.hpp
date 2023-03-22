@@ -38,6 +38,10 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         const ::namespace_proto::MoveFromTo *request,
         ::namespace_proto::GameState *response
     ) override {
+        std::cout << request->start().row() << ' ' << request->start().column()
+                  << '\n';
+        std::cout << request->finish().row() << ' '
+                  << request->finish().column() << '\n';
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->user().game_id()]);
         namespace_proto::GameState *game_state_ref =
@@ -59,16 +63,21 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         game_state_ref
             ->mutable_game_cells(
                 request->finish().row() * 10 + request->finish().column()
-            )->set_is_unit(true);
+            )
+            ->set_is_unit(true);
         game_state_ref
             ->mutable_game_cells(
                 request->start().row() * 10 + request->start().column()
             )
-            ->set_allocated_unit(nullptr);
-        game_state_ref
-            ->mutable_game_cells(
-                request->start().row() * 10 + request->start().column()
-            )->set_is_unit(false);
+            ->set_is_unit(false);
+        //        namespace_proto::GameState copy;
+        //        copy.set_first_user(game_state_ref->first_user());
+        //        copy.set_second_user(game_state_ref->second_user());
+        //        copy.set_game_id(game_state_ref->game_id());
+        //        for (int i = 0; i < 100; i++){
+        //            namespace_proto::Cell* new_cell = copy.add_game_cells();
+        //            *new_cell = game_state_ref->game_cells(i);
+        //        }
         if (request->user().user_id() !=
             game_session_ref->get_first_player().get_id()) {
             (*(game_session_ref->get_response_queues())
