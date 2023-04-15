@@ -33,6 +33,19 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         return ::grpc::Status::OK;
     }
 
+    void swapUnits(namespace_proto::Cell *cell1, namespace_proto::Cell *cell2) {
+        cell1->Swap(cell2);
+        int temp_row = cell1->row();
+        int temp_column = cell1->column();
+        int temp_strength = cell1->strength();
+        cell1->set_strength(cell2->strength());
+        cell2->set_strength(temp_strength);
+        cell1->set_row(cell2->row());
+        cell1->set_column(cell2->column());
+        cell2->set_row(temp_row);
+        cell2->set_column(temp_column);
+    }
+
     ::grpc::Status MoveUnit(
         ::grpc::ServerContext *context,
         const ::namespace_proto::MoveFromTo *request,
@@ -49,27 +62,14 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         game_model::coordinates from(request->start());
         game_model::coordinates to(request->finish());
         (*game_session_ref->get_mover())(from, to);
-        namespace_proto::Unit *unit =
-            game_state_ref
-                ->mutable_game_cells(
-                    request->start().row() * 10 + request->start().column()
-                )
-                ->mutable_unit();
-        game_state_ref
-            ->mutable_game_cells(
-                request->finish().row() * 10 + request->finish().column()
-            )
-            ->set_allocated_unit(unit);
-        game_state_ref
-            ->mutable_game_cells(
-                request->finish().row() * 10 + request->finish().column()
-            )
-            ->set_is_unit(true);
-        game_state_ref
-            ->mutable_game_cells(
+        swapUnits(
+            game_state_ref->mutable_game_cells(
                 request->start().row() * 10 + request->start().column()
+            ),
+            game_state_ref->mutable_game_cells(
+                request->finish().row() * 10 + request->finish().column()
             )
-            ->set_is_unit(false);
+        );
         if (request->user().user_id() !=
             game_session_ref->get_first_player().get_id()) {
             (*(game_session_ref->get_response_queues())

@@ -3,7 +3,7 @@
 #include "game.hpp"
 
 int main() {
-    const std::shared_ptr< ::grpc::ChannelInterface> &channel =
+    const std::shared_ptr<::grpc::ChannelInterface> &channel =
         grpc::CreateChannel(
             "localhost:50051", grpc::InsecureChannelCredentials()
         );
