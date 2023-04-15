@@ -54,6 +54,7 @@ void EventManager::update_cell(
             to = reverse_cell(to);
         }
         Client::move_unit(from, to);
+        board->remove_available_for_moving_cells();
         board->update_board(get_client_state()->m_game_state);
         (*selected_unit)->disable_selection();
         *selected_unit = nullptr;

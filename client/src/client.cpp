@@ -43,8 +43,7 @@ void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
     request.set_allocated_finish(request_to);
     request.set_allocated_user(request_user);
     namespace_proto::GameState response;
-    get_client_state()->m_stub->MoveUnit(
-        &context, request, &response);
+    get_client_state()->m_stub->MoveUnit(&context, request, &response);
     get_client_state()->m_game_state = response;
 }
 
