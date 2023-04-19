@@ -7,7 +7,7 @@ namespace game_model {
 
 class cell {
 private:
-    int m_health = 10;
+    int m_durability = 10;
     int m_player_index = -1;
     int m_unit_index = -1;
     coordinates m_coordinates{0, 0};
@@ -21,6 +21,9 @@ public:
     void set_player_index(int player_index);
     void set_unit_index(int unit_index);
     void set_coordinates(const coordinates &coordinates_new);
+    void decrease_cell_durability(int damage);
+    [[nodiscard]] bool is_unit_movable(int player_id) const;
+    [[nodiscard]] int get_durability() const;
 };
 
 }  // namespace game_model
