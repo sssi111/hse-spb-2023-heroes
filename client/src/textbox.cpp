@@ -5,7 +5,8 @@ TextBox::TextBox(
     sf::Vector2f position,
     sf::Vector2f size,
     game_view::Fonts font,
-    unsigned int character_size
+    unsigned int character_size,
+    bool is_active
 ) {
     m_rect.setSize(size);
     m_rect.setFillColor(sf::Color::White);
@@ -23,27 +24,44 @@ TextBox::TextBox(
         rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
     );
 
-    m_label.setPosition(position.x - size.x / 2 + character_size /2 , position.x - size.y / 2 + character_size / 2);
-    m_is_active = true;
+    m_label.setPosition(position.x - size.x / 2 + character_size / 2 , position.y - size.y / 2 + character_size / 2);
+    m_is_active = is_active;
 }
 
 
-game_view::ButtonType TextBox::update(sf::Event event, game_view::Window *window) {
+bool TextBox::update(sf::Event event, game_view::Window *window) {
+    bool result = false;
     if (m_button.event_processing(event, window->get_render_window())) {
         m_is_active = true;
-    } else if (event.type == sf::Event::TextEntered && event.text.unicode != 10) {
+        result = true;
+        std::cout << "Switch to " << m_is_active << "\n";
+    } else if (m_is_active && event.type == sf::Event::TextEntered && event.text.unicode != 10 &&  event.text.unicode != 8) {
         m_input += event.text.unicode;
+        std::cout << event.text.unicode << '\n';
         m_label.setString(m_input);
-    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+    } else if (m_is_active && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
         std::cout << "Got from you: " << m_input.toAnsiString() << "\n";
         m_input.clear();
         m_label.setString(m_input);
+    } else if (m_is_active && event.type == sf::Event::TextEntered && event.text.unicode == 8) {
+        if (!m_input.isEmpty()) {
+            m_input.erase(m_input.getSize() - 1, 1);
+            m_label.setString(m_input);
+        }
     }
-    return game_view::ButtonType::None;
+    return result;
 }
 
 void TextBox::draw(sf::RenderWindow *window) const {
     window->draw(m_rect);
     window->draw(m_label);
+}
+
+bool TextBox::is_active() const {
+    return m_is_active;
+}
+
+void TextBox::set_is_active() {
+    m_is_active = false;
 }
 }  // namespace game_view

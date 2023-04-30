@@ -13,7 +13,6 @@ Menu::Menu() : m_window(
     sf::Vector2u window_size = m_window.get_render_window()->getSize();
     sf::Vector2f button_size = sf::Vector2f(200.0f, 60.0f);
 
-
     // entry page
     m_captions[0] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 3 * button_size.y), button_size,
                             game_view::Fonts::Montserrat, 48, "Battle of Heroes and Villains", PageType::Entry);
@@ -37,13 +36,13 @@ Menu::Menu() : m_window(
 
     // login page
     m_buttons[4] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2), button_size, sf::Color(139, 69, 19),
+        sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
         game_view::Fonts::Montserrat, 24, "login", PageType::Login,
         PageType::GameChoose
     );
 
     m_buttons[5] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2), button_size, sf::Color(139, 69, 19),
+        sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
         game_view::Fonts::Montserrat, 24, "register", PageType::Registration,
         PageType::GameChoose
     );
@@ -71,7 +70,8 @@ Menu::Menu() : m_window(
         PageType::Hehe
     );
 
-
+    m_login = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 1.5 * button_size.y), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, true);
+    m_password = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, false);
 }
 
 void Menu::change_page(PageType next_page) {
@@ -93,6 +93,10 @@ void Menu::render() {
             m_captions[caption].draw(m_window.get_render_window());
         }
     }
+    if (m_current_page == PageType::Registration || m_current_page == PageType::Login) {
+        m_login.draw(m_window.get_render_window());
+        m_password.draw(m_window.get_render_window());
+    }
     m_window.end_draw();
 }
 
@@ -103,6 +107,15 @@ game_view::Window *Menu::get_window()  {
 void Menu::update() {
     sf::Event event{};
     while (m_window.get_render_window()->pollEvent(event)) {
+        bool flag1 = m_login.update(event, &m_window);
+        bool flag2 = m_password.update(event, &m_window);
+        if (m_login.is_active() && m_password.is_active()) {
+            if (flag2) {
+                m_login.set_is_active();
+            } else if (flag1) {
+                m_password.set_is_active();
+            }
+        }
         for (int button = 0; button < m_buttons.size(); button++) {
             if (m_current_page == m_buttons[button].m_current_page) {
                 if (m_buttons[button].update(event, this, &m_window)) {
