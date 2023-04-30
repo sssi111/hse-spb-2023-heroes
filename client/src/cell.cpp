@@ -36,10 +36,12 @@ void Cell::set_unit(Unit *unit) {
 
 void Cell::add_selection() {
     m_is_available_for_moving = true;
+    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Selected));
 }
 
 void Cell::remove_selection() {
     m_is_available_for_moving = false;
+    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Default));
 }
 
 void Cell::update_cell(const namespace_proto::Cell &cell) {
