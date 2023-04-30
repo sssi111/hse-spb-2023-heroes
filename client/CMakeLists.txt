@@ -17,7 +17,10 @@ set(SOURCES
         src/resource_manager.cpp
         src/menu_button.cpp
         src/button.cpp
-        src/coordinates.cpp)
+        src/coordinates.cpp
+        src/textbox.cpp
+        src/menu.cpp
+        )
 
 add_executable(client ${SOURCES})
 

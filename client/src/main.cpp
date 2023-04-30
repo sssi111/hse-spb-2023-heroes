@@ -1,8 +1,14 @@
 #include <future>
 #include "client.hpp"
 #include "game.hpp"
+#include "menu.hpp"
 
 int main() {
+    menu_view::Menu main_menu{};
+    while (!main_menu.get_window()->is_done()) {
+        main_menu.update();
+        main_menu.render();
+    }
     const std::shared_ptr<::grpc::ChannelInterface> &channel =
         grpc::CreateChannel(
             "localhost:50051", grpc::InsecureChannelCredentials()
