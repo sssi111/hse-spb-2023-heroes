@@ -1,7 +1,33 @@
 #include "unit.hpp"
+#include <algorithm>
 
 namespace game_model {
 int unit::get_movement_range() const {
     return m_movement_range;
+}
+
+void unit::decrease_number() {
+    if (m_number > 0)
+        --m_number;
+}
+
+void unit::decrease_health(int damage) {
+    m_health = std::max(0, m_health - damage);
+    if (m_health == 0) {
+        decrease_number();
+        m_health = m_max_health;
+    }
+}
+
+int unit::get_damage() const {
+    return m_damage * m_number;
+}
+
+bool unit::is_dead() const {
+    return m_number == 0;
+}
+
+int unit::get_attack_range() const {
+    return m_attack_range;
 }
 }  // namespace game_model
