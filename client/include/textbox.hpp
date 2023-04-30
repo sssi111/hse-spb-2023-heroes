@@ -29,6 +29,8 @@ public:
 
     void set_is_active();
 
+    void clear();
+
 private:
     sf::RectangleShape m_rect;
     sf::String m_input;

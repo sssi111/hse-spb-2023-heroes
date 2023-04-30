@@ -13,6 +13,9 @@ Menu::Menu() : m_window(
     sf::Vector2u window_size = m_window.get_render_window()->getSize();
     sf::Vector2f button_size = sf::Vector2f(200.0f, 60.0f);
 
+
+    m_error = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 3 * button_size.y), button_size,
+                            game_view::Fonts::Montserrat, 24, "", PageType::Entry);
     // entry page
     m_captions[0] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 3 * button_size.y), button_size,
                             game_view::Fonts::Montserrat, 48, "Battle of Heroes and Villains", PageType::Entry);
@@ -74,6 +77,8 @@ Menu::Menu() : m_window(
     m_password = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, false);
 }
 
+
+
 void Menu::change_page(PageType next_page) {
     m_current_page = next_page;
     if (m_current_page == PageType::Hehe) {
@@ -88,7 +93,8 @@ void Menu::render() {
             m_buttons[button].draw(m_window.get_render_window());
         }
     }
-    for (int caption = 0; caption < m_captions.size(); caption++) {
+    print_error();
+    for (int caption = 1; caption < m_captions.size(); caption++) {
         if (m_current_page == m_captions[caption].m_current_page) {
             m_captions[caption].draw(m_window.get_render_window());
         }
@@ -124,6 +130,10 @@ void Menu::update() {
             }
         }
     }
+}
+
+void Menu::print_error() {
+    m_error.draw(m_window.get_render_window());
 }
 
 MenuButton::MenuButton(
@@ -204,5 +214,9 @@ Caption::Caption(
 void Caption::draw(sf::RenderWindow *window) const {
     window->draw(m_rect);
     window->draw(m_label);
+}
+
+void Caption::set_text(std::string text) {
+    m_label.setString(text);
 }
 }// namespace menu_view

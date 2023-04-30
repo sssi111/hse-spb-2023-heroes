@@ -52,6 +52,10 @@ bool TextBox::update(sf::Event event, game_view::Window *window) {
     return result;
 }
 
+void TextBox::clear() {
+    m_label.setString("");
+}
+
 void TextBox::draw(sf::RenderWindow *window) const {
     window->draw(m_rect);
     window->draw(m_label);
