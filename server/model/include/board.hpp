@@ -21,6 +21,11 @@ private:
         coordinates current_cell_coordinates,
         coordinates start_cell_coordinates
     );
+    bool is_cell_attackable(
+        const coordinates &attacking,
+        const coordinates &attacked,
+        int attack_range
+    );
 
 public:
     board() {
@@ -41,11 +46,7 @@ public:
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     get_reachable_cells(coordinates cell_coordinates, int max_distance);
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
-    get_attackable_cells(
-        coordinates cell_coordinates,
-        int player_id,
-        int max_distance
-    );
+    get_attackable_cells(coordinates cell_coordinates, int max_distance);
 };
 
 }  // namespace game_model

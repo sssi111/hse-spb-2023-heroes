@@ -29,7 +29,7 @@ game::get_attackable_cells(const coordinates &cell_coordinates, int user_id) {
         m_players_list[player_id]
             ->get_unit(m_board.get_cell(cell_coordinates).get_unit_index())
             .get_attack_range();
-
+    return m_board.get_attackable_cells(cell_coordinates, max_distance);
 }
 
 void game::move(

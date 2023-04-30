@@ -31,18 +31,31 @@ board::get_reachable_cells(coordinates cell_coordinates, int max_distance) {
     return coordinates_to_cells(bfs.get_reachable_coordinates());
 }
 
-std::vector<std::reference_wrapper<cell>> board::get_attackable_cells(
-    coordinates cell_coordinates,
-    int player_id,
-    int max_distance
-) {
-    int row_amount = m_size.get_row();
-    int column_amount = m_size.get_column();
-    for (int row = 0; row < row_amount; ++row) {
-        for (int column = 0; column < column_amount; ++column) {
-            if ()
+std::vector<std::reference_wrapper<cell>>
+board::get_attackable_cells(coordinates cell_coordinates, int max_distance) {
+    std::vector<coordinates> attackable_coordinates;
+    for (int row = 0; row < m_size.get_row(); ++row)
+        for (int column = 0; column < m_size.get_column(); ++column) {
+            coordinates attacked_coordinates(row, column);
+            if (is_cell_attackable(
+                    cell_coordinates, attacked_coordinates, max_distance
+                ))
+                attackable_coordinates.emplace_back(attacked_coordinates);
         }
-    }
+    return coordinates_to_cells(attackable_coordinates);
+}
+
+bool board::is_cell_attackable(
+    const coordinates &attacking,
+    const coordinates &attacked,
+    int attack_range
+) {
+    const cell &attacking_cell = get_cell(attacking);
+    const cell &attacked_cell = get_cell(attacked);
+    return attacked_cell.get_player_index() != -1 &&
+           attacked_cell.get_player_index() !=
+               attacking_cell.get_player_index() &&
+           distance(attacking, attacked) <= attack_range;
 }
 
 const coordinates &board::get_size() const {
