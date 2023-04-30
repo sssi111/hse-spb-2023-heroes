@@ -27,7 +27,7 @@ void cell::set_coordinates(const coordinates &coordinates_new) {
 }
 
 void cell::decrease_cell_durability(int damage) {
-    m_durability = std::min(0, m_durability - damage);
+    m_durability = std::max(0, m_durability - damage);
 }
 
 bool cell::is_unit_movable(int player_id) const {
