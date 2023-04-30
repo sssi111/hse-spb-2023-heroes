@@ -73,7 +73,7 @@ void Cell::event_processing(
 ) {
     if (m_button.event_processing(event, window)) {
         if (is_have_unit() &&
-            m_unit->get_hero_id() == get_client_state()->m_user.user_id()) {
+            m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
             if (*selected_unit != m_unit) {
                 EventManager::update_cell(
                     CellEventType::FirstPress, selected_unit, &m_unit, m_coords,
