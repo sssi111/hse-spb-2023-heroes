@@ -1,32 +1,70 @@
-#include <all_protos/demo.grpc.pb.h>
-#include <all_protos/demo_client.pb.h>
-#include <grpcpp/client_context.h>
-#include <grpcpp/create_channel.h>
-#include <iostream>
+#include <future>
+#include "client.hpp"
 #include "game.hpp"
+#include "menu.hpp"
 
-int main(int argc, char *argv[]) {
-    auto local_channel = grpc::CreateChannel(
-        "localhost:50051", grpc::InsecureChannelCredentials()
-    );
-
-    Game game;
-    while (!game.get_window()->is_done()) {
-        game.update();
-        game.render();
+int main() {
+    menu_view::Menu main_menu{};
+    while (!main_menu.get_window()->is_done()) {
+        main_menu.update();
+        main_menu.render();
     }
-
-    ::demo_name::GetOk request;
-    ::demo_name::Ok response;
-
-    response.set_ok(false);
-
-    std::unique_ptr<demo_name::ClientToServer::Stub> stub =
-        demo_name::ClientToServer::NewStub(local_channel);
-    grpc::ClientContext context;
-    grpc::Status status = stub->SendOk(&context, request, &response);
-
-    std::cout << "server response " << response.ok() << std::endl;
-
+    const std::shared_ptr<::grpc::ChannelInterface> &channel =
+        grpc::CreateChannel(
+            "localhost:50051", grpc::InsecureChannelCredentials()
+        );
+    get_client_state()->m_stub =
+        std::make_unique<namespace_proto::Server::Stub>(channel);
+    namespace_proto::UserState user;
+    user.mutable_user()->set_id(-1);
+    //    get_client_state()->m_user = user;
+    int type;
+    std::cout << "select type 0 - for login / 1 - for sign up .....  ";
+    std::cin >> type;
+    if (type == 0){
+        std::cout << "LogIn: enter your name and password:\n";
+        std::string name, password;
+        while (user.user().id() == -1) {
+            std::cin >> name >> password;
+            namespace_proto::LogInData request;
+            request.set_name(name);
+            request.set_password(password);
+            grpc::ClientContext context{};
+            get_client_state()->m_stub->LogIn(
+                &context, request, user.mutable_user()
+            );
+            if (user.user().id() == -1){
+                std::cout << "try again\n";
+            }
+        }
+    }
+    else{
+        std::cout << "SignUp: enter your name and password:\n";
+        std::string name, password;
+        while (user.user().id() == -1) {
+            std::cin >> name >> password;
+            namespace_proto::LogInData request;
+            request.set_name(name);
+            request.set_password(password);
+            grpc::ClientContext context{};
+            get_client_state()->m_stub->SignUp(
+                &context, request, user.mutable_user()
+            );
+            if (user.user().id() == -1){
+                std::cout << "try again\n";
+            }
+        }
+    }
+    std::cout << user.user().id() << '\n';
+    get_client_state()->m_user = user;
+    std::thread receiver(&Client::run_receiver);
+    while (!game_view::get_game_state()->get_window()->is_done()) {
+        {
+            std::unique_lock lock{get_client_state()->m_mutex};
+            game_view::get_game_state()->update();
+        }
+        game_view::get_game_state()->render();
+    }
+    receiver.join();
     return 0;
 }

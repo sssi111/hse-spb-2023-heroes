@@ -1,13 +1,78 @@
- syntax = "proto3";
+syntax = "proto3";
 
- package demo_name;
+import "google/protobuf/empty.proto";
+package namespace_proto;
 
- import "all_protos/demo_client.proto";
+message LogInData{
+  string name = 1;
+  string password = 2;
+}
 
- message GetOk {
-    bool ok = 1;
- }
+message User{
+  int32 id = 1;
+  int32 rate = 2;
+  string name = 3;
+}
 
- service ClientToServer {
-     rpc SendOk(GetOk) returns (Ok) {}
- }
+message Unit{
+  int32 type_unit = 1;
+  int32 id_unit = 2;
+  int32 amount_unit = 3;
+  int32 sum_of_health = 4;
+  int32 id_hero = 5;
+  int32 is_selected = 6;
+}
+
+message Cell{
+  int32 row = 1;
+  int32 column = 2;
+  Unit unit = 3;
+  int32 strength = 4;
+  bool is_unit = 5;
+}
+
+message EnableCell{
+  repeated Cell cells = 1;
+}
+
+message UserState{
+  int32 game_id = 1;
+  User user = 2;
+}
+
+message GameIdAndHero{
+  int32 game_id = 1;
+  int32 position_in_call_queue = 2;
+}
+
+message MoveSelectUnit{
+  Cell unit = 1;
+  UserState user = 2;
+}
+
+message MoveFromTo{
+  Cell start = 1;
+  Cell finish = 2;
+  UserState user = 3;
+}
+
+message GameState{
+  int32 game_id = 1;
+  int32 first_user = 2;
+  int32 second_user = 3;
+  repeated Cell game_cells = 4;
+}
+
+message EnableCells{
+  repeated Cell enable_cells = 1;
+}
+
+service Server {
+  rpc SignUp(LogInData) returns(User) {}
+  rpc LogIn(LogInData) returns(User) {}
+
+  rpc CallServer(UserState) returns(stream GameState) {}
+  rpc AddToLobby(User) returns(GameIdAndHero) {}
+  rpc MoveUnit(MoveFromTo) returns(GameState) {}
+  rpc SelectUnit(MoveSelectUnit) returns(EnableCell) {}
+}

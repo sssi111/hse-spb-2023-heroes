@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(SFML 2.5 COMPONENTS system window graphics network audio REQUIRED)
 
 set(SOURCES
+        src/client.cpp
         src/main.cpp
         src/cell.cpp
         src/board.cpp
@@ -16,9 +17,13 @@ set(SOURCES
         src/resource_manager.cpp
         src/menu_button.cpp
         src/button.cpp
+        src/coordinates.cpp
+        src/textbox.cpp
+        src/menu.cpp
         )
 
 add_executable(client ${SOURCES})
+
 
 target_include_directories(client PRIVATE
         "${PROJECT_BINARY_DIR}"

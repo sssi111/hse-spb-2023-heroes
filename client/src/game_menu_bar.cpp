@@ -2,6 +2,7 @@
 #include <iostream>
 #include "resource_manager.hpp"
 
+namespace game_view {
 GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
     sf::Vector2f button_size(100.0f, 62.0f);
     sf::Vector2f button_pos(button_size.x, wind_size.y - menu_height / 2);
@@ -45,3 +46,4 @@ void GameMenuBar::render(sf::RenderWindow *window) {
         m_buttons[i].draw(window);
     }
 }
+}  // namespace game_view

@@ -1,26 +1,56 @@
 #include "cell.hpp"
 #include <string>
+#include "client.hpp"
 #include "event_manager.hpp"
 
+namespace game_view {
 Cell::Cell(
     Coords coords,
     CellType type,
     sf::Vector2f position,
-    sf::Vector2f size
+    sf::Vector2f size,
+    int strength,
+    Unit *unit
 ) {
     m_coords = coords;
-    m_type = type;
-    m_cell.setTexture(resource_manager()->load_cell_texture(m_type));
-    m_cell.setTextureRect(sf::IntRect(0, 0, size.x, size.y));
+    m_cell_type = type;
+    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
+    m_cell.setTextureRect(
+        sf::IntRect(0, 0, static_cast<int>(size.x), static_cast<int>(size.y))
+    );
     m_cell.setPosition(position);
     m_cell.setOrigin(size.x / 2, size.y / 2);
 
     m_button = Button(position, size);
+    m_strength = strength;
+    m_unit = unit;
+}
 
-    m_cell_strength = 10;
+bool Cell::is_have_unit() const {
+    return m_unit != nullptr;
+}
+
+void Cell::set_unit(Unit *unit) {
+    m_unit = unit;
+}
+
+void Cell::add_selection() {
+    m_is_available_for_moving = true;
+    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Selected));
+}
+
+void Cell::remove_selection() {
+    m_is_available_for_moving = false;
+    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Default));
+}
+
+void Cell::update_cell(const namespace_proto::Cell &cell) {
+    m_strength = cell.strength();
+
+    m_unit = nullptr;
 
     m_label.setFont(resource_manager()->load_font(Fonts::Montserrat));
-    m_label.setString(std::to_string(m_cell_strength));
+    m_label.setString(std::to_string(m_strength));
     m_label.setCharacterSize(24);
 
     sf::FloatRect label_bounds = m_label.getLocalBounds();
@@ -35,33 +65,43 @@ Cell::Cell(
     );
 }
 
-bool Cell::get_is_have_unit() const {
-    return m_is_have_unit;
-}
-
-void Cell::set_unit(
-    UnitType unit_type,
-    sf::Vector2f position,
-    sf::Vector2f size
+void Cell::event_processing(
+    Unit **selected_unit,
+    Board *board,
+    sf::Event event,
+    sf::Window *window
 ) {
-    m_is_have_unit = true;
-    m_is_unit_active = false;
-    m_unit = Unit(unit_type, position, size);
+    if (m_button.event_processing(event, window)) {
+        if (is_have_unit() &&
+            m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
+            if (*selected_unit != m_unit) {
+                EventManager::update_cell(
+                    CellEventType::FirstPress, selected_unit, &m_unit, m_coords,
+                    board
+                );
+            } else {
+                EventManager::update_cell(
+                    CellEventType::SecondPress, selected_unit, &m_unit,
+                    m_coords, board
+                );
+            }
+        } else if (!is_have_unit()) {
+            if (*selected_unit && m_is_available_for_moving) {
+                EventManager::update_cell(
+                    CellEventType::Move, selected_unit, &m_unit, m_coords, board
+                );
+            }
+        }
+    }
 }
 
 void Cell::draw(sf::RenderWindow *window) {
     window->draw(m_cell);
-    if (m_is_have_unit) {
-        m_unit.draw(window);
-    }
     window->draw(m_label);
 }
 
-void Cell::update(sf::Event event, sf::Window *window) {
-    if (m_button.update(event, window)) {
-        EventManager::update_cell(
-            (m_is_have_unit ? CellEventType::Move : CellEventType::Press),
-            m_coords
-        );
-    }
+namespace_proto::Cell reverse_cell(namespace_proto::Cell cell) {
+    cell.set_column(9 - cell.column());
+    return cell;
 }
+}  // namespace game_view

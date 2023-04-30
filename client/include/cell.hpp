@@ -6,15 +6,8 @@
 #include "enum_classes_fwd.hpp"
 #include "unit.hpp"
 
-class Coords {
-public:
-    Coords() : m_row(0), m_column(0){};
-    Coords(int row, int column) : m_row(row), m_column(column){};
-
-private:
-    int m_row;
-    int m_column;
-};
+namespace game_view {
+class Board;
 
 class Cell {
 public:
@@ -23,28 +16,42 @@ public:
         Coords coords,
         CellType type,
         sf::Vector2f position,
-        sf::Vector2f size
+        sf::Vector2f size,
+        int strength = 0,
+        Unit *unit = nullptr
     );
 
-    bool get_is_have_unit() const;
+    bool is_have_unit() const;
 
-    void set_unit(UnitType unit_type, sf::Vector2f position, sf::Vector2f size);
+    void set_unit(Unit *unit);
+    void add_selection();
+    void remove_selection();
 
-    void update(sf::Event event, sf::Window *window);
+    void event_processing(
+        Unit **selected_unit,
+        Board *board,
+        sf::Event event,
+        sf::Window *window
+    );
+
+    void update_cell(const namespace_proto::Cell &cell);
+
     void draw(sf::RenderWindow *window);
 
 private:
     sf::Sprite m_cell;
     Coords m_coords;
-    CellType m_type{CellType::Default};
-    int m_cell_strength{};
+    CellType m_cell_type{CellType::Default};
+    int m_strength{};
+    bool m_is_available_for_moving{};
 
-    Unit m_unit;
-    bool m_is_have_unit{};
-    bool m_is_unit_active{};
+    Unit *m_unit{};
 
     Button m_button;
     sf::Text m_label;
 };
+
+namespace_proto::Cell reverse_cell(namespace_proto::Cell cell);
+}  // namespace game_view
 
 #endif  // BATTLE_OF_HEROES_CELL_HPP

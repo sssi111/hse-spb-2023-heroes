@@ -1,6 +1,7 @@
 #include "window.hpp"
 #include <utility>
 
+namespace game_view {
 Window::Window(std::string title, const sf::Vector2u &size) {
     setup(std::move(title), size);
 }
@@ -37,7 +38,7 @@ void Window::update(sf::Event event) {
     }
 }
 
-sf::RenderWindow *Window::get_render_window() {
+[[nodiscard]] sf::RenderWindow *Window::get_render_window() {
     return &m_window;
 }
 
@@ -59,14 +60,15 @@ void Window::toggle_fullscreen() {
     create();
 }
 
-bool Window::is_done() const {
+[[nodiscard]] bool Window::is_done() const {
     return m_is_done;
 }
 
-bool Window::is_fullscreen() const {
+[[nodiscard]] bool Window::is_fullscreen() const {
     return m_is_fullscreen;
 }
 
 void Window::set_is_done() {
     m_is_done = true;
 }
+}  // namespace game_view
