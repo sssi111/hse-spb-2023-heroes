@@ -5,6 +5,11 @@ ServerState *get_server_state() {
     return &server_state;
 }
 
+int get_db_size() {
+    std::unique_lock lock{get_server_state()->server_mutex};
+    return get_server_state()->data_base.size();
+}
+
 void RunServer(const std::string &address, ServerServices *service) {
     grpc::ServerBuilder builder;
     builder.AddListeningPort(address, grpc::InsecureServerCredentials());

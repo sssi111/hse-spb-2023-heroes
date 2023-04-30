@@ -17,7 +17,7 @@ void EventManager::update_cell(
         selected_cell.set_column(clicked_position.get_column());
         bool is_second =
             (get_client_state()->m_game_state.second_user() ==
-             get_client_state()->m_user.user_id());
+             get_client_state()->m_user.user().id());
         if (is_second) {
             selected_cell = reverse_cell(selected_cell);
         }
@@ -48,7 +48,7 @@ void EventManager::update_cell(
         from.set_column((*selected_unit)->get_coords().get_column());
         bool is_second =
             (get_client_state()->m_game_state.second_user() ==
-             get_client_state()->m_user.user_id());
+             get_client_state()->m_user.user().id());
         if (is_second) {
             from = reverse_cell(from);
             to = reverse_cell(to);

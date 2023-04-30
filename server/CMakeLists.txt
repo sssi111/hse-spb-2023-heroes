@@ -15,6 +15,8 @@ set(SOURCES
 
 add_executable(server ${SOURCES})
 
+find_package(SQLite3)
+
 target_include_directories(server PRIVATE
         "${PROJECT_BINARY_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/model/include"
@@ -29,6 +31,7 @@ set_target_properties(server
 
 target_link_libraries(server
         all_protos
+        sqlite3
         )
 
 install(TARGETS server DESTINATION bin)

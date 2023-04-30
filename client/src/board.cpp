@@ -69,7 +69,7 @@ void Board::render(sf::RenderWindow *window) {
 
 void Board::update_board(const namespace_proto::GameState &game_state) {
     bool is_second =
-        (game_state.second_user() == get_client_state()->m_user.user_id());
+        (game_state.second_user() == get_client_state()->m_user.user().id());
     for (int cell_index = 0; cell_index < 100; cell_index++) {
         namespace_proto::Cell server_cell =
             game_state.game_cells(cell_index);
@@ -100,7 +100,7 @@ void Board::add_available_for_moving_cells(
     m_available_for_moving_cells = selected_cells;
     for (auto [row, column] : m_available_for_moving_cells) {
         bool is_second =
-            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user_id());
+            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user().id());
         if (is_second){
             column = 9 - column;
         }
@@ -111,7 +111,7 @@ void Board::add_available_for_moving_cells(
 void Board::remove_available_for_moving_cells() {
     for (auto [row, column] : m_available_for_moving_cells) {
         bool is_second =
-            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user_id());
+            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user().id());
         if (is_second){
             column = 9 - column;
         }
