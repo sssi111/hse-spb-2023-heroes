@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <mutex>
+#include <random>
 #include <string>
 #include <thread>
 #include <utility>
@@ -29,7 +30,6 @@ ServerState *get_server_state();
 int get_db_size();
 
 class ServerServices final : public ::namespace_proto::Server::Service {
-
     ::grpc::Status SignUp(
         ::grpc::ServerContext *context,
         const namespace_proto::LogInData *request,
@@ -50,17 +50,14 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         const namespace_proto::LogInData *request,
         namespace_proto::User *response
     ) override {
-        int id = get_db_size();
+        int id = rand();
         std::unique_lock lock{get_server_state()->db_mutex};
-        get_server_state()->data_base.get_user(
-            request->name()
-        );
-        if (callback_data.password == request->password()){
+        get_server_state()->data_base.get_user(request->name());
+        if (callback_data.password == request->password()) {
             response->set_id(id);
             response->set_rate(callback_data.rating);
             response->set_name(request->name());
-        }
-        else{
+        } else {
             response->set_id(-1);
         }
         return grpc::Status::OK;
@@ -71,14 +68,15 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         const namespace_proto::UserState *request,
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
-        get_server_state()->wait_list.push(Player{request->user().id(), response}
-        );
+        get_server_state()->wait_list.push(Player{
+            request->user().id(), response});
         while (true) {
         }
         return ::grpc::Status::OK;
     }
 
-    static void swapUnits(namespace_proto::Cell *cell1, namespace_proto::Cell *cell2) {
+    static void
+    swapUnits(namespace_proto::Cell *cell1, namespace_proto::Cell *cell2) {
         cell1->Swap(cell2);
         int temp_row = cell1->row();
         int temp_column = cell1->column();
@@ -151,4 +149,4 @@ class ServerServices final : public ::namespace_proto::Server::Service {
 
 void RunServer(const std::string &address, ServerServices *services);
 
-#endif // SERVER_HPP_
+#endif  // SERVER_HPP_

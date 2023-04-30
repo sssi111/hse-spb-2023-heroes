@@ -8,17 +8,23 @@ Menu::Menu() : m_window(
     m_current_page = PageType::Entry;
 
     m_buttons.resize(10);
-    m_captions.resize(1);
+    m_captions.resize(3);
 
     sf::Vector2u window_size = m_window.get_render_window()->getSize();
     sf::Vector2f button_size = sf::Vector2f(200.0f, 60.0f);
 
 
-    m_error = Caption(sf::Vector2f(window_size.x / 2 - 90, window_size.y / 2 - 3 * button_size.y), button_size,
+    m_error = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 + button_size.y * 0.3), button_size,
                             game_view::Fonts::Montserrat, 24, "", PageType::Entry);
     // entry page
     m_captions[0] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 3 * button_size.y), button_size,
                             game_view::Fonts::Montserrat, 48, "Battle of Heroes and Villains", PageType::Entry);
+
+    m_captions[1] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 4 * button_size.y), button_size,
+                            game_view::Fonts::Montserrat, 48, "Login", PageType::Login);
+
+    m_captions[2] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 4 * button_size.y), button_size,
+                            game_view::Fonts::Montserrat, 48, "Register", PageType::Registration);
 
     m_buttons[0] = MenuButton(
         sf::Vector2f(window_size.x / 2, window_size.y / 2 - 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
@@ -40,13 +46,13 @@ Menu::Menu() : m_window(
     // login page
     m_buttons[4] = MenuButton(
         sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "login", PageType::Login,
+        game_view::Fonts::Montserrat, 24, "submit", PageType::Login,
         PageType::GameChoose
     );
 
     m_buttons[5] = MenuButton(
         sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "register", PageType::Registration,
+        game_view::Fonts::Montserrat, 24, "submit", PageType::Registration,
         PageType::GameChoose
     );
 
@@ -73,8 +79,8 @@ Menu::Menu() : m_window(
         PageType::Hehe
     );
 
-    m_login = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 1.5 * button_size.y), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, true);
-    m_password = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, false);
+    m_login = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 2.5 * button_size.y), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, true);
+    m_password = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2 - button_size.y), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, false);
 }
 
 
@@ -88,15 +94,15 @@ void Menu::change_page(PageType next_page) {
 
 void Menu::render() {
     m_window.begin_draw();
-    for (int button = 0; button < m_buttons.size(); button++) {
-        if (m_current_page == m_buttons[button].m_current_page) {
-            m_buttons[button].draw(m_window.get_render_window());
-        }
-    }
     print_error();
     for (int caption = 0; caption < m_captions.size(); caption++) {
         if (m_current_page == m_captions[caption].m_current_page) {
             m_captions[caption].draw(m_window.get_render_window());
+        }
+    }
+    for (int button = 0; button < m_buttons.size(); button++) {
+        if (m_current_page == m_buttons[button].m_current_page) {
+            m_buttons[button].draw(m_window.get_render_window());
         }
     }
     if (m_current_page == PageType::Registration || m_current_page == PageType::Login) {
@@ -139,7 +145,7 @@ void Menu::update() {
                         if (get_client_state()->m_user.user().id() == -1) {
                             m_login.clear();
                             m_password.clear();
-                            m_error.set_text("Wrong data");
+                            m_error.set_text("Wrong data from user");
                             break;
                         }
                     }
@@ -236,5 +242,10 @@ void Caption::draw(sf::RenderWindow *window) const {
 
 void Caption::set_text(std::string text) {
     m_label.setString(text);
+    sf::FloatRect rect = m_label.getLocalBounds();
+    m_label.setOrigin(
+        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
+    );
+    m_label.setPosition(m_rect.getPosition());
 }
 }// namespace menu_view
