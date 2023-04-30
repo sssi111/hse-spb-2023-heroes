@@ -15,7 +15,7 @@ cell &game::get_cell(const coordinates &cell_coordinates) {
 std::vector<std::reference_wrapper<cell>>
 game::get_reachable_cells(const coordinates &cell_coordinates, int user_id) {
     int player_id = (m_players_list[0]->get_id() == user_id ? 0 : 1);
-    if (get_cell(cell_coordinates).get_player_index() != player_id)
+    if (!get_cell(cell_coordinates).is_unit_movable(player_id))
         return {};
     int max_distance =
         m_players_list[player_id]
@@ -38,6 +38,7 @@ void game::move(
     current_cell.set_unit_index(-1);
     new_cell.set_player_index(player_index);
     new_cell.set_unit_index(unit_index);
+    new_cell.decrease_cell_durability(1);
 }
 
 }  // namespace game_model

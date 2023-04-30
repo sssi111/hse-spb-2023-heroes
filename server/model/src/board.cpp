@@ -47,7 +47,9 @@ bool board::is_cell_empty(
     coordinates start_cell_coordinates
 ) {
     int cell_player_id = get_cell(current_cell_coordinates).get_player_index();
-    return cell_player_id == -1 ||
-           current_cell_coordinates == start_cell_coordinates;
+    int cell_durability = get_cell(current_cell_coordinates).get_durability();
+    return (cell_player_id == -1 ||
+            current_cell_coordinates == start_cell_coordinates) &&
+           cell_durability > 0;
 }
 }  // namespace game_model

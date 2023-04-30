@@ -1,5 +1,5 @@
-#ifndef CHOOSE_INTERACTOR_HPP
-#define CHOOSE_INTERACTOR_HPP
+#ifndef SELECT_INTERACTOR_HPP
+#define SELECT_INTERACTOR_HPP
 
 #include <memory>
 #include "game.hpp"
@@ -21,4 +21,4 @@ public:
 };
 }  // namespace interactors
 
-#endif  // CHOOSE_INTERACTOR_HPP
+#endif  // SELECT_INTERACTOR_HPP

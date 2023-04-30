@@ -38,8 +38,11 @@ public:
 
     [[nodiscard]] const coordinates &get_size() const;
     [[nodiscard]] cell &get_cell(const coordinates &cell_coordinates);
-    [[nodiscard]] std::vector<std::reference_wrapper<cell>>
-    get_reachable_cells(coordinates cell_coordinates, int id, int max_distance);
+    [[nodiscard]] std::vector<std::reference_wrapper<cell>> get_reachable_cells(
+        coordinates cell_coordinates,
+        int current_player_id,
+        int max_distance
+    );
 };
 
 }  // namespace game_model
