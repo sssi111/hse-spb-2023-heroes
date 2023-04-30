@@ -16,7 +16,7 @@ TextBox::TextBox(
     m_button = game_view::Button(position, size);
 
     m_label.setFont(game_view::resource_manager()->load_font(font));
-    m_label.setFillColor(sf::Color::Red);
+    m_label.setFillColor(sf::Color::Black);
     m_label.setCharacterSize(character_size);
 
     sf::FloatRect rect = m_label.getLocalBounds();
@@ -24,10 +24,12 @@ TextBox::TextBox(
         rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
     );
 
-    m_label.setPosition(position.x - size.x / 2 + character_size / 2 , position.y - size.y / 2 + character_size / 2);
+    m_label.setPosition(
+        position.x - size.x / 2 + character_size / 2,
+        position.y - size.y / 2 + character_size / 2
+    );
     m_is_active = is_active;
 }
-
 
 bool TextBox::update(sf::Event event, game_view::Window *window) {
     bool result = false;
@@ -53,7 +55,8 @@ bool TextBox::update(sf::Event event, game_view::Window *window) {
 }
 
 void TextBox::clear() {
-    m_label.setString("");
+    m_input = "";
+    m_label.setString(m_input);
 }
 
 void TextBox::draw(sf::RenderWindow *window) const {
@@ -68,4 +71,8 @@ bool TextBox::is_active() const {
 void TextBox::set_is_active() {
     m_is_active = false;
 }
-}  // namespace game_view
+
+std::string TextBox::get_input() const {
+    return m_input;
+}
+}  // namespace menu_view

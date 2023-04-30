@@ -30,6 +30,8 @@ public:
     static std::vector<std::pair<int, int>> select_unit(
         namespace_proto::Cell selected
     );
+    static void log_in(std::string nickname, std::string password);
+    static void sign_up(std::string nickname, std::string password);
 };
 
 #endif  // CLIENT_HPP_

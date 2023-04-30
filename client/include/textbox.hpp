@@ -31,6 +31,8 @@ public:
 
     void clear();
 
+    std::string get_input() const;
+
 private:
     sf::RectangleShape m_rect;
     sf::String m_input;

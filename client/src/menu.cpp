@@ -14,7 +14,7 @@ Menu::Menu() : m_window(
     sf::Vector2f button_size = sf::Vector2f(200.0f, 60.0f);
 
 
-    m_error = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 3 * button_size.y), button_size,
+    m_error = Caption(sf::Vector2f(window_size.x / 2 - 90, window_size.y / 2 - 3 * button_size.y), button_size,
                             game_view::Fonts::Montserrat, 24, "", PageType::Entry);
     // entry page
     m_captions[0] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 3 * button_size.y), button_size,
@@ -94,7 +94,7 @@ void Menu::render() {
         }
     }
     print_error();
-    for (int caption = 1; caption < m_captions.size(); caption++) {
+    for (int caption = 0; caption < m_captions.size(); caption++) {
         if (m_current_page == m_captions[caption].m_current_page) {
             m_captions[caption].draw(m_window.get_render_window());
         }
@@ -125,6 +125,25 @@ void Menu::update() {
         for (int button = 0; button < m_buttons.size(); button++) {
             if (m_current_page == m_buttons[button].m_current_page) {
                 if (m_buttons[button].update(event, this, &m_window)) {
+                    if (m_current_page == PageType::Login || m_current_page == PageType::Registration) {
+                        if (m_current_page == PageType::Login) {
+                            Client::log_in(
+                                m_login.get_input(), m_password.get_input()
+                            );
+                        }
+                        else {
+                            Client::sign_up(
+                                m_login.get_input(), m_password.get_input()
+                            );
+                        }
+                        if (get_client_state()->m_user.user().id() == -1) {
+                            m_login.clear();
+                            m_password.clear();
+                            m_error.set_text("Wrong data");
+                            break;
+                        }
+                    }
+                    change_page(m_buttons[button].m_next_page);
                     break;
                 }
             }
@@ -172,7 +191,6 @@ bool MenuButton::update(sf::Event event, Menu *menu, game_view::Window *window) 
     if (m_button.event_processing(event, window->get_render_window())) {
         //EventManager::update_game_menu(m_button_location, window);
         std::cout << "Pressed\n";
-        menu->change_page(m_next_page);
         return true;
     }
     return false;

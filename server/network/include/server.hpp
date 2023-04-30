@@ -60,6 +60,9 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             response->set_rate(callback_data.rating);
             response->set_name(request->name());
         }
+        else{
+            response->set_id(-1);
+        }
         return grpc::Status::OK;
     }
 
