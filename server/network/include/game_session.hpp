@@ -2,6 +2,8 @@
 #define GAME_SESSION_HPP
 
 #include "TSqueue.hpp"
+#include "attack_interactor.hpp"
+#include "attack_select_interactor.hpp"
 #include "game.hpp"
 #include "move_interactor.hpp"
 #include "move_select_interactor.hpp"
@@ -33,16 +35,20 @@ class GameSession {
         response_queues;
     namespace_proto::GameState game_state;
     game_model::game model_game;
-    interactors::mover move_unit;
-    interactors::move_selecter choose_unit;
+    interactors::mover mover;
+    interactors::attacker attacker;
+    interactors::move_selecter move_selecter;
+    interactors::attack_selecter attack_selecter;
 
 public:
     GameSession(Player first_player_, Player second_player_)
         : first_player(first_player_),
           second_player(second_player_),
           model_game(first_player_.get_id(), second_player_.get_id()),
-          move_unit(model_game),
-          choose_unit(model_game) {
+          mover(model_game),
+          move_selecter(model_game),
+          attacker(model_game),
+          attack_selecter(model_game) {
     }
 
     Player get_first_player() const {
@@ -67,11 +73,19 @@ public:
     }
 
     interactors::mover *get_mover() {
-        return &move_unit;
+        return &mover;
     }
 
-    interactors::move_selecter *get_chooser() {
-        return &choose_unit;
+    interactors::move_selecter *get_move_selecter() {
+        return &move_selecter;
+    }
+
+    interactors::attacker *get_attacker() {
+        return &attacker;
+    }
+
+    interactors::attack_selecter *get_attack_selecter() {
+        return &attack_selecter;
     }
 };
 

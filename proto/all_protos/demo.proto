@@ -29,6 +29,7 @@ message Cell{
   Unit unit = 3;
   int32 durability = 4;
   bool is_unit = 5;
+  bool is_attack = 6;
 }
 
 message EnableCell{

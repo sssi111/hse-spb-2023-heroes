@@ -133,7 +133,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->user().game_id()]);
         game_model::coordinates selected(request->unit());
-        auto enable_cells = (*game_session_ref->get_chooser()
+        auto enable_cells = (*game_session_ref->get_move_selecter()
         )(selected, request->user().user().id());
         std::cout << enable_cells.size() << '\n';
         for (auto cell : enable_cells) {
@@ -141,6 +141,15 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             new_cell->set_row(cell.get().get_coordinates().get_row());
             new_cell->set_column(cell.get().get_coordinates().get_column());
         }
+        enable_cells = (*game_session_ref->get_attack_selecter()
+                        )(selected, request->user().user().id());
+        for (auto cell : enable_cells) {
+            namespace_proto::Cell *new_cell = response->add_cells();
+            new_cell->set_row(cell.get().get_coordinates().get_row());
+            new_cell->set_column(cell.get().get_coordinates().get_column());
+            new_cell->set_is_attack(true);
+        }
+        std::cout << enable_cells.size() << '\n';
         return ::grpc::Status::OK;
     }
 };
