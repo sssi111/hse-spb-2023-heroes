@@ -9,9 +9,10 @@ set(SOURCES
         model/src/player.cpp
         model/src/unit.cpp
         model/src/bfs_state.cpp
-        interactors/src/select_interactor.cpp
+        interactors/src/move_select_interactor.cpp
         interactors/src/move_interactor.cpp
-        )
+        interactors/src/attack_interactor.cpp
+        interactors/src/attack_select_interactor.cpp)
 
 add_executable(server ${SOURCES})
 

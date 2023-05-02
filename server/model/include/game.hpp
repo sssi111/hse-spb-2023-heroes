@@ -17,6 +17,9 @@ private:
     std::vector<std::unique_ptr<player>> m_players_list;
     board m_board{};
 
+    static void clear_cell(cell &current_cell);
+    void attack_cell(const cell &attacking, cell &attacked);
+
 public:
     explicit game(int account_id_first, int account_id_second) {
         m_players_list.emplace_back(std::make_unique<user>(account_id_first));
@@ -25,14 +28,16 @@ public:
         m_players_list[1]->set_start_units(1, m_board);
     }
 
-    [[nodiscard]] board &get_board();
     [[nodiscard]] cell &get_cell(const coordinates &cell_coordinates);
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     get_reachable_cells(const coordinates &cell_coordinates, int user_id);
+    [[nodiscard]] std::vector<std::reference_wrapper<cell>>
+    get_attackable_cells(const coordinates &cell_coordinates, int user_id);
     void move(
         const coordinates &current_cell_coordinates,
         const coordinates &new_cell_coordinates
     );
+    void attack(const coordinates &attacking, const coordinates &attacked);
 };
 
 }  // namespace game_model
