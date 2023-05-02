@@ -17,17 +17,26 @@ public:
         sf::Vector2f position,
         sf::Vector2f size,
         game_view::Fonts font,
-        unsigned character_size
+        unsigned character_size,
+        bool is_active
     );
 
-    game_view::ButtonType update(sf::Event event, game_view::Window *window);
+    bool update(sf::Event event, game_view::Window *window);
 
     void draw(sf::RenderWindow *window) const;
+
+    bool is_active() const;
+
+    void set_is_active();
+
+    void clear();
+
+    std::string get_input() const;
 
 private:
     sf::RectangleShape m_rect;
     sf::String m_input;
-    bool m_is_active{false};
+    bool m_is_active;
     sf::Text m_label;
     game_view::Button m_button;
 };

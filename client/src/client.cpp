@@ -7,6 +7,29 @@
     return &clientState;
 }
 
+void Client::log_in(std::string nickname, std::string password) {
+    namespace_proto::LogInData request;
+    request.set_name(nickname);
+    request.set_password(password);
+    grpc::ClientContext context{};
+    get_client_state()->m_stub->LogIn(
+        &context, request, get_client_state()->m_user.mutable_user()
+    );
+}
+
+void Client::sign_up(std::string nickname, std::string password) {
+    namespace_proto::LogInData request;
+    request.set_name(nickname);
+    request.set_password(password);
+    grpc::ClientContext context{};
+    get_client_state()->m_stub->SignUp(
+        &context, request, get_client_state()->m_user.mutable_user()
+    );
+    if (get_client_state()->m_user.user().id() == -1){
+        std::cout << "try again\n";
+    }
+}
+
 void Client::run_receiver() {
     namespace_proto::GameState response;
     grpc::ClientContext context{};

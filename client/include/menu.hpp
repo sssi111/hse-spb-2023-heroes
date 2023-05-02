@@ -55,6 +55,8 @@ public:
 
     void draw(sf::RenderWindow *window) const;
 
+    void set_text(std::string text);
+
     friend Menu;
 
 private:
@@ -75,12 +77,15 @@ public:
 
     void update();
 
+    void print_error();
+
 private:
     game_view::Window m_window;
     std::vector<MenuButton> m_buttons;
     std::vector<Caption> m_captions;
     PageType m_current_page;
     TextBox m_login, m_password;
+    Caption m_error;
 };
 }
 
