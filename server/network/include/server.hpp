@@ -27,15 +27,13 @@ public:
 
 ServerState *get_server_state();
 
-int get_db_size();
-
 class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status SignUp(
         ::grpc::ServerContext *context,
         const namespace_proto::LogInData *request,
         namespace_proto::User *response
     ) override {
-        int id = get_db_size();
+        int id = rand();
         get_server_state()->data_base.insert(
             request->name().c_str(), request->password().c_str(), 1000
         );
@@ -80,9 +78,9 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         cell1->Swap(cell2);
         int temp_row = cell1->row();
         int temp_column = cell1->column();
-        int temp_strength = cell1->strength();
-        cell1->set_strength(cell2->strength());
-        cell2->set_strength(temp_strength);
+        int temp_strength = cell1->durability();
+        cell1->set_durability(cell2->durability());
+        cell2->set_durability(temp_strength);
         cell1->set_row(cell2->row());
         cell1->set_column(cell2->column());
         cell2->set_row(temp_row);

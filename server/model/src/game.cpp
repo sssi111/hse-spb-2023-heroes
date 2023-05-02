@@ -32,6 +32,10 @@ game::get_attackable_cells(const coordinates &cell_coordinates, int user_id) {
     return m_board.get_attackable_cells(cell_coordinates, max_distance);
 }
 
+[[nodiscard]] player* game::get_player(int index){
+    return m_players_list[index].get();
+}
+
 void game::move(
     const coordinates &current_cell_coordinates,
     const coordinates &new_cell_coordinates

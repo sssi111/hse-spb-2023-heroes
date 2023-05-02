@@ -8,6 +8,7 @@ namespace game_model {
 
 class unit {
 private:
+    int m_type{1};
     int m_number{5};
     int m_health{10};
     const int m_max_health{10};
@@ -19,6 +20,10 @@ private:
 
 public:
     unit() = default;
+
+    [[nodiscard]] int get_type() const;
+    [[nodiscard]] int get_number() const;
+    [[nodiscard]] int get_health() const;
 
     [[nodiscard]] int get_attack_range() const;
     [[nodiscard]] int get_movement_range() const;

@@ -27,7 +27,7 @@ message Cell{
   int32 row = 1;
   int32 column = 2;
   Unit unit = 3;
-  int32 strength = 4;
+  int32 durability = 4;
   bool is_unit = 5;
 }
 

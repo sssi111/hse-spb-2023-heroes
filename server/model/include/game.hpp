@@ -33,6 +33,9 @@ public:
     get_reachable_cells(const coordinates &cell_coordinates, int user_id);
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     get_attackable_cells(const coordinates &cell_coordinates, int user_id);
+
+    [[nodiscard]] player* get_player(int index);
+
     void move(
         const coordinates &current_cell_coordinates,
         const coordinates &new_cell_coordinates

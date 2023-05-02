@@ -2,6 +2,18 @@
 #include <algorithm>
 
 namespace game_model {
+
+[[nodiscard]] int unit::get_type() const{
+    return m_type;
+}
+[[nodiscard]] int unit::get_number() const{
+    return m_number;
+}
+[[nodiscard]] int unit::get_health() const{
+    return m_health;
+}
+
+
 int unit::get_movement_range() const {
     return m_movement_range;
 }
