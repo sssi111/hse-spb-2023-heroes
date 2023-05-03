@@ -32,7 +32,7 @@ game::get_attackable_cells(const coordinates &cell_coordinates, int user_id) {
     return m_board.get_attackable_cells(cell_coordinates, max_distance);
 }
 
-[[nodiscard]] player* game::get_player(int index){
+[[nodiscard]] player *game::get_player(int index) {
     return m_players_list[index].get();
 }
 
@@ -47,7 +47,9 @@ void game::move(
     clear_cell(current_cell);
     new_cell.set_player_index(player_index);
     new_cell.set_unit_index(unit_index);
-    new_cell.decrease_cell_durability(1);
+    new_cell.decrease_cell_durability(
+        get_player(player_index)->get_unit(unit_index).get_weight()
+    );
 }
 
 void game::attack(const coordinates &attacking, const coordinates &attacked) {

@@ -15,8 +15,7 @@ private:
     int m_damage{1};
     int m_attack_range{1};
     int m_movement_range{2};
-
-    void decrease_number();
+    int m_weight{1};
 
 public:
     unit() = default;
@@ -28,6 +27,7 @@ public:
     [[nodiscard]] int get_attack_range() const;
     [[nodiscard]] int get_movement_range() const;
     [[nodiscard]] int get_damage() const;
+    [[nodiscard]] int get_weight() const;
     [[nodiscard]] bool is_dead() const;
     void decrease_health(int damage);
 };
