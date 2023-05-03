@@ -1,12 +1,14 @@
 #include "unit.hpp"
 #include <algorithm>
+#include <cassert>
 #include <fstream>
 
 namespace game_model {
 
 unit::unit(int type) : m_type(type) {
     std::string filename = "unit_type" + std::to_string(type) + ".txt";
-    std::ifstream unit_type_file("model/unit_types/" + filename);
+    std::ifstream unit_type_file("../../server/model/unit_types/" + filename);
+    assert(unit_type_file.is_open());
     unit_type_file >> m_number >> m_max_health >> m_damage >> m_attack_range >>
         m_movement_range >> m_weight;
     m_health = m_max_health;
