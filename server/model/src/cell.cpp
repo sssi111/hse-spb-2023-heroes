@@ -31,7 +31,7 @@ void cell::decrease_cell_durability(int damage) {
 }
 
 bool cell::is_unit_movable(int player_id) const {
-    return m_player_index == player_id && m_durability > 0;
+    return m_player_index == player_id;
 }
 
 [[nodiscard]] int cell::get_durability() const {
