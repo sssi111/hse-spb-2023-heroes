@@ -101,6 +101,16 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         unit->set_amount_unit(model_unit.get_number());
     }
 
+    static void update_cell(
+        namespace_proto::Cell *cell,
+        const game_model::coordinates &coordinates,
+        GameSession *game_session_res
+    ) {
+        game_model::game *model_game = game_session_res->get_model_game();
+        game_model::cell model_cell = model_game->get_cell(coordinates);
+        cell->set_durability(model_cell.get_durability());
+    }
+
     ::grpc::Status MoveUnit(
         ::grpc::ServerContext *context,
         const ::namespace_proto::MoveFromTo *request,
@@ -133,14 +143,14 @@ class ServerServices final : public ::namespace_proto::Server::Service {
                 ) == -1) {
                 // delete to;
                 std::cout << "delete to\n";
-                //cell_to->set_allocated_unit(nullptr);
+                cell_to->set_allocated_unit(nullptr);
                 cell_to->set_is_unit(false);
             } else {
                 update_unit(cell_to->mutable_unit(), to, game_session_ref);
             }
             if (game_session_ref->get_model_game()->get_cell(from).get_unit_index(
                 ) == -1) {
-                //cell_from->set_allocated_unit(nullptr);
+                cell_from->set_allocated_unit(nullptr);
                 cell_from->set_is_unit(false);
                 std::cout << "delete from\n";
                 // delete from;
@@ -148,6 +158,8 @@ class ServerServices final : public ::namespace_proto::Server::Service {
                 update_unit(cell_from->mutable_unit(), from, game_session_ref);
             }
         }
+        update_cell(cell_from, from, game_session_ref);
+        update_cell(cell_to, to, game_session_ref);
 
         if (request->user().user().id() !=
             game_session_ref->get_first_player().get_id()) {
