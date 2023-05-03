@@ -17,6 +17,7 @@ set(SOURCES
 add_executable(server ${SOURCES})
 
 find_package(SQLite3)
+find_package(Boost)
 
 target_include_directories(server PRIVATE
         "${PROJECT_BINARY_DIR}"

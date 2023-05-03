@@ -89,6 +89,9 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
             );
             m_board[row][column].set_unit(&m_units[unit_id]);
         }
+//        else{
+//            m_board[row][column].set_unit(nullptr);
+//        }
     }
 }
 
