@@ -141,8 +141,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             (*game_session_ref->get_attacker())(from, to);
             if (game_session_ref->get_model_game()->get_cell(to).get_unit_index(
                 ) == -1) {
-                // delete to;
-                std::cout << "delete to\n";
                 cell_to->set_allocated_unit(nullptr);
                 cell_to->set_is_unit(false);
             } else {
@@ -152,8 +150,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
                 ) == -1) {
                 cell_from->set_allocated_unit(nullptr);
                 cell_from->set_is_unit(false);
-                std::cout << "delete from\n";
-                // delete from;
             } else {
                 update_unit(cell_from->mutable_unit(), from, game_session_ref);
             }
