@@ -11,7 +11,7 @@ enum class CellType { Default, Broken, Selected };
 
 enum class Fonts { Montserrat };
 
-enum class CellEventType { FirstPress, SecondPress, Move };
+enum class CellEventType { FirstPress, SecondPress, Move, Targeting, Nothing };
 
 enum class ButtonType { None, Play, Pass, Menu, Exit };
 

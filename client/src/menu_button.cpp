@@ -32,7 +32,7 @@ MenuButton::MenuButton(
 }
 
 ButtonType MenuButton::update(sf::Event event, Window *window) {
-    if (m_button.event_processing(event, window->get_render_window())) {
+    if (m_button.event_processing(event, window->get_render_window()) == CellEventType::FirstPress) {
         EventManager::update_game_menu(m_button_type, window);
     }
     return ButtonType::None;

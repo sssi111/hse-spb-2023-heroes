@@ -194,7 +194,7 @@ MenuButton::MenuButton(
 }
 
 bool MenuButton::update(sf::Event event, Menu *menu, game_view::Window *window) {
-    if (m_button.event_processing(event, window->get_render_window())) {
+    if (m_button.event_processing(event, window->get_render_window()) == game_view::CellEventType::FirstPress) {
         //EventManager::update_game_menu(m_button_location, window);
         std::cout << "Pressed\n";
         return true;

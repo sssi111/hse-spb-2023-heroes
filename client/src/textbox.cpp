@@ -33,7 +33,7 @@ TextBox::TextBox(
 
 bool TextBox::update(sf::Event event, game_view::Window *window) {
     bool result = false;
-    if (m_button.event_processing(event, window->get_render_window())) {
+    if (m_button.event_processing(event, window->get_render_window()) == game_view::CellEventType::FirstPress) {
         m_is_active = true;
         result = true;
         std::cout << "Switch to " << m_is_active << "\n";

@@ -10,7 +10,7 @@ namespace game_view {
         Button() = default;
         Button(sf::Vector2f position, sf::Vector2f size);
 
-        bool event_processing(sf::Event event, const sf::Window *window);
+        CellEventType event_processing(sf::Event event, const sf::Window *window);
 
     private:
         sf::RectangleShape m_button;
