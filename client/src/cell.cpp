@@ -44,7 +44,7 @@ void Cell::remove_selection() {
 }
 
 void Cell::update_cell(const namespace_proto::Cell &cell) {
-    m_strength = cell.strength();
+    m_strength = cell.durability();
 
     m_unit = nullptr;
 

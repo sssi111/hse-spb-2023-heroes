@@ -21,6 +21,7 @@ public:
     [[nodiscard]] int get_column() const;
     coordinates operator+(const coordinates &delta) const;
     bool operator==(const coordinates &other_coordinates) const;
+    friend int distance(const coordinates &c1, const coordinates &c2);
 };
 }  // namespace game_model
 

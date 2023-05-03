@@ -19,4 +19,8 @@ bool coordinates::operator==(const coordinates &other_coordinates) const {
     return m_row == other_coordinates.get_row() &&
            m_column == other_coordinates.get_column();
 }
+
+int distance(const coordinates &c1, const coordinates &c2) {
+    return std::abs(c1.m_row - c2.m_row) + std::abs(c1.m_column - c2.m_column);
+}
 }  // namespace game_model
