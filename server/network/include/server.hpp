@@ -126,37 +126,41 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             -1) {
             (*game_session_ref->get_mover())(from, to);
             swapUnits(cell_from, cell_to);
-            if (request->user().user().id() !=
-                game_session_ref->get_first_player().get_id()) {
-                (*(game_session_ref->get_response_queues())
-                )[game_session_ref->get_first_player().get_id()]
-                    .push(*game_state_ref);
-            } else {
-                (*(game_session_ref->get_response_queues())
-                )[game_session_ref->get_second_player().get_id()]
-                    .push(*game_state_ref);
-            }
         } else {
             std::cout << "attack selected\n";
             (*game_session_ref->get_attacker())(from, to);
             if (game_session_ref->get_model_game()->get_cell(to).get_unit_index(
                 ) == -1) {
                 // delete to;
-                cell_to->set_allocated_unit(nullptr);
+                std::cout << "delete to\n";
+                //cell_to->set_allocated_unit(nullptr);
                 cell_to->set_is_unit(false);
             } else {
                 update_unit(cell_to->mutable_unit(), to, game_session_ref);
             }
             if (game_session_ref->get_model_game()->get_cell(from).get_unit_index(
                 ) == -1) {
-                cell_to->set_allocated_unit(nullptr);
+                //cell_from->set_allocated_unit(nullptr);
                 cell_from->set_is_unit(false);
+                std::cout << "delete from\n";
                 // delete from;
             } else {
                 update_unit(cell_from->mutable_unit(), from, game_session_ref);
             }
         }
+
+        if (request->user().user().id() !=
+            game_session_ref->get_first_player().get_id()) {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_first_player().get_id()]
+                .push(*game_state_ref);
+        } else {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_second_player().get_id()]
+                .push(*game_state_ref);
+        }
         *response = *game_state_ref;
+
         return ::grpc::Status::OK;
     }
 

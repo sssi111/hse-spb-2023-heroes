@@ -85,12 +85,10 @@ void Cell::event_processing(
                     m_coords, board
                 );
             }
-        } else if (!is_have_unit()) {
-            if (*selected_unit && m_is_available_for_moving) {
-                EventManager::update_cell(
-                    CellEventType::Move, selected_unit, &m_unit, m_coords, board
-                );
-            }
+        } else if (*selected_unit && m_is_available_for_moving) {
+            EventManager::update_cell(
+                CellEventType::Move, selected_unit, &m_unit, m_coords, board
+            );
         }
     }
 }
