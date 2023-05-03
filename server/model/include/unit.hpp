@@ -11,14 +11,14 @@ private:
     int m_type{1};
     int m_number{5};
     int m_health{10};
-    const int m_max_health{10};
+    int m_max_health{10};
     int m_damage{1};
     int m_attack_range{1};
     int m_movement_range{2};
     int m_weight{1};
 
 public:
-    unit() = default;
+    explicit unit(int type);
 
     [[nodiscard]] int get_type() const;
     [[nodiscard]] int get_number() const;

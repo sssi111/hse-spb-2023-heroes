@@ -1,7 +1,33 @@
 #include "unit.hpp"
 #include <algorithm>
+#include <cassert>
+#include <fstream>
+#include "boost/property_tree/json_parser.hpp"
+#include "boost/property_tree/ptree.hpp"
 
 namespace game_model {
+
+unit::unit(int type) : m_type(type) {
+    using namespace boost::property_tree;
+
+    ptree tree;
+
+    read_json("model/unit_types/units.json", tree);
+
+    ptree units = tree.get_child("units");
+    auto it = units.begin();
+    while (type-- > 1) {
+        it++;
+    }
+
+    m_number = it->second.get<int>("m_number");
+    m_max_health = it->second.get<int>("m_max_health");
+    m_damage = it->second.get<int>("m_damage");
+    m_attack_range = it->second.get<int>("m_attack_range");
+    m_movement_range = it->second.get<int>("m_movement_range");
+    m_weight = it->second.get<int>("m_weight");
+    m_health = m_max_health;
+}
 
 [[nodiscard]] int unit::get_type() const {
     return m_type;
