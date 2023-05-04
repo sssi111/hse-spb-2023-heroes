@@ -33,6 +33,12 @@ game::get_attackable_cells(const coordinates &cell_coordinates, int user_id) {
     return m_board.get_attackable_cells(cell_coordinates, max_distance);
 }
 
+std::vector<std::reference_wrapper<cell>>
+game::get_spellable_cells(const coordinates &cell_coordinates, int user_id) {
+    int player_id = (m_players_list[0]->get_id() == user_id ? 0 : 1);
+    if (get_player(player_id)->get_mana() >= )
+}
+
 [[nodiscard]] player *game::get_player(int index) {
     return m_players_list[index].get();
 }

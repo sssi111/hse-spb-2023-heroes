@@ -14,7 +14,8 @@ set(SOURCES
         interactors/src/move_select_interactor.cpp
         interactors/src/attack_interactor.cpp
         interactors/src/attack_select_interactor.cpp
-        interactors/src/spell_interactor.cpp)
+        interactors/src/spell_interactor.cpp
+        interactors/src/spell_select_interactor.cpp)
 
 add_executable(server ${SOURCES})
 

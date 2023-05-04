@@ -22,6 +22,7 @@ public:
     [[nodiscard]] int get_id() const;
     [[nodiscard]] unit &get_unit(int index);
     void decrease_mana(int cost);
+    [[nodiscard]] int get_mana() const;
 };
 
 }  // namespace game_model
