@@ -111,6 +111,14 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         cell->set_durability(model_cell.get_durability());
     }
 
+    static void switch_turn(namespace_proto::GameState *game) {
+        if (game->move_turn() == game->first_user()) {
+            game->set_move_turn(game->second_user());
+        } else {
+            game->set_move_turn(game->first_user());
+        }
+    }
+
     ::grpc::Status MoveUnit(
         ::grpc::ServerContext *context,
         const ::namespace_proto::MoveFromTo *request,
@@ -146,8 +154,9 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             } else {
                 update_unit(cell_to->mutable_unit(), to, game_session_ref);
             }
-            if (game_session_ref->get_model_game()->get_cell(from).get_unit_index(
-                ) == -1) {
+            if (game_session_ref->get_model_game()
+                    ->get_cell(from)
+                    .get_unit_index() == -1) {
                 cell_from->set_allocated_unit(nullptr);
                 cell_from->set_is_unit(false);
             } else {
@@ -156,6 +165,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         }
         update_cell(cell_from, from, game_session_ref);
         update_cell(cell_to, to, game_session_ref);
+        switch_turn(game_state_ref);
 
         if (request->user().user().id() !=
             game_session_ref->get_first_player().get_id()) {
