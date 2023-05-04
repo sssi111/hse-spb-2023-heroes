@@ -28,17 +28,18 @@ void Unit::draw(sf::RenderWindow *window) {
     window->draw(m_unit);
     window->draw(m_table);
     window->draw(m_label);
+    if (is_statistic_showed) {
+        window->draw(m_statistic_background);
+        window->draw(m_statistic_label);
+    }
 }
 
 void Unit::set_selection() {
-    m_unit.setTexture(
-        resource_manager()->load_unit_texture(UnitType::SelectedMushroom)
-    );
+    m_unit.setTexture(resource_manager()->load_selected_unit_texture(m_type));
 }
 
 void Unit::disable_selection() {
-    m_unit.setTexture(resource_manager()->load_unit_texture(UnitType::Mushroom)
-    );
+    m_unit.setTexture(resource_manager()->load_unit_texture(m_type));
 }
 
 void Unit::update_unit(
