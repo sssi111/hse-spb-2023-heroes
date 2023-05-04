@@ -28,6 +28,8 @@ public:
 private:
     std::vector<std::vector<Cell>> m_board;
     std::vector<Unit> m_units;
+    std::vector<bool> m_unit_is_updated;
+    std::vector<bool> m_unit_is_alive;
 
     Unit *selected_unit;
 
