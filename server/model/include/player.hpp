@@ -20,7 +20,7 @@ public:
     explicit player(int account_id) : m_id(account_id) {
     }
 
-    void set_start_units(int player_index, const board &game_board);
+    void set_start_units(int player_index, const board &game_board, const std::vector<int> &troop);
     [[nodiscard]] int get_id() const;
     [[nodiscard]] unit &get_unit(int index);
     virtual ~player() = default;

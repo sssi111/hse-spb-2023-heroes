@@ -10,11 +10,11 @@ unit &player::get_unit(int index) {
     return m_units_list[index];
 }
 
-void player::set_start_units(int player_index, const board &game_board) {
+void player::set_start_units(int player_index, const board &game_board, const std::vector<int> &troop) {
     coordinates board_size = game_board.get_size();
     int row_amount = board_size.get_row();
-    for (int row = 0; row < row_amount; ++row) {
-        m_units_list.emplace_back(1 + row % 2);
+    for (int unit : troop) {
+        m_units_list.emplace_back(unit);
     }
 }
 }  // namespace game_model
