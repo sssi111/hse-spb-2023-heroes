@@ -9,7 +9,9 @@ enum class UnitType { Empty, Mushroom, Mushroom1 };
 
 enum class CellType { Default, Broken, Selected };
 
-enum class Fonts { Montserrat };
+enum class TextureType { MenuBackground };
+
+enum class Fonts { TittleFont, Montserrat };
 
 enum class CellEventType { FirstPress, SecondPress, Move, Targeting, Nothing };
 
@@ -21,8 +23,6 @@ static std::string source_dir = RESOURCE_PATH;
 namespace menu_view {
 
 enum class PageType { Hehe, Exit, Entry, Login, Registration, GameChoose };
-
-
 
 }
 

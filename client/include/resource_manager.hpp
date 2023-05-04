@@ -17,12 +17,15 @@ namespace game_view {
 
         const sf::Texture &load_selected_unit_texture(UnitType texture);
 
+        const sf::Texture &load_texture(TextureType texture);
+
         const sf::Font &load_font(Fonts font);
 
     private:
         std::unordered_map<CellType, sf::Texture> m_cell_textures;
         std::unordered_map<UnitType, sf::Texture> m_unit_textures;
         std::unordered_map<UnitType, sf::Texture> m_selected_unit_textures;
+        std::unordered_map<TextureType, sf::Texture> m_textures;
         std::unordered_map<Fonts, sf::Font> m_fonts;
     };
 

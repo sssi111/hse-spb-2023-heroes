@@ -25,12 +25,17 @@ ResourceManager::ResourceManager() {
     m_selected_unit_textures[UnitType::Mushroom1].loadFromFile(
         source_dir + "selected_hero2.png"
     );
-//    m_unit_textures[UnitType::SelectedMushroom].loadFromFile(
-//        source_dir + "selected_hero.png"
-//    );
+
+    m_textures[TextureType::MenuBackground].loadFromFile(
+        source_dir + "menu_background.jpg"
+    );
 
     m_fonts[Fonts::Montserrat].loadFromFile(
         source_dir + "Montserrat-SemiBold.otf"
+    );
+
+    m_fonts[Fonts::TittleFont].loadFromFile(
+        source_dir + "tittle_font.otf"
     );
 }
 
@@ -54,5 +59,9 @@ ResourceManager::ResourceManager() {
 
 [[nodiscard]] const sf::Font &ResourceManager::load_font(Fonts font) {
     return m_fonts[font];
+}
+
+[[nodiscard]] const sf::Texture &ResourceManager::load_texture(TextureType texture) {
+    return m_textures[texture];
 }
 }  // namespace game_view

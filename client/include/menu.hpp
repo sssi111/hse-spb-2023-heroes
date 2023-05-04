@@ -83,6 +83,7 @@ private:
     game_view::Window m_window;
     std::vector<MenuButton> m_buttons;
     std::vector<Caption> m_captions;
+    sf::Sprite m_background;
     PageType m_current_page;
     TextBox m_login, m_password;
     Caption m_error;
