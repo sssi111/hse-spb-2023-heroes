@@ -85,8 +85,13 @@ private:
     std::vector<Caption> m_captions;
     sf::Sprite m_background;
     PageType m_current_page;
-    TextBox m_login, m_password;
-    Caption m_error;
+    TextBox m_signup_login;
+    TextBox m_signup_password;
+    TextBox m_registration_login;
+    TextBox m_registration_password;
+    TextBox m_registration_password_checker;
+    Caption m_signup_error;
+    Caption m_registration_error;
 };
 }
 

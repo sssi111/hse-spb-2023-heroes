@@ -31,11 +31,11 @@ public:
 
     void clear();
 
-    std::string get_input() const;
+    std::string get_data() const;
 
 private:
     sf::RectangleShape m_rect;
-    sf::String m_input;
+    sf::String m_data;
     bool m_is_active;
     sf::Text m_label;
     game_view::Button m_button;

@@ -22,7 +22,7 @@ static std::string source_dir = RESOURCE_PATH;
 
 namespace menu_view {
 
-enum class PageType { Hehe, Exit, Entry, Login, Registration, GameChoose };
+enum class PageType { Game, Exit, Entry, SignUp, Registration, GameChoose };
 
 }
 

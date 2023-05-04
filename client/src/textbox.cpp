@@ -38,25 +38,25 @@ bool TextBox::update(sf::Event event, game_view::Window *window) {
         result = true;
         std::cout << "Switch to " << m_is_active << "\n";
     } else if (m_is_active && event.type == sf::Event::TextEntered && event.text.unicode != 10 &&  event.text.unicode != 8) {
-        m_input += event.text.unicode;
+        m_data += event.text.unicode;
         std::cout << event.text.unicode << '\n';
-        m_label.setString(m_input);
+        m_label.setString(m_data);
     } else if (m_is_active && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
-        std::cout << "Got from you: " << m_input.toAnsiString() << "\n";
-        m_input.clear();
-        m_label.setString(m_input);
+        std::cout << "Got from you: " << m_data.toAnsiString() << "\n";
+        m_data.clear();
+        m_label.setString(m_data);
     } else if (m_is_active && event.type == sf::Event::TextEntered && event.text.unicode == 8) {
-        if (!m_input.isEmpty()) {
-            m_input.erase(m_input.getSize() - 1, 1);
-            m_label.setString(m_input);
+        if (!m_data.isEmpty()) {
+            m_data.erase(m_data.getSize() - 1, 1);
+            m_label.setString(m_data);
         }
     }
     return result;
 }
 
 void TextBox::clear() {
-    m_input = "";
-    m_label.setString(m_input);
+    m_data = "";
+    m_label.setString(m_data);
 }
 
 void TextBox::draw(sf::RenderWindow *window) const {
@@ -72,7 +72,7 @@ void TextBox::set_is_active() {
     m_is_active = false;
 }
 
-std::string TextBox::get_input() const {
-    return m_input;
+std::string TextBox::get_data() const {
+    return m_data;
 }
 }  // namespace menu_view
