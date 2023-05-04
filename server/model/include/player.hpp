@@ -13,6 +13,8 @@ private:
     std::vector<unit> m_units_list{};
     hero m_hero{};
     int m_id;
+    int m_mana{10};
+    int m_max_mana{10};
 
 public:
     explicit player(int account_id) : m_id(account_id) {
