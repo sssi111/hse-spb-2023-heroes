@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include <vector>
 #include "cell.hpp"
+#include "spell_list.hpp"
 
 namespace game_model {
 
@@ -74,5 +75,16 @@ void game::attack_cell(const cell &attacking, cell &attacked) {
 void game::clear_cell(cell &current_cell) {
     current_cell.set_player_index(-1);
     current_cell.set_unit_index(-1);
+}
+
+void game::spell(
+    const coordinates &cell_coordinates,
+    int player_id,
+    int spell_id
+) {
+    const_game_info::SPELL_LIST[spell_id](get_cell(cell_coordinates));
+    get_player(player_id)->decrease_mana(
+        const_game_info::SPELL_LIST[spell_id].get_mana_cost()
+    );
 }
 }  // namespace game_model

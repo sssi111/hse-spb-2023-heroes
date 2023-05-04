@@ -34,7 +34,7 @@ bool cell::is_unit_movable(int player_id) const {
     return m_player_index == player_id;
 }
 
-[[nodiscard]] int cell::get_durability() const {
+int cell::get_durability() const {
     return m_durability;
 }
 

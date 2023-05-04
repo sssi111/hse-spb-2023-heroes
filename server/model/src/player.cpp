@@ -17,4 +17,8 @@ void player::set_start_units(int player_index, const board &game_board) {
         m_units_list.emplace_back(1 + row % 2);
     }
 }
+
+void player::decrease_mana(int cost) {
+    m_mana = std::max(0, m_mana - cost);
+}
 }  // namespace game_model
