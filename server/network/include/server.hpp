@@ -112,11 +112,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     }
 
     static void switch_turn(namespace_proto::GameState *game) {
-        if (game->move_turn() == game->first_user()) {
-            game->set_move_turn(game->second_user());
-        } else {
-            game->set_move_turn(game->first_user());
-        }
+        game->set_move_turn((game->move_turn() + 1) % 2);
     }
 
     ::grpc::Status MoveUnit(

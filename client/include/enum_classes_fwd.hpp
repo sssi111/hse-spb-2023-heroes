@@ -5,7 +5,7 @@
 #include "config.hpp"
 
 namespace game_view {
-enum class UnitType { Empty, Mushroom, SelectedMushroom };
+enum class UnitType { Empty, Mushroom, Mushroom1 };
 
 enum class CellType { Default, Broken, Selected };
 

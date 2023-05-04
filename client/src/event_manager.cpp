@@ -58,6 +58,10 @@ void EventManager::update_cell(
         board->update_board(get_client_state()->m_game_state);
         (*selected_unit)->disable_selection();
         *selected_unit = nullptr;
+    } else if (event_type == CellEventType::Targeting) {
+        std::cout << "Show statistic\n";
+//        (*unit)->update_stastictic(); ?
+
     }
 }
 
