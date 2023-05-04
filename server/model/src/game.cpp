@@ -85,9 +85,10 @@ void game::clear_cell(cell &current_cell) {
 
 void game::spell(
     const coordinates &cell_coordinates,
-    int player_id,
+    int user_id,
     int spell_id
 ) {
+    int player_id = (m_players_list[0]->get_id() == user_id ? 0 : 1);
     const_game_info::SPELL_LIST[spell_id](get_cell(cell_coordinates));
     get_player(player_id)->decrease_mana(
         const_game_info::SPELL_LIST[spell_id].get_mana_cost()

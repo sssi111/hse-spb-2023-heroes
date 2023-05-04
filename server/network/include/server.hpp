@@ -15,6 +15,7 @@
 #include <vector>
 #include "db_interface.hpp"
 #include "game_session.hpp"
+#include "heroes_list.hpp"
 
 class ServerState {
 public:
@@ -26,6 +27,8 @@ public:
 };
 
 ServerState *get_server_state();
+
+int rand(int min, int max);
 
 class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status SignUp(
@@ -59,6 +62,26 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             response->set_id(-1);
         }
         return grpc::Status::OK;
+    }
+
+    ::grpc::Status GetHero(
+        ::grpc::ServerContext *context,
+        const google::protobuf::Empty *request,
+        namespace_proto::Hero *response
+    ) override{
+        int rand_id =
+            rand(0, static_cast<int>(const_game_info::HEROES_LIST.size() - 1));
+        const game_model::hero *model_hero =
+            &const_game_info::HEROES_LIST[rand_id];
+        response->set_type(model_hero->get_id());
+        const std::vector<game_model::spell> spells = model_hero->get_spells();
+        for (const auto &item : spells) {
+            auto spell = response->add_spells();
+            spell->set_id(item.get_id());
+            spell->set_name(item.get_name());
+            spell->set_description(item.get_description());
+        }
+        return ::grpc::Status::OK;
     }
 
     ::grpc::Status CallServer(
@@ -146,8 +169,9 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             } else {
                 update_unit(cell_to->mutable_unit(), to, game_session_ref);
             }
-            if (game_session_ref->get_model_game()->get_cell(from).get_unit_index(
-                ) == -1) {
+            if (game_session_ref->get_model_game()
+                    ->get_cell(from)
+                    .get_unit_index() == -1) {
                 cell_from->set_allocated_unit(nullptr);
                 cell_from->set_is_unit(false);
             } else {

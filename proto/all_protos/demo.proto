@@ -72,10 +72,21 @@ message EnableCells{
   repeated Cell enable_cells = 1;
 }
 
+message Spell{
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message Hero{
+  int32 type = 1;
+  repeated Spell spells = 2;
+}
+
 service Server {
   rpc SignUp(LogInData) returns(User) {}
   rpc LogIn(LogInData) returns(User) {}
-
+  rpc GetHero(google.protobuf.Empty) returns(Hero) {}
   rpc CallServer(UserState) returns(stream GameState) {}
   rpc AddToLobby(User) returns(GameIdAndHero) {}
   rpc MoveUnit(MoveFromTo) returns(GameState) {}
