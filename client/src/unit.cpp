@@ -47,6 +47,8 @@ void Unit::update_unit(
     sf::Vector2f new_position,
     sf::Vector2f size
 ) {
+    new_position.x += size.x / 4;
+    new_position.y += size.y / 4 - 3;
     if (unit.type_unit() != 0) {  // then initialize unit
         if (m_type != static_cast<UnitType>(unit.type_unit())) {
             m_type = static_cast<UnitType>(unit.type_unit());

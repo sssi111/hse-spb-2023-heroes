@@ -15,9 +15,8 @@ Cell::Cell(
     m_coords = coords;
     m_cell_type = type;
     m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
-    m_cell.setTextureRect(
-        sf::IntRect(0, 0, static_cast<int>(size.x), static_cast<int>(size.y))
-    );
+    m_cell.scale(size.x / m_cell.getTexture()->getSize().x,
+                 size.y / m_cell.getTexture()->getSize().y);
     m_cell.setPosition(position);
     m_cell.setOrigin(size.x / 2, size.y / 2);
 
@@ -45,7 +44,7 @@ void Cell::remove_selection() {
 }
 
 void Cell::update_cell(const namespace_proto::Cell &cell) {
-    m_strength = cell.strength();
+    m_strength = cell.durability();
 
     m_unit = nullptr;
 
@@ -71,7 +70,8 @@ void Cell::event_processing(
     sf::Event event,
     sf::Window *window
 ) {
-    if (m_button.event_processing(event, window)) {
+    auto result = m_button.event_processing(event, window);
+    if (result == CellEventType::FirstPress) {
         if (is_have_unit() &&
             m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
             if (*selected_unit != m_unit) {
@@ -85,12 +85,10 @@ void Cell::event_processing(
                     m_coords, board
                 );
             }
-        } else if (!is_have_unit()) {
-            if (*selected_unit && m_is_available_for_moving) {
-                EventManager::update_cell(
-                    CellEventType::Move, selected_unit, &m_unit, m_coords, board
-                );
-            }
+        } else if (*selected_unit && m_is_available_for_moving) {
+            EventManager::update_cell(
+                CellEventType::Move, selected_unit, &m_unit, m_coords, board
+            );
         }
     }
 }

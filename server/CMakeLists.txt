@@ -9,13 +9,15 @@ set(SOURCES
         model/src/player.cpp
         model/src/unit.cpp
         model/src/bfs_state.cpp
-        interactors/src/select_interactor.cpp
+        interactors/src/move_select_interactor.cpp
         interactors/src/move_interactor.cpp
-        )
+        interactors/src/attack_interactor.cpp
+        interactors/src/attack_select_interactor.cpp)
 
 add_executable(server ${SOURCES})
 
 find_package(SQLite3)
+find_package(Boost)
 
 target_include_directories(server PRIVATE
         "${PROJECT_BINARY_DIR}"

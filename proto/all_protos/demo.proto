@@ -15,20 +15,25 @@ message User{
 }
 
 message Unit{
-  int32 type_unit = 1;
   int32 id_unit = 2;
-  int32 amount_unit = 3;
-  int32 sum_of_health = 4;
   int32 id_hero = 5;
   int32 is_selected = 6;
+  int32 type_unit = 1;
+  int32 amount_unit = 3;
+  int32 sum_of_health = 4;
+  int32 damage = 10;
+  int32 attack_range = 7;
+  int32 movement_range = 8;
+  int32 weight = 9;
 }
 
 message Cell{
   int32 row = 1;
   int32 column = 2;
   Unit unit = 3;
-  int32 strength = 4;
+  int32 durability = 4;
   bool is_unit = 5;
+  bool is_attack = 6;
 }
 
 message EnableCell{

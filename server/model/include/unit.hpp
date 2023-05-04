@@ -8,22 +8,28 @@ namespace game_model {
 
 class unit {
 private:
+    int m_type{1};
+    int m_number{5};
     int m_health{10};
+    int m_max_health{10};
     int m_damage{1};
     int m_attack_range{1};
     int m_movement_range{2};
-    coordinates m_coordinates;
-    int m_player_index;
-    int m_unit_index;
+    int m_weight{1};
 
 public:
-    unit(const coordinates &cell_coordinates, int player_index, int unit_index)
-        : m_coordinates(cell_coordinates),
-          m_player_index(player_index),
-          m_unit_index(unit_index) {
-    }
+    explicit unit(int type);
 
+    [[nodiscard]] int get_type() const;
+    [[nodiscard]] int get_number() const;
+    [[nodiscard]] int get_health() const;
+
+    [[nodiscard]] int get_attack_range() const;
     [[nodiscard]] int get_movement_range() const;
+    [[nodiscard]] int get_damage() const;
+    [[nodiscard]] int get_weight() const;
+    [[nodiscard]] bool is_dead() const;
+    void decrease_health(int damage);
 };
 
 }  // namespace game_model
