@@ -28,6 +28,10 @@ void dump_game(GameSession *game_session) {
             unit->set_type_unit(model_unit.get_type());
             unit->set_amount_unit(model_unit.get_number());
             unit->set_sum_of_health(model_unit.get_health());
+            unit->set_damage(model_unit.get_damage());
+            unit->set_attack_range(model_unit.get_attack_range());
+            unit->set_movement_range(model_unit.get_movement_range());
+            unit->set_weight(model_unit.get_weight());
             new_cell->set_allocated_unit(unit);
             new_cell->set_is_unit(true);
         }
@@ -46,31 +50,6 @@ void start_game_session(int game_id) {
     game_state_ref->set_second_user(second_player.get_id());
 
     dump_game(game_session);
-    //    int unit_num = 0;
-    //
-    //    for (int i = 0; i < 100; ++i) {
-    //        namespace_proto::Cell *new_cell =
-    //        game_state_ref->add_game_cells();
-    //        new_cell->set_allocated_unit(nullptr);
-    //        new_cell->set_column(i % 10);
-    //        new_cell->set_row(i / 10);
-    //        new_cell->set_durability(10);
-    //        if (i % 10 == 0 || i % 10 == 9) {
-    //            auto *unit = new namespace_proto::Unit;
-    //            unit->set_id_unit(unit_num++);
-    //            unit->set_type_unit(1);
-    //            unit->set_amount_unit(10);
-    //            if (i % 10 == 0) {
-    //                unit->set_id_hero(game_state_ref->first_user());
-    //            }
-    //            else{
-    //                unit->set_id_hero(game_state_ref->second_user());
-    //            }
-    //            std::cout << "id " << unit->id_hero() << '\n';
-    //            new_cell->set_allocated_unit(unit);
-    //            new_cell->set_is_unit(true);
-    //        }
-    //    }
 
     game_state_ref->set_game_id(game_id);
     (*response_queues_ref)[first_player.get_id()].push(*game_state_ref);
