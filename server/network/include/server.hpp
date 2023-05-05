@@ -255,8 +255,9 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         int index = 10 * request->cell().row() + request->cell().column();
         namespace_proto::Cell *cell =
             game_session_ref->get_game_state()->mutable_game_cells(index);
+        namespace_proto::Unit *unit = cell->mutable_unit();
         update_cell(cell, game_model::coordinates{*cell}, game_session_ref);
-
+        update_unit(unit, game_model::coordinates{*cell}, game_session_ref);
         if (request->player_id() !=
             game_session_ref->get_first_player().get_id()) {
             (*(game_session_ref->get_response_queues())
