@@ -111,12 +111,12 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     }
 
     static void switch_turn(namespace_proto::GameState *game) {
-        if (game->move_turn() == 0){
-            game->
-        }
-        else{
-
-        }
+//        if (game->move_turn() == 0){
+//            game->
+//        }
+//        else{
+//
+//        }
         game->set_move_turn((game->move_turn() + 1) % 2);
     }
 
