@@ -14,10 +14,8 @@ public:
         : m_game(current_game_state) {
     }
 
-    std::vector<std::reference_wrapper<game_model::cell>> operator()(
-        const game_model::coordinates &current_cell_coordinates,
-        int user_id
-    );
+    std::vector<std::reference_wrapper<game_model::cell>>
+    operator()(int user_id, int spell_id);
 };
 }  // namespace interactors
 

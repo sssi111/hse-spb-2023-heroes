@@ -34,7 +34,7 @@ public:
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     get_attackable_cells(const coordinates &cell_coordinates, int user_id);
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
-    get_spellable_cells(const coordinates &cell_coordinates, int user_id);
+    get_spellable_cells(int user_id, int spell_id);
 
     [[nodiscard]] player *get_player(int index);
 
@@ -43,8 +43,7 @@ public:
         const coordinates &new_cell_coordinates
     );
     void attack(const coordinates &attacking, const coordinates &attacked);
-    void
-    spell(const coordinates &cell_coordinates, int player_id, int spell_id);
+    void spell(const coordinates &cell_coordinates, int user_id, int spell_id);
 };
 
 }  // namespace game_model

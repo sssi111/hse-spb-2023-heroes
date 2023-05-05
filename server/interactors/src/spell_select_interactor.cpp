@@ -4,12 +4,9 @@
 
 namespace interactors {
 std::vector<std::reference_wrapper<game_model::cell>>
-spell_selecter::operator()(
-    const game_model::coordinates &current_cell_coordinates,
-    int user_id
-) {
-    std::vector<std::reference_wrapper<game_model::cell>> reachable_cells =
-        m_game.get_spellable_cells(current_cell_coordinates, user_id);
-    return reachable_cells;
+spell_selecter::operator()(int user_id, int spell_id) {
+    std::vector<std::reference_wrapper<game_model::cell>> spellable_cells =
+        m_game.get_spellable_cells(user_id, spell_id);
+    return spellable_cells;
 }
 }  // namespace interactors

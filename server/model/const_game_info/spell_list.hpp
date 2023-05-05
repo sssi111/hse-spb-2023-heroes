@@ -6,12 +6,14 @@
 
 namespace const_game_info {
 const std::vector<game_model::spell> SPELL_LIST = {game_model::spell(
-    "brake_cell", "destroy the selected cell",
+    0,
+    "brake_cell",
+    "destroy the selected cell",
     5,
     [](game_model::cell &cell) {
         cell.decrease_cell_durability(cell.get_durability());
     },
-    [](const game_model::cell &cell, int user_id) {
+    [](const game_model::cell &cell, int player_id) {
         return cell.get_durability() > 0;
     }
 )};

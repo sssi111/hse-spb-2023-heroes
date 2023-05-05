@@ -25,6 +25,8 @@ public:
         std::function<bool(const cell &, int)> select_logic
     );
     void operator()(cell &current_cell) const;
+    [[nodiscard]] bool is_selectable(const cell &current_cell, int player_id)
+        const;
     [[nodiscard]] int get_id() const;
     [[nodiscard]] int get_mana_cost() const;
     [[nodiscard]] std::string get_name() const;

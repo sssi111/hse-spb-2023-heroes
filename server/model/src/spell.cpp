@@ -22,7 +22,11 @@ void spell::operator()(cell &current_cell) const {
     m_spell_logic(current_cell);
 }
 
-int spell::get_id() const{
+bool spell::is_selectable(const cell &current_cell, int player_id) const {
+    return m_select_logic(current_cell, player_id);
+}
+
+int spell::get_id() const {
     return m_id;
 }
 
@@ -30,11 +34,11 @@ int spell::get_mana_cost() const {
     return m_mana_cost;
 }
 
-std::string spell::get_name() const{
+std::string spell::get_name() const {
     return m_name;
 }
 
-std::string spell::get_description() const{
+std::string spell::get_description() const {
     return m_description;
 }
 

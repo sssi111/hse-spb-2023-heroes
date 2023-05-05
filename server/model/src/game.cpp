@@ -34,9 +34,12 @@ game::get_attackable_cells(const coordinates &cell_coordinates, int user_id) {
 }
 
 std::vector<std::reference_wrapper<cell>>
-game::get_spellable_cells(const coordinates &cell_coordinates, int user_id) {
+game::get_spellable_cells(int user_id, int spell_id) {
     int player_id = (m_players_list[0]->get_id() == user_id ? 0 : 1);
-    if (get_player(player_id)->get_mana() >= )
+    if (get_player(player_id)->get_mana() <
+        const_game_info::SPELL_LIST[spell_id].get_mana_cost())
+        return {};
+    return m_board.get_spellable_cells(player_id, spell_id);
 }
 
 [[nodiscard]] player *game::get_player(int index) {
