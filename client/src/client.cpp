@@ -89,3 +89,29 @@ std::vector<std::pair<int, int>> Client::select_unit(
     }
     return enable_set;
 }
+
+std::vector<std::pair<int, int>> Client::select_spell(int spell_id){
+    grpc::ClientContext context;
+    namespace_proto::SelectSpellRequest request;
+    request.set_game_id(get_client_state()->m_user.game_id());
+    request.set_spell_id(spell_id);
+    request.set_player_id(get_client_state()->m_user.user().id());
+    namespace_proto::EnableCell response;
+    get_client_state()->m_stub->SelectSpell(&context, request, &response);
+    std::vector<std::pair<int, int>> enable_set;
+    for (const auto &cell : response.cells()) {
+        enable_set.emplace_back(cell.row(), cell.column());
+    }
+    return enable_set;
+}
+
+void Client::do_spell(int spell_id, const namespace_proto::Cell &cell){
+    grpc::ClientContext context;
+    namespace_proto::DoSpellRequest request;
+    request.set_game_id(get_client_state()->m_user.game_id());
+    request.set_player_id(get_client_state()->m_user.user().id());
+    request.set_spell_id(spell_id);
+    namespace_proto::GameState response;
+    get_client_state()->m_stub->DoSpell(&context, request, &response);
+    get_client_state()->m_game_state = response;
+}

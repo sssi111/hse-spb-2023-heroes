@@ -8,6 +8,7 @@
 #include "board.hpp"
 #include "cell.hpp"
 #include "player.hpp"
+#include "user.hpp"
 
 namespace game_model {
 
@@ -29,7 +30,6 @@ public:
         m_players_list.emplace_back(std::make_unique<user>(account_id_second));
         m_players_list[0]->set_start_units(0, m_board, troops[first_troop]);
         m_players_list[1]->set_start_units(1, m_board, troops[second_troop]);
-
     }
 
     [[nodiscard]] cell &get_cell(const coordinates &cell_coordinates);
@@ -37,8 +37,6 @@ public:
     get_reachable_cells(const coordinates &cell_coordinates, int user_id);
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     get_attackable_cells(const coordinates &cell_coordinates, int user_id);
-    [[nodiscard]] std::vector<std::reference_wrapper<cell>>
-    get_spellable_cells(int user_id, int spell_id);
 
     [[nodiscard]] player *get_player(int index);
 
@@ -47,7 +45,6 @@ public:
         const coordinates &new_cell_coordinates
     );
     void attack(const coordinates &attacking, const coordinates &attacked);
-    void spell(const coordinates &cell_coordinates, int user_id, int spell_id);
 };
 
 }  // namespace game_model
