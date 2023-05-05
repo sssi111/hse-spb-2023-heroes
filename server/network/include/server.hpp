@@ -110,6 +110,21 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         cell2->set_column(temp_column);
     }
 
+    static void switch_turn(GameSession *game) {
+        if (game->get_game_state()->move_turn() == 0) {
+            game->get_model_game()->get_player(0)->decrease_mana(-1);
+            int mana = game->get_model_game()->get_player(0)->get_mana();
+            game->get_game_state()->set_first_user_mana(mana);
+        } else {
+            game->get_model_game()->get_player(1)->decrease_mana(-1);
+            int mana = game->get_model_game()->get_player(1)->get_mana();
+            game->get_game_state()->set_second_user_mana(mana);
+        }
+        game->get_game_state()->set_move_turn(
+            (game->get_game_state()->move_turn() + 1) % 2
+        );
+    }
+
     static void update_unit(
         namespace_proto::Unit *unit,
         const game_model::coordinates &coordinates,
@@ -132,10 +147,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         game_model::game *model_game = game_session_res->get_model_game();
         game_model::cell model_cell = model_game->get_cell(coordinates);
         cell->set_durability(model_cell.get_durability());
-    }
-
-    static void switch_turn(namespace_proto::GameState *game) {
-        game->set_move_turn((game->move_turn() + 1) % 2);
     }
 
     ::grpc::Status MoveUnit(
@@ -184,7 +195,8 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         }
         update_cell(cell_from, from, game_session_ref);
         update_cell(cell_to, to, game_session_ref);
-        switch_turn(game_state_ref);
+
+        switch_turn(game_session_ref);
 
         if (request->user().user().id() !=
             game_session_ref->get_first_player().get_id()) {

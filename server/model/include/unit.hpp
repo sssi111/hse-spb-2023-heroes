@@ -34,5 +34,5 @@ public:
 };
 
 }  // namespace game_model
-
+    
 #endif  // MODEL_UNIT_HPP
