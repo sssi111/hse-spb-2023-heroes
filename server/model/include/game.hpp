@@ -19,13 +19,17 @@ private:
     static void clear_cell(cell &current_cell);
     void attack_cell(const cell &attacking, cell &attacked);
 
+    std::vector<std::vector<int>> troops = {
+        {1, 2, 1, 2, 1, 2, 1, 2, 1, 2},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+
 public:
-    explicit game(int account_id_first, int account_id_second) {
-        m_players_list.emplace_back(std::make_unique<player>(account_id_first));
-        m_players_list.emplace_back(std::make_unique<player>(account_id_second)
-        );
-        m_players_list[0]->set_start_units(0, m_board);
-        m_players_list[1]->set_start_units(1, m_board);
+    explicit game(int account_id_first, int first_troop, int account_id_second, int second_troop) {
+        m_players_list.emplace_back(std::make_unique<user>(account_id_first));
+        m_players_list.emplace_back(std::make_unique<user>(account_id_second));
+        m_players_list[0]->set_start_units(0, m_board, troops[first_troop]);
+        m_players_list[1]->set_start_units(1, m_board, troops[second_troop]);
+
     }
 
     [[nodiscard]] cell &get_cell(const coordinates &cell_coordinates);

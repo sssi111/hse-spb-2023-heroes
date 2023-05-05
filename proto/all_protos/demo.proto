@@ -65,6 +65,7 @@ message GameState{
   int32 game_id = 1;
   int32 first_user = 2;
   int32 second_user = 3;
+  int32 move_turn = 5;
   repeated Cell game_cells = 4;
 }
 
@@ -99,6 +100,7 @@ message Hero{
 service Server {
   rpc SignUp(LogInData) returns(User) {}
   rpc LogIn(LogInData) returns(User) {}
+  rpc SwitchTurn(google.protobuf.Empty) returns(google.protobuf.Empty) {}
   rpc GetHero(google.protobuf.Empty) returns(Hero) {}
   rpc CallServer(UserState) returns(stream GameState) {}
   rpc AddToLobby(User) returns(GameIdAndHero) {}

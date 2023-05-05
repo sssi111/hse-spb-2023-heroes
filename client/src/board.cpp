@@ -13,6 +13,8 @@ Board::Board(sf::Vector2i window_size) {
     m_cell_size.y = (m_window_size.y - m_boarder_size.y) / m_cell_amount;
     m_board.resize(m_cell_amount, std::vector<Cell>(m_cell_amount));
     m_units.resize(20);
+    m_unit_is_updated.resize(20, false);
+    m_unit_is_alive.resize(20, true);
     selected_unit = nullptr;
     for (int row = 0; row < m_cell_amount; row++) {
         for (int column = 0; column < m_cell_amount; column++) {
@@ -21,8 +23,7 @@ Board::Board(sf::Vector2i window_size) {
                 sf::Vector2f(
                     m_boarder_size.x + m_cell_size.x / 4 +
                         m_cell_size.x * column,
-                    m_boarder_size.y + m_cell_size.y / 4 +
-                        m_cell_size.y * row
+                    m_boarder_size.y + m_cell_size.y / 4 + m_cell_size.y * row
                 ),
                 sf::Vector2f(m_cell_size)
             );
@@ -61,8 +62,10 @@ void Board::render(sf::RenderWindow *window) {
             cell.draw(window);
         }
     }
-    for (auto &unit : m_units) {
-        unit.draw(window);
+    for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {
+        if (m_unit_is_alive[unit_id]) {
+            m_units[unit_id].draw(window);
+        }
         // std::cout << "Unit: " << unit.get_coords().get_row() << ' ' <<
         // unit.get_coords().get_column() << '\n';
     }
@@ -71,6 +74,7 @@ void Board::render(sf::RenderWindow *window) {
 void Board::update_board(const namespace_proto::GameState &game_state) {
     bool is_second =
         (game_state.second_user() == get_client_state()->m_user.user().id());
+    std::fill(m_unit_is_updated.begin(), m_unit_is_updated.end(), false);
     for (int cell_index = 0; cell_index < 100; cell_index++) {
         namespace_proto::Cell server_cell = game_state.game_cells(cell_index);
         int row = server_cell.row();
@@ -88,10 +92,13 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
                 static_cast<sf::Vector2f>(m_cell_size)
             );
             m_board[row][column].set_unit(&m_units[unit_id]);
+            m_unit_is_updated[unit_id] = true;
         }
-//        else{
-//            m_board[row][column].set_unit(nullptr);
-//        }
+    }
+    for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {
+        if (!m_unit_is_updated[unit_id]) {
+            m_unit_is_alive[unit_id] = false;
+        }
     }
 }
 
@@ -102,8 +109,9 @@ void Board::add_available_for_moving_cells(
     m_available_for_moving_cells = selected_cells;
     for (auto [row, column] : m_available_for_moving_cells) {
         bool is_second =
-            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user().id());
-        if (is_second){
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
             column = 9 - column;
         }
         m_board[row][column].add_selection();
@@ -113,8 +121,9 @@ void Board::add_available_for_moving_cells(
 void Board::remove_available_for_moving_cells() {
     for (auto [row, column] : m_available_for_moving_cells) {
         bool is_second =
-            (get_client_state()->m_game_state.second_user() == get_client_state()->m_user.user().id());
-        if (is_second){
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
             column = 9 - column;
         }
         m_board[row][column].remove_selection();

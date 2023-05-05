@@ -44,11 +44,14 @@ private:
     int m_amount_of_units;
     int m_unit_id;
     int m_hero_id;
-    bool is_selected;
+    bool is_selected{false};
+    bool is_statistic_showed{false};
 
     sf::Sprite m_unit;
     sf::RectangleShape m_table;
     sf::Text m_label;
+    sf::RectangleShape m_statistic_background;
+    sf::Text m_statistic_label;
 };
 }  // namespace game_view
 

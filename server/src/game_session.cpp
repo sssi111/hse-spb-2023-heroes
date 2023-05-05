@@ -52,6 +52,7 @@ void start_game_session(int game_id) {
     dump_game(game_session);
 
     game_state_ref->set_game_id(game_id);
+    game_state_ref->set_move_turn(0);
     (*response_queues_ref)[first_player.get_id()].push(*game_state_ref);
     (*response_queues_ref)[second_player.get_id()].push(*game_state_ref);
 

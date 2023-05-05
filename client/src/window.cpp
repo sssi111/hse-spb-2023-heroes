@@ -70,5 +70,6 @@ void Window::toggle_fullscreen() {
 
 void Window::set_is_done() {
     m_is_done = true;
+    destroy();
 }
 }  // namespace game_view

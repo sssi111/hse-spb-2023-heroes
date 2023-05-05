@@ -17,9 +17,17 @@ ResourceManager::ResourceManager() {
     );
 
     m_unit_textures[UnitType::Mushroom].loadFromFile(source_dir + "hero.png");
-    m_unit_textures[UnitType::SelectedMushroom].loadFromFile(
+    m_unit_textures[UnitType::Mushroom1].loadFromFile(source_dir + "hero2.png");
+
+    m_selected_unit_textures[UnitType::Mushroom].loadFromFile(
         source_dir + "selected_hero.png"
     );
+    m_selected_unit_textures[UnitType::Mushroom1].loadFromFile(
+        source_dir + "selected_hero2.png"
+    );
+//    m_unit_textures[UnitType::SelectedMushroom].loadFromFile(
+//        source_dir + "selected_hero.png"
+//    );
 
     m_fonts[Fonts::Montserrat].loadFromFile(
         source_dir + "Montserrat-SemiBold.otf"
@@ -36,6 +44,12 @@ ResourceManager::ResourceManager() {
     UnitType texture
 ) {
     return m_unit_textures[texture];
+}
+
+[[nodiscard]] const sf::Texture &ResourceManager::load_selected_unit_texture(
+    UnitType texture
+) {
+    return m_selected_unit_textures[texture];
 }
 
 [[nodiscard]] const sf::Font &ResourceManager::load_font(Fonts font) {

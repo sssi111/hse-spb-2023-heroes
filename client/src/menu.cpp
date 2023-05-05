@@ -158,7 +158,9 @@ void Menu::update() {
 }
 
 void Menu::print_error() {
-    m_error.draw(m_window.get_render_window());
+    if (m_current_page == PageType::Login || m_current_page == PageType::Registration) {
+        m_error.draw(m_window.get_render_window());
+    }
 }
 
 MenuButton::MenuButton(
