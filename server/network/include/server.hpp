@@ -15,6 +15,7 @@
 #include <vector>
 #include "db_interface.hpp"
 #include "game_session.hpp"
+#include "heroes_list.hpp"
 
 class ServerState {
 public:
@@ -26,6 +27,8 @@ public:
 };
 
 ServerState *get_server_state();
+
+int rand(int min, int max);
 
 class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status SignUp(
@@ -59,6 +62,26 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             response->set_id(-1);
         }
         return grpc::Status::OK;
+    }
+
+    ::grpc::Status GetHero(
+        ::grpc::ServerContext *context,
+        const google::protobuf::Empty *request,
+        namespace_proto::Hero *response
+    ) override {
+        int rand_id =
+            rand(0, static_cast<int>(const_game_info::HEROES_LIST.size() - 1));
+        const game_model::hero *model_hero =
+            &const_game_info::HEROES_LIST[rand_id];
+        response->set_type(model_hero->get_id());
+        const std::vector<game_model::spell> spells = model_hero->get_spells();
+        for (const auto &item : spells) {
+            auto spell = response->add_spells();
+            spell->set_id(item.get_id());
+            spell->set_name(item.get_name());
+            spell->set_description(item.get_description());
+        }
+        return ::grpc::Status::OK;
     }
 
     ::grpc::Status CallServer(
@@ -203,6 +226,54 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             new_cell->set_is_attack(true);
         }
         std::cout << enable_cells.size() << '\n';
+        return ::grpc::Status::OK;
+    }
+
+    ::grpc::Status SelectSpell(
+        ::grpc::ServerContext *context,
+        const ::namespace_proto::SelectSpellRequest *request,
+        ::namespace_proto::EnableCell *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        auto enable_cells = (*game_session_ref->get_spell_selecter()
+        )(request->player_id(), request->spell_id());
+        for (auto cell : enable_cells) {
+            namespace_proto::Cell *new_cell = response->add_cells();
+            new_cell->set_row(cell.get().get_coordinates().get_row());
+            new_cell->set_column(cell.get().get_coordinates().get_column());
+            new_cell->set_is_attack(true);
+        }
+        return ::grpc::Status::OK;
+    }
+
+    ::grpc::Status DoSpell(
+        ::grpc::ServerContext *context,
+        const ::namespace_proto::DoSpellRequest *request,
+        ::namespace_proto::GameState *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        (*game_session_ref->get_speller()
+        )(game_model::coordinates{request->cell()}, request->player_id(),
+          request->spell_id());
+        int index = 10 * request->cell().row() + request->cell().column();
+        namespace_proto::Cell *cell =
+            game_session_ref->get_game_state()->mutable_game_cells(index);
+        namespace_proto::Unit *unit = cell->mutable_unit();
+        update_cell(cell, game_model::coordinates{*cell}, game_session_ref);
+        update_unit(unit, game_model::coordinates{*cell}, game_session_ref);
+        if (request->player_id() !=
+            game_session_ref->get_first_player().get_id()) {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_first_player().get_id()]
+                .push(*(game_session_ref->get_game_state()));
+        } else {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_second_player().get_id()]
+                .push(*(game_session_ref->get_game_state()));
+        }
+        *response = *(game_session_ref->get_game_state());
         return ::grpc::Status::OK;
     }
 };

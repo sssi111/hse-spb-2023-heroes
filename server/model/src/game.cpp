@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include <vector>
 #include "cell.hpp"
+#include "spell_list.hpp"
 
 namespace game_model {
 
@@ -30,6 +31,26 @@ game::get_attackable_cells(const coordinates &cell_coordinates, int user_id) {
             ->get_unit(m_board.get_cell(cell_coordinates).get_unit_index())
             .get_attack_range();
     return m_board.get_attackable_cells(cell_coordinates, max_distance);
+}
+
+std::vector<std::reference_wrapper<cell>>
+game::get_spellable_cells(int user_id, int spell_id) {
+    int player_id = (m_players_list[0]->get_id() == user_id ? 0 : 1);
+    const class spell &current_spell = const_game_info::SPELL_LIST[spell_id];
+    if (get_player(player_id)->get_mana() < current_spell.get_mana_cost())
+        return {};
+    std::vector<std::reference_wrapper<cell>> board_result =
+        m_board.get_spellable_cells(player_id, spell_id);
+    if (current_spell.get_type() == spell::type::CELL)
+        return board_result;
+    std::vector<std::reference_wrapper<cell>> result;
+    for (auto &element : board_result)
+        if (current_spell.is_selectable(
+                get_player(element.get().get_player_index())
+                    ->get_unit(element.get().get_unit_index())
+            ))
+            result.emplace_back(element);
+    return result;
 }
 
 [[nodiscard]] player *game::get_player(int index) {
@@ -74,5 +95,20 @@ void game::attack_cell(const cell &attacking, cell &attacked) {
 void game::clear_cell(cell &current_cell) {
     current_cell.set_player_index(-1);
     current_cell.set_unit_index(-1);
+}
+
+void game::spell(
+    const coordinates &cell_coordinates,
+    int user_id,
+    int spell_id
+) {
+    int player_id = (m_players_list[0]->get_id() == user_id ? 0 : 1);
+    const class spell &current_spell = const_game_info::SPELL_LIST[spell_id];
+    cell &current_cell = get_cell(cell_coordinates);
+    current_spell(current_cell);
+    if (current_spell.get_type() == spell::type::UNIT)
+        current_spell(get_player(current_cell.get_player_index())
+                          ->get_unit(current_cell.get_unit_index()));
+    get_player(player_id)->decrease_mana(current_spell.get_mana_cost());
 }
 }  // namespace game_model

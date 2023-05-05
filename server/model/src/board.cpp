@@ -2,6 +2,7 @@
 #include <vector>
 #include "bfs_state.hpp"
 #include "cell.hpp"
+#include "spell_list.hpp"
 
 namespace game_model {
 cell &board::get_cell(const coordinates &cell_coordinates) {
@@ -43,6 +44,20 @@ board::get_attackable_cells(coordinates cell_coordinates, int max_distance) {
                 attackable_coordinates.emplace_back(attacked_coordinates);
         }
     return coordinates_to_cells(attackable_coordinates);
+}
+
+std::vector<std::reference_wrapper<cell>>
+board::get_spellable_cells(int player_id, int spell_id) {
+    std::vector<coordinates> spellable_coordinates;
+    for (int row = 0; row < m_size.get_row(); ++row)
+        for (int column = 0; column < m_size.get_column(); ++column) {
+            coordinates cell_coordinates(row, column);
+            if (const_game_info::SPELL_LIST[spell_id].is_selectable(
+                    get_cell(cell_coordinates), player_id
+                ))
+                spellable_coordinates.emplace_back(cell_coordinates);
+        }
+    return coordinates_to_cells(spellable_coordinates);
 }
 
 bool board::is_cell_attackable(

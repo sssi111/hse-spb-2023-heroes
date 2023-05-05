@@ -1,8 +1,13 @@
-#include "../network/include/server.hpp"
+#include "server.hpp"
 
 ServerState *get_server_state() {
     static ServerState server_state;
     return &server_state;
+}
+
+int rand(int min, int max){
+    if (min == max) return min;
+    return min + rand() % (max - min);
 }
 
 void RunServer(const std::string &address, ServerServices *service) {
