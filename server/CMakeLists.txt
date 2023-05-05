@@ -10,6 +10,7 @@ set(SOURCES
         model/src/unit.cpp
         model/src/bfs_state.cpp
         model/src/spell.cpp
+        model/src/hero.cpp
         interactors/src/move_interactor.cpp
         interactors/src/move_select_interactor.cpp
         interactors/src/attack_interactor.cpp

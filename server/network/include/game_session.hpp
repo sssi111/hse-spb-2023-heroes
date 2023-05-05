@@ -8,6 +8,8 @@
 #include "move_interactor.hpp"
 #include "move_select_interactor.hpp"
 #include "proto/all_protos/demo.grpc.pb.h"
+#include "spell_interactor.hpp"
+#include "spell_select_interactor.hpp"
 
 class Player final {
     int id;
@@ -39,6 +41,8 @@ class GameSession {
     interactors::attacker attacker;
     interactors::move_selecter move_selecter;
     interactors::attack_selecter attack_selecter;
+    interactors::speller speller;
+    interactors::spell_selecter spell_selecter;
 
 public:
     GameSession(Player first_player_, Player second_player_)
@@ -48,7 +52,9 @@ public:
           mover(model_game),
           move_selecter(model_game),
           attacker(model_game),
-          attack_selecter(model_game) {
+          attack_selecter(model_game),
+          speller(model_game),
+          spell_selecter(model_game) {
     }
 
     Player get_first_player() const {
@@ -87,6 +93,15 @@ public:
     interactors::attack_selecter *get_attack_selecter() {
         return &attack_selecter;
     }
+
+    interactors::spell_selecter *get_spell_selecter(){
+        return &spell_selecter;
+    }
+
+    interactors::speller *get_speller(){
+        return &speller;
+    }
+
 };
 
 void start_game_session(int game_id);

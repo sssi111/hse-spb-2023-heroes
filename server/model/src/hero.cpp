@@ -5,6 +5,6 @@ namespace game_model{
     }
     
     const std::vector<spell> hero::get_spells() const {
-        return spells;
+        return m_spells;
     }
 }

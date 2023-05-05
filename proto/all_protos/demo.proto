@@ -78,6 +78,19 @@ message Spell{
   string description = 3;
 }
 
+message SelectSpellRequest{
+  int32 player_id = 1;
+  int32 spell_id = 2;
+  int32 game_id = 3;
+}
+
+message DoSpellRequest{
+  int32 player_id = 1;
+  int32 spell_id = 2;
+  Cell cell = 3;
+  int32 game_id = 4;
+}
+
 message Hero{
   int32 type = 1;
   repeated Spell spells = 2;
@@ -89,6 +102,10 @@ service Server {
   rpc GetHero(google.protobuf.Empty) returns(Hero) {}
   rpc CallServer(UserState) returns(stream GameState) {}
   rpc AddToLobby(User) returns(GameIdAndHero) {}
+
   rpc MoveUnit(MoveFromTo) returns(GameState) {}
   rpc SelectUnit(MoveSelectUnit) returns(EnableCell) {}
+
+  rpc SelectSpell(SelectSpellRequest) returns(EnableCell) {}
+  rpc DoSpell(DoSpellRequest) returns(GameState) {}
 }
