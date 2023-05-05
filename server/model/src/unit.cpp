@@ -12,7 +12,7 @@ unit::unit(int type) : m_type(type) {
 
     ptree tree;
 
-    read_json("model/unit_types/units.json", tree);
+    read_json("model/const_game_info/units.json", tree);
 
     ptree units = tree.get_child("units");
     auto it = units.begin();
@@ -68,5 +68,13 @@ bool unit::is_dead() const {
 
 int unit::get_attack_range() const {
     return m_attack_range;
+}
+
+void unit::restore_health() {
+    m_health = m_max_health;
+}
+
+int unit::get_max_health() const {
+    return m_max_health;
 }
 }  // namespace game_model

@@ -9,10 +9,14 @@ set(SOURCES
         model/src/player.cpp
         model/src/unit.cpp
         model/src/bfs_state.cpp
-        interactors/src/move_select_interactor.cpp
+        model/src/spell.cpp
+        model/src/hero.cpp
         interactors/src/move_interactor.cpp
+        interactors/src/move_select_interactor.cpp
         interactors/src/attack_interactor.cpp
-        interactors/src/attack_select_interactor.cpp)
+        interactors/src/attack_select_interactor.cpp
+        interactors/src/spell_interactor.cpp
+        interactors/src/spell_select_interactor.cpp)
 
 add_executable(server ${SOURCES})
 
@@ -22,6 +26,7 @@ find_package(Boost)
 target_include_directories(server PRIVATE
         "${PROJECT_BINARY_DIR}"
         "${CMAKE_CURRENT_SOURCE_DIR}/model/include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/model/const_game_info"
         "${CMAKE_CURRENT_SOURCE_DIR}/interactors/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/network/include")
 
