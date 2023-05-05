@@ -21,22 +21,22 @@ public:
         bool is_active
     );
 
+    std::string get_data() const;
+    bool is_active() const;
+    bool is_showed() const;
+    void activate();
+    void hide_data();
+    void show_data();
+    void clear();
     bool update(sf::Event event, game_view::Window *window);
-
     void draw(sf::RenderWindow *window) const;
 
-    bool is_active() const;
-
-    void set_is_active();
-
-    void clear();
-
-    std::string get_data() const;
-
 private:
-    sf::RectangleShape m_rect;
+    sf::RectangleShape m_table;
     sf::String m_data;
-    bool m_is_active;
+    sf::String m_hidden_data;
+    bool m_is_active{false};
+    bool m_is_showed{true};
     sf::Text m_label;
     game_view::Button m_button;
 };

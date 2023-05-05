@@ -1,14 +1,13 @@
 #ifndef BATTLE_OF_HEROES_HEROES_MENU_HPP
 #define BATTLE_OF_HEROES_HEROES_MENU_HPP
 
+#include <vector>
 #include "enum_classes_fwd.hpp"
 #include "menu_button.hpp"
-#include "window.hpp"
-#include <vector>
 #include "textbox.hpp"
+#include "window.hpp"
 
 namespace menu_view {
-class Menu;
 
 class MenuButton {
 public:
@@ -21,19 +20,21 @@ public:
         sf::Color color,
         game_view::Fonts font,
         unsigned character_size,
-        const std::string &label,
+        const std::string &tittle,
         PageType current_page,
-        PageType next_page
+        PageType next_page,
+        sf::Color font_color
     );
 
-    bool update(sf::Event event, Menu *menu, game_view::Window *window);
-
+    PageType get_current_page() const;
+    PageType get_next_page() const;
+    void update_tittle(std::string new_tittle);
+    bool update(sf::Event event, game_view::Window *window);
     void draw(sf::RenderWindow *window);
-    friend Menu;
 
 private:
-    sf::RectangleShape m_rect;
-    sf::Text m_label;
+    sf::RectangleShape m_table;
+    sf::Text m_data;
     game_view::Button m_button;
     PageType m_current_page;
     PageType m_next_page;
@@ -49,35 +50,29 @@ public:
         sf::Vector2f size,
         game_view::Fonts font,
         unsigned character_size,
-        std::string text,
+        const std::string& text,
         PageType m_current_page
     );
 
+    PageType get_current_page() const;
+    void set_text(const std::string& text);
     void draw(sf::RenderWindow *window) const;
 
-    void set_text(std::string text);
-
-    friend Menu;
-
 private:
-    sf::RectangleShape m_rect;
-    sf::Text m_label;
-    PageType m_current_page;
+    sf::RectangleShape m_table;
+    sf::Text m_data;
+    PageType m_current_page{PageType::Game};
 };
 
 class Menu {
 public:
     Menu();
 
-    void change_page(PageType new_page);
-
     game_view::Window *get_window();
-
-    void render();
-
-    void update();
-
+    void change_page(PageType new_page);
     void print_error();
+    void render();
+    void update();
 
 private:
     game_view::Window m_window;
@@ -87,12 +82,13 @@ private:
     PageType m_current_page;
     TextBox m_signup_login;
     TextBox m_signup_password;
+    MenuButton m_show_signup_password, m_show_registration_password;
     TextBox m_registration_login;
     TextBox m_registration_password;
     TextBox m_registration_password_checker;
     Caption m_signup_error;
     Caption m_registration_error;
 };
-}
+}  // namespace menu_view
 
-#endif  // HSE_SPB_2023_HEROES_MENU_HPP
+#endif  // BATTLE_OF_HEROES_HEROES_MENU_HPP
