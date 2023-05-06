@@ -28,10 +28,8 @@ void Unit::draw(sf::RenderWindow *window) {
     window->draw(m_unit);
     window->draw(m_table);
     window->draw(m_label);
-    if (is_statistic_showed) {
-        window->draw(m_statistic_background);
-        window->draw(m_statistic_label);
-    }
+    auto mouse_position = sf::Mouse::getPosition(*window);
+    m_statistic.draw(window);
 }
 
 void Unit::set_selection() {
@@ -40,6 +38,15 @@ void Unit::set_selection() {
 
 void Unit::disable_selection() {
     m_unit.setTexture(resource_manager()->load_unit_texture(m_type));
+}
+
+void Unit::update_characteristics(const namespace_proto::Unit &unit) {
+    m_number_of_units = unit.amount_unit();
+    m_max_health = unit.sum_of_health();
+    m_damage = unit.damage();
+    m_attack_range = unit.attack_range();
+    m_movement_range = unit.movement_range();
+    m_weight = unit.weight();
 }
 
 void Unit::update_unit(
@@ -60,11 +67,11 @@ void Unit::update_unit(
             );
         }
         m_coords = {cell.row(), cell.column()};
-        m_health = unit.sum_of_health();
         m_amount_of_units = unit.amount_unit();
         m_unit_id = unit.id_unit();
         m_hero_id = unit.id_hero();
         is_selected = false;
+        update_characteristics(unit);
 
         m_unit.setPosition(new_position);
         m_unit.setOrigin(size.x / 2, size.y / 2);
@@ -86,7 +93,15 @@ void Unit::update_unit(
         m_label.setPosition(sf::Vector2f(
             new_position.x + 13 * size.x / 16, new_position.y + 3 * size.y / 4
         ));
+
+        m_statistic = interface::PopUpWindow(
+            new_position, {0, 0}, Fonts::Montserrat, 20,
+            "number of units: 5\nmax health: 10\ndamage: 1\nattack range: "
+            "1\nmovement range: 2\nweight: 1"
+        );
+
     } else {  // then event_processing
+        update_characteristics(unit);
         is_selected = unit.is_selected();
         m_coords = {cell.row(), cell.column()};
         m_unit.setPosition(new_position);
@@ -97,5 +112,20 @@ void Unit::update_unit(
             new_position.x + 3 * size.x / 4, new_position.y + 3 * size.y / 4
         ));
     }
+}
+
+void Unit::update_statistic(
+    CellEventType event_type,
+    const sf::Window *window
+) {
+    m_statistic.update(
+        "number of units: 5\n"
+        "max health: 10\n"
+        "damage: 1\n"
+        "attack range: 1\n"
+        "movement range: 2\n"
+        "weight: 1",
+        event_type, window
+    );
 }
 }  // namespace game_view

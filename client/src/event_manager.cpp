@@ -60,8 +60,7 @@ void EventManager::update_cell(
         *selected_unit = nullptr;
     } else if (event_type == CellEventType::Targeting) {
         std::cout << "Show statistic\n";
-//        (*unit)->update_stastictic(); ?
-
+        //        (*unit)->update_stastictic(); ?
     }
 }
 

@@ -60,14 +60,15 @@ void Board::render(sf::RenderWindow *window) {
     for (auto &row : m_board) {
         for (auto &cell : row) {
             cell.draw(window);
+            if (cell.is_have_unit()) {
+                cell.get_unit()->update_statistic(cell.targetting(window), window);
+            }
         }
     }
     for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {
         if (m_unit_is_alive[unit_id]) {
             m_units[unit_id].draw(window);
         }
-        // std::cout << "Unit: " << unit.get_coords().get_row() << ' ' <<
-        // unit.get_coords().get_column() << '\n';
     }
 }
 

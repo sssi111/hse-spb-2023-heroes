@@ -24,6 +24,7 @@ public:
     bool is_have_unit() const;
 
     void set_unit(Unit *unit);
+    [[nodiscard]] Unit *get_unit();
     void add_selection();
     void remove_selection();
 
@@ -34,7 +35,10 @@ public:
         sf::Window *window
     );
 
+    CellEventType targetting(sf::Window *window);
+
     void update_cell(const namespace_proto::Cell &cell);
+
 
     void draw(sf::RenderWindow *window);
 

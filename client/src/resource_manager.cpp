@@ -34,9 +34,7 @@ ResourceManager::ResourceManager() {
         source_dir + "Montserrat-SemiBold.otf"
     );
 
-    m_fonts[Fonts::TittleFont].loadFromFile(
-        source_dir + "tittle_font.otf"
-    );
+    m_fonts[Fonts::TittleFont].loadFromFile(source_dir + "tittle_font.otf");
 }
 
 [[nodiscard]] const sf::Texture &ResourceManager::load_cell_texture(
@@ -61,7 +59,9 @@ ResourceManager::ResourceManager() {
     return m_fonts[font];
 }
 
-[[nodiscard]] const sf::Texture &ResourceManager::load_texture(TextureType texture) {
+[[nodiscard]] const sf::Texture &ResourceManager::load_texture(
+    TextureType texture
+) {
     return m_textures[texture];
 }
 }  // namespace game_view

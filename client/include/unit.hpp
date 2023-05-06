@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "client.hpp"
 #include "coordinates.hpp"
+#include "popup_window.hpp"
 #include "resource_manager.hpp"
 
 namespace game_view {
@@ -14,7 +15,6 @@ public:
           m_coords({-1, -1}),
           m_amount_of_units(),
           m_unit_id(),
-          m_health(),
           m_hero_id(),
           is_selected() {
     }
@@ -28,30 +28,34 @@ public:
     set_coords(Coords new_position, sf::Vector2f position, sf::Vector2f size);
     void set_selection();
     void disable_selection();
+    void update_characteristics(const namespace_proto::Unit &unit);
     void update_unit(
         namespace_proto::Cell cell,
         const namespace_proto::Unit &unit,
         sf::Vector2f new_position,
         sf::Vector2f size
     );
-
+    void update_statistic(CellEventType event_type, const sf::Window *window);
     void draw(sf::RenderWindow *window);
 
 private:
     UnitType m_type;
     Coords m_coords;
-    int m_health;
     int m_amount_of_units;
     int m_unit_id;
     int m_hero_id;
     bool is_selected{false};
-    bool is_statistic_showed{false};
+    int m_number_of_units;
+    int m_max_health;
+    int m_damage;
+    int m_attack_range;
+    int m_movement_range;
+    int m_weight;
 
     sf::Sprite m_unit;
     sf::RectangleShape m_table;
     sf::Text m_label;
-    sf::RectangleShape m_statistic_background;
-    sf::Text m_statistic_label;
+    interface::PopUpWindow m_statistic;
 };
 }  // namespace game_view
 

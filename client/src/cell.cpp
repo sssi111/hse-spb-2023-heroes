@@ -15,8 +15,10 @@ Cell::Cell(
     m_coords = coords;
     m_cell_type = type;
     m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
-    m_cell.scale(size.x / m_cell.getTexture()->getSize().x,
-                 size.y / m_cell.getTexture()->getSize().y);
+    m_cell.scale(
+        size.x / m_cell.getTexture()->getSize().x,
+        size.y / m_cell.getTexture()->getSize().y
+    );
     m_cell.setPosition(position);
     m_cell.setOrigin(size.x / 2, size.y / 2);
 
@@ -35,7 +37,8 @@ void Cell::set_unit(Unit *unit) {
 
 void Cell::add_selection() {
     m_is_available_for_moving = true;
-    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Selected));
+    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Selected)
+    );
 }
 
 void Cell::remove_selection() {
@@ -91,11 +94,40 @@ void Cell::event_processing(
             );
         }
     }
+    if (is_have_unit() &&
+        m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
+        m_unit->update_statistic(result, window);
+    }
 }
 
 void Cell::draw(sf::RenderWindow *window) {
     window->draw(m_cell);
     window->draw(m_label);
+}
+
+Unit *Cell::get_unit() {
+    return m_unit;
+}
+
+CellEventType Cell::targetting(sf::Window *window) {
+    sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
+    auto cell_bounds = m_cell.getLocalBounds();
+    auto cell_position = m_cell.getPosition();
+    mouse_position.x += cell_bounds.width / 2;
+    mouse_position.y += cell_bounds.height / 2;
+    mouse_position.x -= cell_position.x;
+    mouse_position.y -= cell_position.y;
+
+//    std::cout << cell_bounds.left<< ' ' <<  cell_bounds.left + cell_bounds.width << " - target left cell\n";
+//    std::cout << cell_bounds.top << ' ' <<  cell_bounds.top + cell_bounds.height << " - target top cell\n";
+    if (mouse_position.x >= 0 &&
+        mouse_position.x <= cell_bounds.width &&
+        mouse_position.y >=0 &&
+        mouse_position.y <= cell_bounds.height) {
+        std::cout << mouse_position.x << ' ' << mouse_position.y << " - target mouse\n";
+        return CellEventType::Targeting;
+    }
+    return CellEventType::Nothing;
 }
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell) {

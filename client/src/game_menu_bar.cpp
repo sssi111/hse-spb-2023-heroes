@@ -6,7 +6,7 @@ namespace game_view {
 GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
     sf::Vector2f button_size(100.0f, 62.0f);
     sf::Vector2f button_pos(button_size.x, wind_size.y - menu_height / 2);
-    float button_padding = (wind_size.x - button_size.x * 4) / 5;  // 4px.
+    float button_padding = (wind_size.x - button_size.x * 4) / 5;
 
     ButtonType button_types[4] = {
         ButtonType::Play, ButtonType::Pass, ButtonType::Menu, ButtonType::Exit};
@@ -18,8 +18,7 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
     labels[3] = "EXIT";
 
     m_background.setPosition(0, wind_size.y - menu_height);
-    m_background.setSize(sf::Vector2f(wind_size.x, menu_height));
-    m_background.setFillColor(sf::Color::Black);
+    m_background.setSize(sf::Vector2f(0, 0));
 
     for (int i = 0; i < 4; ++i) {
         sf::Vector2f button_position(
@@ -28,7 +27,7 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
             button_pos.y
         );
         m_buttons[i] = MenuButton(
-            button_position, button_size, sf::Color(139, 69, 19),
+            button_position, button_size, sf::Color(71, 78, 50),
             Fonts::Montserrat, 24, labels[i], button_types[i]
         );
     }

@@ -20,6 +20,8 @@ set(SOURCES
         src/coordinates.cpp
         src/textbox.cpp
         src/menu.cpp
+        src/caption.cpp
+        src/popup_window.cpp
         )
 
 add_executable(client ${SOURCES})

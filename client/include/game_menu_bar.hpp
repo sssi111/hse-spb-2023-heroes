@@ -6,20 +6,20 @@
 #include "window.hpp"
 
 namespace game_view {
-    class MenuButton;
+class MenuButton;
 
-    class GameMenuBar {
-    public:
-        GameMenuBar(sf::Vector2f wind_size, float menu_height);
-        ~GameMenuBar() = default;
+class GameMenuBar {
+public:
+    GameMenuBar(sf::Vector2f wind_size, float menu_height);
+    ~GameMenuBar() = default;
 
-        void update(sf::Event event, Window *window);
-        void render(sf::RenderWindow *window);
+    void update(sf::Event event, Window *window);
+    void render(sf::RenderWindow *window);
 
-    private:
-        sf::RectangleShape m_background;
-        std::vector<MenuButton> m_buttons{4};
-    };
-}
+private:
+    sf::RectangleShape m_background;
+    std::vector<MenuButton> m_buttons{4};
+};
+}  // namespace game_view
 
 #endif  // BATTLE_OF_HEROES_GAME_MENU_BAR_HPP

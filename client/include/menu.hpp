@@ -2,6 +2,7 @@
 #define BATTLE_OF_HEROES_HEROES_MENU_HPP
 
 #include <vector>
+#include "caption.hpp"
 #include "enum_classes_fwd.hpp"
 #include "menu_button.hpp"
 #include "textbox.hpp"
@@ -40,30 +41,6 @@ private:
     PageType m_next_page;
 };
 
-class Caption {
-public:
-    Caption() = default;
-    ~Caption() = default;
-
-    Caption(
-        sf::Vector2f position,
-        sf::Vector2f size,
-        game_view::Fonts font,
-        unsigned character_size,
-        const std::string& text,
-        PageType m_current_page
-    );
-
-    PageType get_current_page() const;
-    void set_text(const std::string& text);
-    void draw(sf::RenderWindow *window) const;
-
-private:
-    sf::RectangleShape m_table;
-    sf::Text m_data;
-    PageType m_current_page{PageType::Game};
-};
-
 class Menu {
 public:
     Menu();
@@ -82,11 +59,12 @@ private:
     PageType m_current_page;
     TextBox m_signup_login;
     TextBox m_signup_password;
-    MenuButton m_show_signup_password, m_show_registration_password;
+    MenuButton m_show_signup_password;
+    Caption m_signup_error;
     TextBox m_registration_login;
     TextBox m_registration_password;
     TextBox m_registration_password_checker;
-    Caption m_signup_error;
+    MenuButton m_show_registration_password;
     Caption m_registration_error;
 };
 }  // namespace menu_view

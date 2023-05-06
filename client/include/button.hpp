@@ -5,15 +5,15 @@
 #include "resource_manager.hpp"
 
 namespace game_view {
-    class Button {
-    public:
-        Button() = default;
-        Button(sf::Vector2f position, sf::Vector2f size);
+class Button {
+public:
+    Button() = default;
+    Button(sf::Vector2f position, sf::Vector2f size);
 
-        CellEventType event_processing(sf::Event event, const sf::Window *window);
+    CellEventType event_processing(sf::Event event, const sf::Window *window);
 
-    private:
-        sf::RectangleShape m_button;
-    };
-}
+private:
+    sf::RectangleShape m_button;
+};
+}  // namespace game_view
 #endif  // BATTLE_OF_HEROES_BUTTON_HPP

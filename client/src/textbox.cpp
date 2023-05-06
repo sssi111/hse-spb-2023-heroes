@@ -59,12 +59,14 @@ void TextBox::show_data() {
 
 void TextBox::clear() {
     m_data = "";
+    m_hidden_data = "";
     m_label.setString(m_data);
 }
 
 bool TextBox::update(sf::Event event, game_view::Window *window) {
     bool result = false;
-    if (m_button.event_processing(event, window->get_render_window()) == game_view::CellEventType::FirstPress) {
+    if (m_button.event_processing(event, window->get_render_window()) ==
+        game_view::CellEventType::FirstPress) {
         m_is_active = true;
         result = true;
     } else if (m_is_active && event.type == sf::Event::TextEntered && event.text.unicode != 10 &&  event.text.unicode != 8) {

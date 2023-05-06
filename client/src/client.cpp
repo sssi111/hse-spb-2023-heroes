@@ -25,7 +25,7 @@ void Client::sign_up(std::string nickname, std::string password) {
     get_client_state()->m_stub->SignUp(
         &context, request, get_client_state()->m_user.mutable_user()
     );
-    if (get_client_state()->m_user.user().id() == -1){
+    if (get_client_state()->m_user.user().id() == -1) {
         std::cout << "try again\n";
     }
 }
