@@ -14,6 +14,7 @@ Cell::Cell(
 ) {
     m_coords = coords;
     m_cell_type = type;
+    m_cell_size = size;
     m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
     m_cell.scale(
         size.x / m_cell.getTexture()->getSize().x,
@@ -112,14 +113,13 @@ void Cell::render(sf::RenderWindow *window) {
 
 CellEventType Cell::is_mouse_target(sf::Window *window) {
     sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
-    auto cell_bounds = m_cell.getLocalBounds();
     auto cell_position = m_cell.getPosition();
-    mouse_position.x += cell_bounds.width / 2;
-    mouse_position.y += cell_bounds.height / 2;
+    mouse_position.x += m_cell_size.x / 2;
+    mouse_position.y += m_cell_size.y / 2;
     mouse_position.x -= cell_position.x;
     mouse_position.y -= cell_position.y;
-    if (mouse_position.x >= 0 && mouse_position.x <= cell_bounds.width &&
-        mouse_position.y >= 0 && mouse_position.y <= cell_bounds.height) {
+    if (mouse_position.x >= 0 && mouse_position.x <= m_cell_size.x &&
+        mouse_position.y >= 0 && mouse_position.y <= m_cell_size.y) {
         std::cout << mouse_position.x << ' ' << mouse_position.y
                   << " - target mouse\n";
         return CellEventType::Targeting;

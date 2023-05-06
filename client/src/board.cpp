@@ -81,18 +81,20 @@ void Board::handling_event(sf::Event event, sf::Window *window) {
         m_board[row][column].handling_event(
             &selected_unit, this, event, window
         );
+        if (m_board[row][column].is_have_unit()) {
+        }
     }
 }
 
 void Board::render(sf::RenderWindow *window) {
     for (auto &row : m_board) {
         for (auto &cell : row) {
-            cell.render(window);
             if (cell.is_have_unit()) {
                 cell.get_unit()->update_statistic(
                     cell.is_mouse_target(window), window
                 );
             }
+            cell.render(window);
         }
     }
     for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {

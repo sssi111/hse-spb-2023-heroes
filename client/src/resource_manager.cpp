@@ -37,7 +37,7 @@ ResourceManager::ResourceManager() {
     );
 
     m_fonts[interface::Fonts::CaptionFont].loadFromFile(
-        interface::source_dir + "CaptionFont-SemiBold.otf"
+        interface::source_dir + "caption_font.otf"
     );
 
     m_fonts[interface::Fonts::TittleFont].loadFromFile(

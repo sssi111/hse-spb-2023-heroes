@@ -37,6 +37,7 @@ public:
 
 private:
     sf::Sprite m_cell;
+    sf::Vector2f m_cell_size;
     Coords m_coords;
     CellType m_cell_type{CellType::Default};
     Unit *m_unit{nullptr};

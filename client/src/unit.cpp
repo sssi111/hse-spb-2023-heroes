@@ -28,7 +28,6 @@ void Unit::render(sf::RenderWindow *window) {
     window->draw(m_unit);
     window->draw(m_table);
     window->draw(m_label);
-    auto mouse_position = sf::Mouse::getPosition(*window);
     m_statistic.render(window);
 }
 
@@ -98,8 +97,7 @@ void Unit::update_unit(
 
         m_statistic = interface::PopUpWindow(
             new_position, {0, 0}, interface::Fonts::CaptionFont, 20,
-            "number of units: 5\nmax health: 10\ndamage: 1\nattack range: "
-            "1\nmovement range: 2\nweight: 1"
+            get_unit_info()
         );
 
     } else {  // then handling_event
@@ -116,18 +114,29 @@ void Unit::update_unit(
     }
 }
 
+std::string Unit::get_unit_info() const {
+    return "number of units: " + std::to_string(m_number_of_units) +
+           "\n"
+           "max health: " +
+           std::to_string(m_max_health) +
+           "\n"
+           "damage: " +
+           std::to_string(m_damage) +
+           "\n"
+           "attack range: " +
+           std::to_string(m_attack_range) +
+           "\n"
+           "movement range: " +
+           std::to_string(m_movement_range) +
+           "\n"
+           "weight: " +
+           std::to_string(m_weight);
+}
+
 void Unit::update_statistic(
     CellEventType event_type,
     const sf::Window *window
 ) {
-    m_statistic.update(
-        "number of units: 5\n"
-        "max health: 10\n"
-        "damage: 1\n"
-        "attack range: 1\n"
-        "movement range: 2\n"
-        "weight: 1",
-        event_type, window
-    );
+    m_statistic.update(get_unit_info(), event_type, window);
 }
 }  // namespace game_interface
