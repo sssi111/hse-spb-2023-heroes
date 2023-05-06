@@ -3,12 +3,10 @@
 
 #include <vector>
 #include "caption.hpp"
-#include "enum_classes_fwd.hpp"
 #include "menu_button.hpp"
 #include "textbox.hpp"
-#include "window.hpp"
 
-namespace menu_view {
+namespace menu_interface {
 
 class MenuButton {
 public:
@@ -19,7 +17,7 @@ public:
         sf::Vector2f position,
         sf::Vector2f size,
         sf::Color color,
-        game_view::Fonts font,
+        interface::Fonts font,
         unsigned character_size,
         const std::string &tittle,
         PageType current_page,
@@ -30,13 +28,13 @@ public:
     PageType get_current_page() const;
     PageType get_next_page() const;
     void update_tittle(std::string new_tittle);
-    bool update(sf::Event event, game_view::Window *window);
-    void draw(sf::RenderWindow *window);
+    bool update(sf::Event event, game_interface::Window *window);
+    void render(sf::RenderWindow *window);
 
 private:
     sf::RectangleShape m_table;
     sf::Text m_data;
-    game_view::Button m_button;
+    interface::Button m_button;
     PageType m_current_page;
     PageType m_next_page;
 };
@@ -45,14 +43,14 @@ class Menu {
 public:
     Menu();
 
-    game_view::Window *get_window();
+    game_interface::Window *get_window();
     void change_page(PageType new_page);
     void print_error();
     void render();
     void update();
 
 private:
-    game_view::Window m_window;
+    game_interface::Window m_window;
     std::vector<MenuButton> m_buttons;
     std::vector<Caption> m_captions;
     sf::Sprite m_background;
@@ -67,6 +65,6 @@ private:
     MenuButton m_show_registration_password;
     Caption m_registration_error;
 };
-}  // namespace menu_view
+}  // namespace menu_interface
 
 #endif  // BATTLE_OF_HEROES_HEROES_MENU_HPP

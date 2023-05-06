@@ -1,10 +1,10 @@
 #include "textbox.hpp"
 
-namespace menu_view {
+namespace menu_interface {
 TextBox::TextBox(
     sf::Vector2f position,
     sf::Vector2f size,
-    game_view::Fonts font,
+    interface::Fonts font,
     unsigned int character_size,
     bool is_active
 ) {
@@ -13,9 +13,9 @@ TextBox::TextBox(
     m_table.setOrigin(size.x / 2.0f, size.y / 2.0f);
     m_table.setPosition(position);
 
-    m_button = game_view::Button(position, size);
+    m_button = interface::Button(position, size);
 
-    m_label.setFont(game_view::resource_manager()->load_font(font));
+    m_label.setFont(game_interface::resource_manager()->load_font(font));
     m_label.setFillColor(sf::Color::Black);
     m_label.setCharacterSize(character_size);
 
@@ -63,10 +63,10 @@ void TextBox::clear() {
     m_label.setString(m_data);
 }
 
-bool TextBox::update(sf::Event event, game_view::Window *window) {
+bool TextBox::update(sf::Event event, game_interface::Window *window) {
     bool result = false;
-    if (m_button.event_processing(event, window->get_render_window()) ==
-        game_view::CellEventType::FirstPress) {
+    if (m_button.handling_event(event, window->get_render_window()) ==
+        game_interface::CellEventType::FirstPress) {
         m_is_active = true;
         result = true;
     } else if (m_is_active && event.type == sf::Event::TextEntered && event.text.unicode != 10 &&  event.text.unicode != 8) {
@@ -86,8 +86,8 @@ bool TextBox::update(sf::Event event, game_view::Window *window) {
     return result;
 }
 
-void TextBox::draw(sf::RenderWindow *window) const {
+void TextBox::render(sf::RenderWindow *window) const {
     window->draw(m_table);
     window->draw(m_label);
 }
-}  // namespace menu_view
+}  // namespace menu_interface

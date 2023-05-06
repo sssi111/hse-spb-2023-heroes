@@ -1,15 +1,15 @@
 #include "button.hpp"
 #include <iostream>
 
-namespace game_view {
+namespace interface {
 Button::Button(sf::Vector2f position, sf::Vector2f size) {
     m_button.setSize(size);
     m_button.setOrigin(size.x / 2.0f, size.y / 2.0f);
     m_button.setPosition(position);
 }
 
-CellEventType
-Button::event_processing(sf::Event event, const sf::Window *window) {
+game_interface::CellEventType
+Button::handling_event(sf::Event event, const sf::Window *window) {
     sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
     std::cout << mouse_position.x << ' ' << mouse_position.y << " - mouse\n";
     auto button_size = sf::Vector2i(m_button.getSize());
@@ -23,10 +23,10 @@ Button::event_processing(sf::Event event, const sf::Window *window) {
         mouse_position.y <= button_position.y + button_size.y) {
         if (event.type == sf::Event::MouseButtonPressed &&
             event.mouseButton.button == sf::Mouse::Left) {
-            return CellEventType::FirstPress;
+            return game_interface::CellEventType::FirstPress;
         }
-        return CellEventType::Targeting;
+        return game_interface::CellEventType::Targeting;
     }
-    return CellEventType::Nothing;
+    return game_interface::CellEventType::Nothing;
 }
-}  // namespace game_view
+}  // namespace interface

@@ -2,10 +2,9 @@
 #define BATTLE_OF_HEROES_EVENT_MANAGER_HPP
 
 #include "board.hpp"
-#include "game_menu_bar.hpp"
 #include "window.hpp"
 
-namespace game_view {
+namespace game_interface {
 class EventManager {
 public:
     static void update_cell(
@@ -17,6 +16,6 @@ public:
     );
     static void update_game_menu(ButtonType event_type, Window *window);
 };
-}  // namespace game_view
+}  // namespace game_interface
 
 #endif  // BATTLE_OF_HEROES_EVENT_MANAGER_HPP

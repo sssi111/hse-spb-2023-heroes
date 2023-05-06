@@ -5,9 +5,8 @@
 #include "client.hpp"
 #include "coordinates.hpp"
 #include "popup_window.hpp"
-#include "resource_manager.hpp"
 
-namespace game_view {
+namespace game_interface {
 class Unit {
 public:
     Unit()
@@ -23,7 +22,6 @@ public:
 
     [[nodiscard]] Coords get_coords() const;
     [[nodiscard]] int get_hero_id() const;
-
     void
     set_coords(Coords new_position, sf::Vector2f position, sf::Vector2f size);
     void set_selection();
@@ -36,7 +34,7 @@ public:
         sf::Vector2f size
     );
     void update_statistic(CellEventType event_type, const sf::Window *window);
-    void draw(sf::RenderWindow *window);
+    void render(sf::RenderWindow *window);
 
 private:
     UnitType m_type;
@@ -57,6 +55,6 @@ private:
     sf::Text m_label;
     interface::PopUpWindow m_statistic;
 };
-}  // namespace game_view
+}  // namespace game_interface
 
 #endif  // BATTLE_OF_HEROES_UNIT_HPP

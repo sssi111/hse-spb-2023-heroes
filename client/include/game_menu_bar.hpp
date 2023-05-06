@@ -5,7 +5,7 @@
 #include "menu_button.hpp"
 #include "window.hpp"
 
-namespace game_view {
+namespace game_interface {
 class MenuButton;
 
 class GameMenuBar {
@@ -18,8 +18,8 @@ public:
 
 private:
     sf::RectangleShape m_background;
-    std::vector<MenuButton> m_buttons{4};
+    std::vector<MenuButton> m_buttons;
 };
-}  // namespace game_view
+}  // namespace game_interface
 
 #endif  // BATTLE_OF_HEROES_GAME_MENU_BAR_HPP

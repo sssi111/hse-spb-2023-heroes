@@ -42,7 +42,7 @@ void Client::run_receiver() {
         {
             std::unique_lock lock{get_client_state()->m_mutex};
             get_client_state()->m_game_state = response;
-            game_view::get_game_state()->get_board()->update_board(
+            game_interface::get_game_state()->get_board()->update_board(
                 get_client_state()->m_game_state
             );
         }

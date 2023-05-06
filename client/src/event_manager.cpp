@@ -2,7 +2,7 @@
 #include <iostream>
 #include "client.hpp"
 
-namespace game_view {
+namespace game_interface {
 void EventManager::update_cell(
     CellEventType event_type,
     Unit **selected_unit,
@@ -24,8 +24,6 @@ void EventManager::update_cell(
         board->add_available_for_moving_cells(Client::select_unit(selected_cell)
         );
         std::cout << '\n' << "received\n";
-        // selected_unit_id = unit_id;
-        // board[row][column].set_selection(selected_unit_id);
         if (*selected_unit != nullptr) {
             (*selected_unit)->disable_selection();
         }
@@ -33,7 +31,7 @@ void EventManager::update_cell(
         (*unit)->set_selection();
     } else if (event_type == CellEventType::SecondPress) {
         std::cout << "SecondPress is caught!\n";
-        // send to server position of our unit to deactivate unit (?)
+
         board->remove_available_for_moving_cells();
 
         *selected_unit = nullptr;
@@ -60,7 +58,6 @@ void EventManager::update_cell(
         *selected_unit = nullptr;
     } else if (event_type == CellEventType::Targeting) {
         std::cout << "Show statistic\n";
-        //        (*unit)->update_stastictic(); ?
     }
 }
 
@@ -71,4 +68,4 @@ void EventManager::update_game_menu(ButtonType button_type, Window *window) {
         std::cout << "FirstPress is caught!\n";
     }
 }
-}  // namespace game_view
+}  // namespace game_interface

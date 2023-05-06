@@ -3,10 +3,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "button.hpp"
-#include "enum_classes_fwd.hpp"
 #include "unit.hpp"
 
-namespace game_view {
+namespace game_interface {
 class Board;
 
 class Cell {
@@ -22,40 +21,32 @@ public:
     );
 
     bool is_have_unit() const;
-
-    void set_unit(Unit *unit);
     [[nodiscard]] Unit *get_unit();
+    void set_unit(Unit *unit);
     void add_selection();
     void remove_selection();
-
-    void event_processing(
+    void handling_event(
         Unit **selected_unit,
         Board *board,
         sf::Event event,
         sf::Window *window
     );
-
-    CellEventType targetting(sf::Window *window);
-
+    CellEventType is_mouse_target(sf::Window *window);
     void update_cell(const namespace_proto::Cell &cell);
-
-
-    void draw(sf::RenderWindow *window);
+    void render(sf::RenderWindow *window);
 
 private:
     sf::Sprite m_cell;
     Coords m_coords;
     CellType m_cell_type{CellType::Default};
+    Unit *m_unit{nullptr};
     int m_strength{};
     bool m_is_available_for_moving{};
-
-    Unit *m_unit{};
-
-    Button m_button;
+    interface::Button m_button;
     sf::Text m_label;
 };
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell);
-}  // namespace game_view
+}  // namespace game_interface
 
 #endif  // BATTLE_OF_HEROES_CELL_HPP

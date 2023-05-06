@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-namespace game_view {
+namespace game_interface {
 class Window {
 public:
     Window() = default;
@@ -14,19 +14,12 @@ public:
 
     void begin_draw();
     void end_draw();
-
-    void update(sf::Event event);
-
-    bool is_done() const;
-    bool is_fullscreen() const;
-
+    [[nodiscard]] sf::RenderWindow *get_render_window();
+    [[nodiscard]] bool is_done() const;
     void set_is_done();
-
     void toggle_fullscreen();
-
-    void draw(sf::Drawable &l_drawable);
-
-    sf::RenderWindow *get_render_window();
+    void update(sf::Event event);
+    void render(sf::Drawable &l_drawable);
 
 private:
     void create();
@@ -39,6 +32,6 @@ private:
     bool m_is_done{};
     bool m_is_fullscreen{};
 };
-}  // namespace game_view
+}  // namespace game_interface
 
 #endif  // BATTLE_OF_HEROES_WINDOW_HPP

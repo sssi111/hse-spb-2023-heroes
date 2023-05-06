@@ -1,12 +1,9 @@
 #ifndef BATTLE_OF_HEROES_GAME_HPP
 #define BATTLE_OF_HEROES_GAME_HPP
 
-#include "board.hpp"
-#include "event_manager.hpp"
 #include "game_menu_bar.hpp"
-#include "window.hpp"
 
-namespace game_view {
+namespace game_interface {
 class Game {
 public:
     Game();
@@ -14,9 +11,8 @@ public:
 
     void update();
     void render();
-
-    Window *get_window();
-    Board *get_board();
+    [[nodiscard]] Window *get_window();
+    [[nodiscard]] Board *get_board();
 
 private:
     Window m_window;
@@ -25,7 +21,7 @@ private:
     Board m_board;
 };
 
-Game *get_game_state();
-}  // namespace game_view
+[[nodiscard]] Game *get_game_state();
+}  // namespace game_interface
 
 #endif  // BATTLE_OF_HEROES_GAME_HPP

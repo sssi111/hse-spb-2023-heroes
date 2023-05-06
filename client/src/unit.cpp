@@ -1,6 +1,6 @@
 #include "unit.hpp"
 
-namespace game_view {
+namespace game_interface {
 Coords Unit::get_coords() const {
     return m_coords;
 }
@@ -24,12 +24,12 @@ void Unit::set_coords(
     );
 }
 
-void Unit::draw(sf::RenderWindow *window) {
+void Unit::render(sf::RenderWindow *window) {
     window->draw(m_unit);
     window->draw(m_table);
     window->draw(m_label);
     auto mouse_position = sf::Mouse::getPosition(*window);
-    m_statistic.draw(window);
+    m_statistic.render(window);
 }
 
 void Unit::set_selection() {
@@ -83,7 +83,9 @@ void Unit::update_unit(
             new_position.x + 3 * size.x / 4, new_position.y + 3 * size.y / 4
         ));
 
-        m_label.setFont(resource_manager()->load_font(Fonts::Montserrat));
+        m_label.setFont(
+            resource_manager()->load_font(interface::Fonts::CaptionFont)
+        );
         m_label.setString(sf::String(std::to_string(m_amount_of_units)));
         m_label.setCharacterSize(24);
 
@@ -95,12 +97,12 @@ void Unit::update_unit(
         ));
 
         m_statistic = interface::PopUpWindow(
-            new_position, {0, 0}, Fonts::Montserrat, 20,
+            new_position, {0, 0}, interface::Fonts::CaptionFont, 20,
             "number of units: 5\nmax health: 10\ndamage: 1\nattack range: "
             "1\nmovement range: 2\nweight: 1"
         );
 
-    } else {  // then event_processing
+    } else {  // then handling_event
         update_characteristics(unit);
         is_selected = unit.is_selected();
         m_coords = {cell.row(), cell.column()};
@@ -128,4 +130,4 @@ void Unit::update_statistic(
         event_type, window
     );
 }
-}  // namespace game_view
+}  // namespace game_interface

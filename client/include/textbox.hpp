@@ -4,19 +4,16 @@
 #include <SFML/Graphics.hpp>
 #include "button.hpp"
 #include "event_manager.hpp"
-#include "resource_manager.hpp"
-#include "window.hpp"
 
-namespace menu_view {
+namespace menu_interface {
 class TextBox {
 public:
     TextBox() = default;
     ~TextBox() = default;
-
     TextBox(
         sf::Vector2f position,
         sf::Vector2f size,
-        game_view::Fonts font,
+        interface::Fonts font,
         unsigned character_size,
         bool is_active
     );
@@ -28,8 +25,8 @@ public:
     void hide_data();
     void show_data();
     void clear();
-    bool update(sf::Event event, game_view::Window *window);
-    void draw(sf::RenderWindow *window) const;
+    bool update(sf::Event event, game_interface::Window *window);
+    void render(sf::RenderWindow *window) const;
 
 private:
     sf::RectangleShape m_table;
@@ -38,8 +35,8 @@ private:
     bool m_is_active{false};
     bool m_is_showed{true};
     sf::Text m_label;
-    game_view::Button m_button;
+    interface::Button m_button;
 };
-}  // namespace menu_view
+}  // namespace menu_interface
 
-#endif  // HSE_SPB_2023_HEROES_TEXTBOX_HPP
+#endif  // BATTLE_OF_HEROES_TEXTBOX_HPP

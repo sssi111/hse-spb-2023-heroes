@@ -1,9 +1,8 @@
-
 #include "board.hpp"
 #include <utility>
 #include "resource_manager.hpp"
 
-namespace game_view {
+namespace game_interface {
 Board::Board(sf::Vector2i window_size) {
     m_cell_amount = 10;
     m_window_size = window_size;
@@ -31,10 +30,10 @@ Board::Board(sf::Vector2i window_size) {
     }
 }
 
-sf::Vector2f Board::get_cell_position(Coords coords) const {
+[[nodiscard]] sf::Vector2f Board::get_cell_position(Coords coords) const {
     return {
         static_cast<float>(
-            m_boarder_size.x + m_cell_size.x / 4 +
+            m_boarder_size.x + m_cell_size.x / 4.0f +
             m_cell_size.x * coords.get_column()
         ),
         static_cast<float>(
@@ -43,14 +42,43 @@ sf::Vector2f Board::get_cell_position(Coords coords) const {
         )};
 }
 
-void Board::event_processing(sf::Event event, sf::Window *window) {
+void Board::add_available_for_moving_cells(
+    std::vector<std::pair<int, int>> selected_cells
+) {
+    remove_available_for_moving_cells();
+    m_available_for_moving_cells = selected_cells;
+    for (auto [row, column] : m_available_for_moving_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
+            column = 9 - column;
+        }
+        m_board[row][column].add_selection();
+    }
+}
+
+void Board::remove_available_for_moving_cells() {
+    for (auto [row, column] : m_available_for_moving_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
+            column = 9 - column;
+        }
+        m_board[row][column].remove_selection();
+    }
+    m_available_for_moving_cells.clear();
+}
+
+void Board::handling_event(sf::Event event, sf::Window *window) {
     int row =
         (sf::Mouse::getPosition(*window).y - m_boarder_size.y) / m_cell_size.y;
     int column =
         (sf::Mouse::getPosition(*window).x - m_boarder_size.x) / m_cell_size.x;
     if (column >= 0 && row >= 0 && row < m_cell_amount &&
         column < m_cell_amount) {
-        m_board[row][column].event_processing(
+        m_board[row][column].handling_event(
             &selected_unit, this, event, window
         );
     }
@@ -59,15 +87,17 @@ void Board::event_processing(sf::Event event, sf::Window *window) {
 void Board::render(sf::RenderWindow *window) {
     for (auto &row : m_board) {
         for (auto &cell : row) {
-            cell.draw(window);
+            cell.render(window);
             if (cell.is_have_unit()) {
-                cell.get_unit()->update_statistic(cell.targetting(window), window);
+                cell.get_unit()->update_statistic(
+                    cell.is_mouse_target(window), window
+                );
             }
         }
     }
     for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {
         if (m_unit_is_alive[unit_id]) {
-            m_units[unit_id].draw(window);
+            m_units[unit_id].render(window);
         }
     }
 }
@@ -102,33 +132,4 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
         }
     }
 }
-
-void Board::add_available_for_moving_cells(
-    std::vector<std::pair<int, int>> selected_cells
-) {
-    remove_available_for_moving_cells();
-    m_available_for_moving_cells = selected_cells;
-    for (auto [row, column] : m_available_for_moving_cells) {
-        bool is_second =
-            (get_client_state()->m_game_state.second_user() ==
-             get_client_state()->m_user.user().id());
-        if (is_second) {
-            column = 9 - column;
-        }
-        m_board[row][column].add_selection();
-    }
-}
-
-void Board::remove_available_for_moving_cells() {
-    for (auto [row, column] : m_available_for_moving_cells) {
-        bool is_second =
-            (get_client_state()->m_game_state.second_user() ==
-             get_client_state()->m_user.user().id());
-        if (is_second) {
-            column = 9 - column;
-        }
-        m_board[row][column].remove_selection();
-    }
-    m_available_for_moving_cells.clear();
-}
-}  // namespace game_view
+}  // namespace game_interface

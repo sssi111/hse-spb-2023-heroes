@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include "button.hpp"
-#include "enum_classes_fwd.hpp"
 
 namespace interface {
 class PopUpWindow {
@@ -12,23 +11,22 @@ public:
     PopUpWindow(
         sf::Vector2f position,
         sf::Vector2f size,
-        game_view::Fonts font,
+        interface::Fonts font,
         unsigned int character_size,
         const std::string &text
     );
 
     void update(
         const std::string &text,
-        game_view::CellEventType event_type,
+        game_interface::CellEventType event_type,
         const sf::Window *window
     );
-
-    void draw(sf::RenderWindow *window);
+    void render(sf::RenderWindow *window);
 
 private:
     sf::RectangleShape m_table;
     sf::Text m_data;
-    game_view::Button m_button;
+    Button m_button;
     bool m_is_active{false};
 };
 }  // namespace interface
