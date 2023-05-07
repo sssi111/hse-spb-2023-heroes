@@ -43,6 +43,7 @@ message EnableCell{
 message UserState{
   int32 game_id = 1;
   User user = 2;
+  int32 hero_id = 3;
 }
 
 message GameIdAndHero{
@@ -97,6 +98,7 @@ message DoSpellRequest{
 
 message Hero{
   int32 type = 1;
+  string name = 3;
   repeated Spell spells = 2;
 }
 
@@ -104,10 +106,12 @@ service Server {
   rpc SignUp(LogInData) returns(User) {}
   rpc LogIn(LogInData) returns(User) {}
   rpc GetHero(google.protobuf.Empty) returns(Hero) {}
+  rpc GetOpponent(UserState) returns(Hero) {}
   rpc CallServer(UserState) returns(stream GameState) {}
   rpc AddToLobby(User) returns(GameIdAndHero) {}
 
-  rpc SwitchTurn(google.protobuf.Empty) returns(google.protobuf.Empty) {}
+  rpc SwitchTurn(UserState) returns(google.protobuf.Empty) {}
+
 
   rpc MoveUnit(MoveFromTo) returns(GameState) {}
   rpc SelectUnit(MoveSelectUnit) returns(EnableCell) {}

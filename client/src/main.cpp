@@ -17,6 +17,8 @@ int main() {
         main_menu.update();
         main_menu.render();
     }
+
+    Client::get_hero();
     std::thread receiver(&Client::run_receiver);
     while (!game_interface::get_game_state()->get_window()->is_done()) {
         {

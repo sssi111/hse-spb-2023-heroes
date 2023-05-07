@@ -64,6 +64,20 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         return grpc::Status::OK;
     }
 
+    static void dump_hero(int hero_id, namespace_proto::Hero *hero) {
+        const game_model::hero *model_hero =
+            &const_game_info::HEROES_LIST[hero_id];
+        hero->set_type(model_hero->get_id());
+        const std::vector<game_model::spell> spells = model_hero->get_spells();
+        for (const auto &item : spells) {
+            auto spell = hero->add_spells();
+            spell->set_id(item.get_id());
+            spell->set_name(item.get_name());
+            spell->set_description(item.get_description());
+            spell->set_mana(item.get_mana_cost());
+        }
+    }
+
     ::grpc::Status GetHero(
         ::grpc::ServerContext *context,
         const google::protobuf::Empty *request,
@@ -71,18 +85,41 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     ) override {
         int rand_id =
             rand(0, static_cast<int>(const_game_info::HEROES_LIST.size() - 1));
-        const game_model::hero *model_hero =
-            &const_game_info::HEROES_LIST[rand_id];
-        response->set_type(model_hero->get_id());
-        const std::vector<game_model::spell> spells = model_hero->get_spells();
-        for (const auto &item : spells) {
-            auto spell = response->add_spells();
-            spell->set_id(item.get_id());
-            spell->set_name(item.get_name());
-            spell->set_description(item.get_description());
-            spell->set_mana(item.get_mana_cost());
-        }
+        dump_hero(rand_id, response);
         return ::grpc::Status::OK;
+    }
+
+    ::grpc::Status GetOpponent(
+        grpc::ServerContext *context,
+        const namespace_proto::UserState *request,
+        namespace_proto::Hero *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        namespace_proto::GameState *game_state_ref =
+            game_session_ref->get_game_state();
+        if (request->user().id() ==
+            game_session_ref->get_first_player().get_id()) {
+            dump_hero(
+                game_session_ref->get_second_player().get_hero_id(), response
+            );
+        } else {
+            dump_hero(
+                game_session_ref->get_first_player().get_hero_id(), response
+            );
+        }
+        return grpc::Status::OK;
+    }
+
+    ::grpc::Status SwitchTurn(
+        grpc::ServerContext *context,
+        const namespace_proto::UserState *request,
+        google::protobuf::Empty *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        switch_turn(game_session_ref);
+        return grpc::Status::OK;
     }
 
     ::grpc::Status CallServer(
@@ -91,7 +128,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
         get_server_state()->wait_list.push(Player{
-            request->user().id(), response});
+            request->user().id(), request->hero_id(), response});
         while (true) {
         }
         return ::grpc::Status::OK;

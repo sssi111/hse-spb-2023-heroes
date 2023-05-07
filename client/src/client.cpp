@@ -58,6 +58,7 @@ void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
     *request_to = to;
     auto *request_user = new namespace_proto::UserState;
     *request_user = (get_client_state()->m_user);
+    request_user->set_hero_id(get_client_state()->m_hero.type());
     request.set_allocated_start(request_from);
     request.set_allocated_finish(request_to);
     request.set_allocated_user(request_user);
@@ -76,6 +77,7 @@ std::vector<std::pair<int, int>> Client::select_unit(
     request.set_allocated_unit(request_cell);
     auto *request_user = new namespace_proto::UserState;
     *request_user = (get_client_state()->m_user);
+    request_user->set_hero_id(get_client_state()->m_hero.type());
     request.set_allocated_user(request_user);
     namespace_proto::EnableCell response;
     get_client_state()->m_stub->SelectUnit(&context, request, &response);
@@ -110,4 +112,21 @@ void Client::do_spell(int spell_id, const namespace_proto::Cell &cell) {
     namespace_proto::GameState response;
     get_client_state()->m_stub->DoSpell(&context, request, &response);
     get_client_state()->m_game_state = response;
+}
+
+void Client::get_hero(){
+    grpc::ClientContext context;
+    namespace_proto::Hero response;
+    get_client_state()->m_stub->GetHero(&context, google::protobuf::Empty{}, &response);
+    get_client_state()->m_hero = response;
+}
+
+void Client::get_opponent(){
+    grpc::ClientContext context;
+    auto *request_user = new namespace_proto::UserState;
+    *request_user = (get_client_state()->m_user);
+    request_user->set_hero_id(get_client_state()->m_hero.type());
+    namespace_proto::Hero response;
+    get_client_state()->m_stub->GetOpponent(&context, *request_user, &response);
+    get_client_state()->m_opponent = response;
 }

@@ -13,15 +13,20 @@
 
 class Player final {
     int id;
+    int hero_id;
     ::grpc::ServerWriter<namespace_proto::GameState> *stream;
 
 public:
-    Player(int id, ::grpc::ServerWriter<namespace_proto::GameState> *stream)
-        : id(id), stream(stream) {
+    Player(int id, int hero_id, ::grpc::ServerWriter<namespace_proto::GameState> *stream)
+        : id(id), hero_id(hero_id), stream(stream) {
     }
 
     [[nodiscard]] int get_id() const {
         return id;
+    }
+
+    [[nodiscard]] int get_hero_id() const{
+        return hero_id;
     }
 
     [[nodiscard]] ::grpc::ServerWriter<namespace_proto::GameState> *get_stream(
