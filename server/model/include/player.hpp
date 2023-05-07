@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "board.hpp"
-#include "hero.hpp"
 #include "unit.hpp"
 
 namespace game_model {
@@ -11,7 +10,6 @@ namespace game_model {
 class player {
 private:
     std::vector<unit> m_units_list{};
-    hero m_hero{};
     int m_id;
     int m_mana{10};
     int m_max_mana{10};
@@ -20,10 +18,11 @@ public:
     explicit player(int account_id) : m_id(account_id) {
     }
 
-    void set_start_units(int player_index, const board &game_board);
+    void set_start_units(int player_index, const board &game_board, const std::vector<int> &troop);
     [[nodiscard]] int get_id() const;
     [[nodiscard]] unit &get_unit(int index);
-    virtual ~player() = default;
+    void decrease_mana(int cost);
+    [[nodiscard]] int get_mana() const;
 };
 
 }  // namespace game_model

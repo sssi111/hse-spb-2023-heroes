@@ -47,6 +47,8 @@ public:
     get_reachable_cells(coordinates cell_coordinates, int max_distance);
     [[nodiscard]] std::vector<std::reference_wrapper<cell>>
     get_attackable_cells(coordinates cell_coordinates, int max_distance);
+    [[nodiscard]] std::vector<std::reference_wrapper<cell>>
+    get_spellable_cells(int player_id, int spell_id);
 };
 
 }  // namespace game_model

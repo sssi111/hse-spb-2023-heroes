@@ -30,12 +30,20 @@ void cell::decrease_cell_durability(int damage) {
     m_durability = std::max(0, m_durability - damage);
 }
 
+void cell::restore_cell_durability() {
+    m_durability = m_max_durability;
+}
+
 bool cell::is_unit_movable(int player_id) const {
     return m_player_index == player_id;
 }
 
-[[nodiscard]] int cell::get_durability() const {
+int cell::get_durability() const {
     return m_durability;
+}
+
+int cell::get_max_durability() const {
+    return m_max_durability;
 }
 
 }  // namespace game_model
