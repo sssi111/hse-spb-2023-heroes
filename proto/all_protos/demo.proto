@@ -110,7 +110,7 @@ service Server {
   rpc CallServer(UserState) returns(stream GameState) {}
   rpc AddToLobby(User) returns(GameIdAndHero) {}
 
-  rpc SwitchTurn(UserState) returns(google.protobuf.Empty) {}
+  rpc SwitchTurn(UserState) returns(GameState) {}
 
 
   rpc MoveUnit(MoveFromTo) returns(GameState) {}

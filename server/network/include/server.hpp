@@ -114,11 +114,12 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status SwitchTurn(
         grpc::ServerContext *context,
         const namespace_proto::UserState *request,
-        google::protobuf::Empty *response
+        namespace_proto::GameState *response
     ) override {
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->game_id()]);
         switch_turn(game_session_ref);
+        *response = *(game_session_ref->get_game_state());
         return grpc::Status::OK;
     }
 

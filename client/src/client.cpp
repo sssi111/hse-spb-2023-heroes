@@ -130,3 +130,13 @@ void Client::get_opponent(){
     get_client_state()->m_stub->GetOpponent(&context, *request_user, &response);
     get_client_state()->m_opponent = response;
 }
+
+void Client::skip_turn() {
+    grpc::ClientContext context;
+    auto *request_user = new namespace_proto::UserState;
+    *request_user = (get_client_state()->m_user);
+    request_user->set_hero_id(get_client_state()->m_hero.type());
+    namespace_proto::GameState response;
+    get_client_state()->m_stub->SwitchTurn(&context, *request_user, &response);
+    get_client_state()->m_game_state = response;
+}

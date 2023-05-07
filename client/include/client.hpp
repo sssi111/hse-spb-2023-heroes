@@ -35,6 +35,8 @@ public:
     static void log_in(std::string nickname, std::string password);
     static void sign_up(std::string nickname, std::string password);
 
+    static void skip_turn();
+
     static void get_hero();
     static void get_opponent();
 
