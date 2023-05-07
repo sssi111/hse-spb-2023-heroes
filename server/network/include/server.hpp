@@ -111,18 +111,22 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     }
 
     static void switch_turn(GameSession *game) {
-        if (game->get_game_state()->move_turn() == 0) {
+        if (game->get_game_state()->move_turn() ==
+            game->get_game_state()->first_user()) {
             game->get_model_game()->get_player(0)->decrease_mana(-1);
             int mana = game->get_model_game()->get_player(0)->get_mana();
             game->get_game_state()->set_first_user_mana(mana);
+            game->get_game_state()->set_move_turn(
+                game->get_game_state()->second_user()
+            );
         } else {
             game->get_model_game()->get_player(1)->decrease_mana(-1);
             int mana = game->get_model_game()->get_player(1)->get_mana();
             game->get_game_state()->set_second_user_mana(mana);
+            game->get_game_state()->set_move_turn(
+                game->get_game_state()->first_user()
+            );
         }
-        game->get_game_state()->set_move_turn(
-            (game->get_game_state()->move_turn() + 1) % 2
-        );
     }
 
     static void update_unit(
