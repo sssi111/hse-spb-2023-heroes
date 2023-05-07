@@ -34,22 +34,40 @@ bool Cell::is_have_unit() const {
 
 void Cell::set_unit(Unit *unit) {
     m_unit = unit;
-    if (m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy));
-    } else if (!m_is_available_for_moving) {
-        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Default));
+    if (unit == nullptr) {
+        m_cell.setTexture(
+            resource_manager()->load_cell_texture(CellType::Default)
+        );
+    } else if (!m_is_available_for_moving && m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy)
+        );
     }
 }
 
 void Cell::add_selection() {
     m_is_available_for_moving = true;
-    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Selected)
-    );
+    if (is_have_unit() &&
+        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Attack
+        ));
+    } else {
+        m_cell.setTexture(
+            resource_manager()->load_cell_texture(CellType::Selected)
+        );
+    }
 }
 
 void Cell::remove_selection() {
     m_is_available_for_moving = false;
-    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Default));
+    if (is_have_unit() &&
+        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy)
+        );
+    } else {
+        m_cell.setTexture(
+            resource_manager()->load_cell_texture(CellType::Default)
+        );
+    }
 }
 
 void Cell::update_cell(const namespace_proto::Cell &cell) {
@@ -72,6 +90,18 @@ void Cell::update_cell(const namespace_proto::Cell &cell) {
         label_bounds.left + label_bounds.width / 2.0f,
         label_bounds.top + label_bounds.height / 2.0f
     );
+
+    if (is_have_unit()) {
+        if (m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+            m_cell.setTexture(
+                resource_manager()->load_cell_texture(CellType::Enemy)
+            );
+        } else if (!m_is_available_for_moving) {
+            m_cell.setTexture(
+                resource_manager()->load_cell_texture(CellType::Default)
+            );
+        }
+    }
 }
 
 void Cell::handling_event(
@@ -125,8 +155,6 @@ CellEventType Cell::is_mouse_target(sf::Window *window) {
     mouse_position.y -= cell_position.y;
     if (mouse_position.x >= 0 && mouse_position.x <= m_cell_size.x &&
         mouse_position.y >= 0 && mouse_position.y <= m_cell_size.y) {
-        std::cout << mouse_position.x << ' ' << mouse_position.y
-                  << " - target mouse\n";
         return CellEventType::Targeting;
     }
     return CellEventType::Nothing;

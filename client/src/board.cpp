@@ -81,8 +81,6 @@ void Board::handling_event(sf::Event event, sf::Window *window) {
         m_board[row][column].handling_event(
             &selected_unit, this, event, window
         );
-        if (m_board[row][column].is_have_unit()) {
-        }
     }
 }
 
@@ -126,6 +124,8 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
             );
             m_board[row][column].set_unit(&m_units[unit_id]);
             m_unit_is_updated[unit_id] = true;
+        } else {
+            m_board[row][column].set_unit(nullptr);
         }
     }
     for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {

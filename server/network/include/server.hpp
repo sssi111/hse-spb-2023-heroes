@@ -158,10 +158,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         const ::namespace_proto::MoveFromTo *request,
         ::namespace_proto::GameState *response
     ) override {
-        std::cout << request->start().row() << ' ' << request->start().column()
-                  << '\n';
-        std::cout << request->finish().row() << ' '
-                  << request->finish().column() << '\n';
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->user().game_id()]);
         namespace_proto::GameState *game_state_ref =
@@ -179,7 +175,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             (*game_session_ref->get_mover())(from, to);
             swapUnits(cell_from, cell_to);
         } else {
-            std::cout << "attack selected\n";
             (*game_session_ref->get_attacker())(from, to);
             if (game_session_ref->get_model_game()->get_cell(to).get_unit_index(
                 ) == -1) {
@@ -227,7 +222,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         game_model::coordinates selected(request->unit());
         auto enable_cells = (*game_session_ref->get_move_selecter()
         )(selected, request->user().user().id());
-        std::cout << enable_cells.size() << '\n';
         for (auto cell : enable_cells) {
             namespace_proto::Cell *new_cell = response->add_cells();
             new_cell->set_row(cell.get().get_coordinates().get_row());
@@ -241,7 +235,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             new_cell->set_column(cell.get().get_coordinates().get_column());
             new_cell->set_is_attack(true);
         }
-        std::cout << enable_cells.size() << '\n';
         return ::grpc::Status::OK;
     }
 

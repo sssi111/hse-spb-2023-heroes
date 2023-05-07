@@ -25,9 +25,6 @@ void Client::sign_up(std::string nickname, std::string password) {
     get_client_state()->m_stub->SignUp(
         &context, request, get_client_state()->m_user.mutable_user()
     );
-    if (get_client_state()->m_user.user().id() == -1) {
-        std::cout << "try again\n";
-    }
 }
 
 void Client::run_receiver() {
@@ -49,7 +46,6 @@ void Client::run_receiver() {
         get_client_state()->m_user.set_game_id(
             get_client_state()->m_game_state.game_id()
         );
-        std::cout << get_client_state()->m_game_state.game_id() << '\n';
     }
 }
 
@@ -90,7 +86,7 @@ std::vector<std::pair<int, int>> Client::select_unit(
     return enable_set;
 }
 
-std::vector<std::pair<int, int>> Client::select_spell(int spell_id){
+std::vector<std::pair<int, int>> Client::select_spell(int spell_id) {
     grpc::ClientContext context;
     namespace_proto::SelectSpellRequest request;
     request.set_game_id(get_client_state()->m_user.game_id());
@@ -105,7 +101,7 @@ std::vector<std::pair<int, int>> Client::select_spell(int spell_id){
     return enable_set;
 }
 
-void Client::do_spell(int spell_id, const namespace_proto::Cell &cell){
+void Client::do_spell(int spell_id, const namespace_proto::Cell &cell) {
     grpc::ClientContext context;
     namespace_proto::DoSpellRequest request;
     request.set_game_id(get_client_state()->m_user.game_id());

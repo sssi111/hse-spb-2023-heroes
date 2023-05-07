@@ -17,7 +17,8 @@ public:
     void render(sf::RenderWindow *window);
 
 private:
-    sf::RectangleShape m_background;
+    sf::RectangleShape m_turn_label;
+    sf::Text m_data;
     std::vector<MenuButton> m_buttons;
 };
 }  // namespace game_interface

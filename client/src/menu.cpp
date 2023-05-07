@@ -55,7 +55,6 @@ void MenuButton::update_tittle(std::string new_tittle) {
 bool MenuButton::update(sf::Event event, game_interface::Window *window) {
     if (m_button.handling_event(event, window->get_render_window()) ==
         game_interface::CellEventType::FirstPress) {
-        std::cout << "Pressed\n";
         return true;
     }
     return false;

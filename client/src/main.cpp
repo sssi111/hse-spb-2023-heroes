@@ -17,7 +17,6 @@ int main() {
         main_menu.update();
         main_menu.render();
     }
-    std::cout << get_client_state()->m_user.user().id() << '\n';
     std::thread receiver(&Client::run_receiver);
     while (!game_interface::get_game_state()->get_window()->is_done()) {
         {
