@@ -34,6 +34,11 @@ bool Cell::is_have_unit() const {
 
 void Cell::set_unit(Unit *unit) {
     m_unit = unit;
+    if (m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy));
+    } else if (!m_is_available_for_moving) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Default));
+    }
 }
 
 void Cell::add_selection() {

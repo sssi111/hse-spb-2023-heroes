@@ -22,6 +22,7 @@ public:
 
     [[nodiscard]] Coords get_coords() const;
     [[nodiscard]] int get_hero_id() const;
+    [[nodiscard]] int get_unit_id() const;
     void
     set_coords(Coords new_position, sf::Vector2f position, sf::Vector2f size);
     void set_selection();

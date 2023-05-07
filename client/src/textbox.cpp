@@ -19,9 +19,10 @@ TextBox::TextBox(
     m_label.setFillColor(sf::Color::Black);
     m_label.setCharacterSize(character_size);
 
-    sf::FloatRect rect = m_label.getLocalBounds();
+    sf::FloatRect data_bounds = m_label.getLocalBounds();
     m_label.setOrigin(
-        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
+        data_bounds.left + data_bounds.width / 2.0f,
+        data_bounds.top + data_bounds.height / 2.0f
     );
 
     m_label.setPosition(

@@ -9,6 +9,10 @@ int Unit::get_hero_id() const {
     return m_hero_id;
 }
 
+int Unit::get_unit_id() const {
+    return m_hero_id;
+}
+
 void Unit::set_coords(
     Coords new_position,
     sf::Vector2f position,

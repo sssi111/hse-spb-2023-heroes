@@ -17,6 +17,9 @@ ResourceManager::ResourceManager() {
     m_cell_textures[CellType::Selected].loadFromFile(
         interface::source_dir + "selected_grass.jpg"
     );
+    m_cell_textures[CellType::Enemy].loadFromFile(
+        interface::source_dir + "enemy_grass.jpg"
+    );
 
     m_unit_textures[UnitType::UnitType1].loadFromFile(
         interface::source_dir + "hero.png"
