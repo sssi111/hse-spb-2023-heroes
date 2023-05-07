@@ -9,7 +9,7 @@ const std::vector<game_model::spell> SPELL_LIST = {
     game_model::spell(
         0,
         game_model::spell::type::CELL,
-        "brake cell",
+        "break cell",
         "destroy the selected cell",
         5,
         [](game_model::cell &cell) {
@@ -37,7 +37,7 @@ const std::vector<game_model::spell> SPELL_LIST = {
     game_model::spell(
         2,
         game_model::spell::type::UNIT,
-        "attak unit",
+        "attack unit",
         "deal 10 damage to unit",
         5,
         [](game_model::cell &cell) { return; },

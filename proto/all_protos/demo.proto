@@ -79,6 +79,7 @@ message Spell{
   int32 id = 1;
   string name = 2;
   string description = 3;
+  int32 mana = 4;
 }
 
 message SelectSpellRequest{

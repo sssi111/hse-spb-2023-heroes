@@ -80,6 +80,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             spell->set_id(item.get_id());
             spell->set_name(item.get_name());
             spell->set_description(item.get_description());
+            spell->set_mana(item.get_mana_cost());
         }
         return ::grpc::Status::OK;
     }
