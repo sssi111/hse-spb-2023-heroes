@@ -137,8 +137,7 @@ std::string Unit::get_unit_info() const {
            std::to_string(m_weight);
 }
 
-void Unit::update_statistic(
-    CellEventType event_type,
+void Unit::update_statistic(EventType event_type,
     const sf::Window *window
 ) {
     m_statistic.update(get_unit_info(), event_type, window);

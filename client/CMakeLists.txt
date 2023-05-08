@@ -22,6 +22,7 @@ set(SOURCES
         src/menu.cpp
         src/caption.cpp
         src/popup_window.cpp
+        src/spell.cpp
         )
 
 add_executable(client ${SOURCES})

@@ -4,11 +4,10 @@
 
 namespace game_interface {
 GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
-    sf::Vector2f button_size(100.0f, 62.0f);
+    sf::Vector2f button_size{100.0f, 60.0f};
     sf::Vector2f button_pos(button_size.x, wind_size.y - menu_height / 2);
-    float button_padding = (wind_size.x - button_size.x * 4) / 5;
 
-    sf::Vector2f label_size(250.0f, 50.0f);
+    sf::Vector2f label_size{250.0f, 50.0f};
     m_turn_label.setSize(label_size);
     m_turn_label.setFillColor(sf::Color(71, 78, 50));
     m_turn_label.setOrigin(label_size.x / 2.0f, label_size.y / 2.0f);
@@ -54,27 +53,52 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
         button_size, sf::Color(71, 78, 50), interface::Fonts::CaptionFont, 22,
         labels[2], button_types[2]
     );
+
+    m_spells_amount = get_client_state()->m_hero.spells_size();
+    sf::Vector2f spell_size{130, 80};
+    float distance = 100.0f;
+    float start_position_y = wind_size.y / 2 -
+                             spell_size.y / 2 * (m_spells_amount % 2) -
+                             (m_spells_amount / 2) * (spell_size.y + distance);
+
+    m_spells.resize(m_spells_amount);
+    for (int spell_id = 0; spell_id < m_spells_amount; spell_id++) {
+        auto current_spell = get_client_state()->m_hero.spells(spell_id);
+        m_spells[spell_id] = Spell({67.0f, start_position_y  + spell_id * (spell_size.y + distance)}, spell_size,
+                                   current_spell);
+    }
+}
+
+void GameMenuBar::update_turn(const std::string &new_label) {
+    m_data.setString(new_label);
+    sf::FloatRect data_bounds = m_data.getLocalBounds();
+    m_data.setOrigin(
+        data_bounds.left + data_bounds.width / 2.0f,
+        data_bounds.top + data_bounds.height / 2.0f
+    );
 }
 
 void GameMenuBar::update(sf::Event event, Window *window) {
     for (auto &button : m_buttons) {
         button.update(event, window);
     }
-    if (get_client_state()->m_user.user().id() ==
+    for (auto &spell : m_spells) {
+        spell.update(event, window);
+    }
+    if (get_client_state()->m_game_state.move_turn() == 0) {
+        update_turn("Nobody's turn");
+    } else if (get_client_state()->m_user.user().id() ==
         get_client_state()->m_game_state.move_turn()) {
-        m_data.setString("Your turn");
-        sf::FloatRect data_bounds = m_data.getLocalBounds();
-        m_data.setOrigin(
-            data_bounds.left + data_bounds.width / 2.0f,
-            data_bounds.top + data_bounds.height / 2.0f
-        );
+        update_turn("Your turn");
     } else {
-        m_data.setString("Opponent's turn");
-        sf::FloatRect data_bounds = m_data.getLocalBounds();
-        m_data.setOrigin(
-            data_bounds.left + data_bounds.width / 2.0f,
-            data_bounds.top + data_bounds.height / 2.0f
-        );
+        update_turn("Opponent's turn");
+    }
+    if (get_client_state()->m_opponent.type() == -1 &&
+        get_client_state()->m_game_state.move_turn() != 0) {
+        Client::get_opponent();
+        // read opponent's spells ?
+        m_opponents_spells_amount =
+            get_client_state()->m_opponent.spells_size();
     }
 }
 
@@ -83,6 +107,12 @@ void GameMenuBar::render(sf::RenderWindow *window) {
     window->draw(m_data);
     for (auto &button : m_buttons) {
         button.render(window);
+    }
+    for (auto &spell : m_spells) {
+        spell.render(window);
+    }
+    for (auto &spell : m_opponents_spells) {
+        spell.render(window);
     }
 }
 }  // namespace game_interface

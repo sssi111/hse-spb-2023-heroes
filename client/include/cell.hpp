@@ -31,7 +31,7 @@ public:
         sf::Event event,
         sf::Window *window
     );
-    CellEventType is_mouse_target(sf::Window *window);
+    EventType is_mouse_target(sf::Window *window);
     void update_cell(const namespace_proto::Cell &cell);
     void render(sf::RenderWindow *window);
 

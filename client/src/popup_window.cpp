@@ -27,10 +27,10 @@ PopUpWindow::PopUpWindow(
 
 void PopUpWindow::update(
     const std::string &text,
-    game_interface::CellEventType event_type,
+    game_interface::EventType event_type,
     const sf::Window *window
 ) {
-    if (event_type == game_interface::CellEventType::Targeting) {
+    if (event_type == game_interface::EventType::Targeting) {
         m_is_active = true;
         auto mouse_position = sf::Mouse::getPosition(*window);
         m_data.setPosition(mouse_position.x, mouse_position.y);

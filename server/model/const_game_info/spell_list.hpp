@@ -9,8 +9,8 @@ const std::vector<game_model::spell> SPELL_LIST = {
     game_model::spell(
         0,
         game_model::spell::type::CELL,
-        "break cell",
-        "destroy the selected cell",
+        "break\n cell",
+        "destroy the\nselected \ncell",
         5,
         [](game_model::cell &cell) {
             cell.decrease_cell_durability(cell.get_durability());
@@ -24,8 +24,8 @@ const std::vector<game_model::spell> SPELL_LIST = {
     game_model::spell(
         1,
         game_model::spell::type::CELL,
-        "heal cell",
-        "restore cell's durability to maximum",
+        "heal\ncell",
+        "restore cell's\ndurability\nto maximum",
         5,
         [](game_model::cell &cell) { cell.restore_cell_durability(); },
         [](game_model::unit &unit) { return; },
@@ -37,8 +37,8 @@ const std::vector<game_model::spell> SPELL_LIST = {
     game_model::spell(
         2,
         game_model::spell::type::UNIT,
-        "attack unit",
-        "deal 10 damage to unit",
+        "attack\n unit ",
+        "deal 10\ndamage\nto unit",
         5,
         [](game_model::cell &cell) { return; },
         [](game_model::unit &unit) { unit.decrease_health(10); },
@@ -52,7 +52,7 @@ const std::vector<game_model::spell> SPELL_LIST = {
         3,
         game_model::spell::type::UNIT,
         "heal unit",
-        "restore unit's health to maximum",
+        "restore unit's\n health \nto maximum",
         5,
         [](game_model::cell &cell) { return; },
         [](game_model::unit &unit) { unit.restore_health(); },

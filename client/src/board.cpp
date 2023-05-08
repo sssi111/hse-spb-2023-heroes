@@ -46,7 +46,7 @@ void Board::add_available_for_moving_cells(
     std::vector<std::pair<int, int>> selected_cells
 ) {
     remove_available_for_moving_cells();
-    m_available_for_moving_cells = selected_cells;
+    m_available_for_moving_cells = std::move(selected_cells);
     for (auto [row, column] : m_available_for_moving_cells) {
         bool is_second =
             (get_client_state()->m_game_state.second_user() ==

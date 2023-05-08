@@ -4,7 +4,7 @@
 
 namespace game_interface {
 void EventManager::update_cell(
-    CellEventType event_type,
+    EventType event_type,
     Unit **selected_unit,
     Unit **unit,
     Coords clicked_position,
@@ -14,7 +14,7 @@ void EventManager::update_cell(
         get_client_state()->m_game_state.move_turn()) {
         return;
     }
-    if (event_type == CellEventType::FirstPress) {
+    if (event_type == EventType::FirstPress) {
         namespace_proto::Cell selected_cell;
         selected_cell.set_row(clicked_position.get_row());
         selected_cell.set_column(clicked_position.get_column());
@@ -31,11 +31,11 @@ void EventManager::update_cell(
         }
         *selected_unit = *unit;
         (*unit)->set_selection();
-    } else if (event_type == CellEventType::SecondPress) {
+    } else if (event_type == EventType::SecondPress) {
         board->remove_available_for_moving_cells();
         *selected_unit = nullptr;
         (*unit)->disable_selection();
-    } else if (event_type == CellEventType::Move) {
+    } else if (event_type == EventType::Move) {
         namespace_proto::Cell to;
         to.set_row(clicked_position.get_row());
         to.set_column(clicked_position.get_column());

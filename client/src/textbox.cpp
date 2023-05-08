@@ -67,7 +67,7 @@ void TextBox::clear() {
 bool TextBox::update(sf::Event event, game_interface::Window *window) {
     bool result = false;
     if (m_button.handling_event(event, window->get_render_window()) ==
-        game_interface::CellEventType::FirstPress) {
+        game_interface::EventType::FirstPress) {
         m_is_active = true;
         result = true;
     } else if (m_is_active && event.type == sf::Event::TextEntered && event.text.unicode != 10 &&  event.text.unicode != 8) {

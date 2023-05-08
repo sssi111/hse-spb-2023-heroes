@@ -35,7 +35,7 @@ public:
         sf::Vector2f size
     );
     [[nodiscard]] std::string get_unit_info() const;
-    void update_statistic(CellEventType event_type, const sf::Window *window);
+    void update_statistic(EventType event_type, const sf::Window *window);
     void render(sf::RenderWindow *window);
 
 private:

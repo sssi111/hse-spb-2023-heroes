@@ -19,6 +19,7 @@ int main() {
     }
 
     Client::get_hero();
+    get_client_state()->m_opponent.set_type(-1);
     std::thread receiver(&Client::run_receiver);
     while (!game_interface::get_game_state()->get_window()->is_done()) {
         {
