@@ -43,7 +43,7 @@ private:
     Coords m_coords;
     CellType m_cell_type{CellType::Default};
     Unit *m_unit{nullptr};
-    int m_strength{};
+    int m_durability{};
     bool m_is_available_for_moving{};
     interface::Button m_button;
     sf::Text m_label;

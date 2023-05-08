@@ -24,7 +24,7 @@ Cell::Cell(
     m_cell.setOrigin(size.x / 2, size.y / 2);
 
     m_button = interface::Button(position, size);
-    m_strength = strength;
+    m_durability = strength;
     m_unit = unit;
 }
 
@@ -88,13 +88,13 @@ void Cell::remove_spelling() {
 }
 
 void Cell::update_cell(const namespace_proto::Cell &cell) {
-    m_strength = cell.durability();
+    m_durability = cell.durability();
 
     m_unit = nullptr;
 
     m_label.setFont(resource_manager()->load_font(interface::Fonts::CaptionFont)
     );
-    m_label.setString(std::to_string(m_strength));
+    m_label.setString(std::to_string(m_durability));
     m_label.setCharacterSize(24);
 
     sf::FloatRect label_bounds = m_label.getLocalBounds();
@@ -166,8 +166,8 @@ void Cell::render(sf::RenderWindow *window) {
 EventType Cell::is_mouse_target(sf::Window *window) {
     sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
     auto cell_position = m_cell.getPosition();
-    mouse_position.x += m_cell_size.x / 2;
-    mouse_position.y += m_cell_size.y / 2;
+//    mouse_position.x += m_cell_size.x / 2;
+//    mouse_position.y += m_cell_size.y / 2;
     mouse_position.x -= cell_position.x;
     mouse_position.y -= cell_position.y;
     if (mouse_position.x >= 0 && mouse_position.x <= m_cell_size.x &&

@@ -35,7 +35,6 @@ void Spell::update(sf::Event event, Window *window) {
             get_game_state()->get_board()->remove_enable_for_spelling_cells();
         } else {
             std::vector<std::pair<int, int>> enable_cells = Client::select_spell(m_id);
-            // todo send to board enable cells
             get_game_state()->get_board()->add_enable_for_spelling_cells(enable_cells);
         }
     }

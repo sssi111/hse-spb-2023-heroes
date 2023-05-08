@@ -100,7 +100,7 @@ void Unit::update_unit(
         ));
 
         m_statistic = interface::PopUpWindow(
-            new_position, {0, 0}, interface::Fonts::CaptionFont, 20,
+            new_position, {230, 150}, interface::Fonts::CaptionFont, 20,
             get_unit_info()
         );
 
