@@ -70,6 +70,23 @@ void Cell::remove_selection() {
     }
 }
 
+void Cell::add_spelling() {
+    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::EnableForSpellbinding
+    ));
+}
+
+void Cell::remove_spelling() {
+    if (is_have_unit() &&
+        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy)
+        );
+    } else {
+        m_cell.setTexture(
+            resource_manager()->load_cell_texture(CellType::Default)
+        );
+    }
+}
+
 void Cell::update_cell(const namespace_proto::Cell &cell) {
     m_strength = cell.durability();
 
@@ -154,7 +171,8 @@ EventType Cell::is_mouse_target(sf::Window *window) {
     mouse_position.x -= cell_position.x;
     mouse_position.y -= cell_position.y;
     if (mouse_position.x >= 0 && mouse_position.x <= m_cell_size.x &&
-        mouse_position.y >= 0 && mouse_position.y <= m_cell_size.y) {
+        mouse_position.y >= 0 && mouse_position.y <= m_cell_size.y &&
+        sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
         return EventType::Targeting;
     }
     return EventType::Nothing;

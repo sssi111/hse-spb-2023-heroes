@@ -71,6 +71,35 @@ void Board::remove_available_for_moving_cells() {
     m_available_for_moving_cells.clear();
 }
 
+void Board::add_enable_for_spelling_cells(
+    std::vector<std::pair<int, int>> enable_cells
+) {
+    remove_enable_for_spelling_cells();
+    m_enable_for_spelling_cells = std::move(enable_cells);
+    for (auto [row, column] : m_enable_for_spelling_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
+            column = 9 - column;
+        }
+        m_board[row][column].add_spelling();
+    }
+}
+
+void Board::remove_enable_for_spelling_cells() {
+    for (auto [row, column] : m_enable_for_spelling_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
+            column = 9 - column;
+        }
+        m_board[row][column].remove_spelling();
+    }
+    m_available_for_moving_cells.clear();
+}
+
 void Board::handling_event(sf::Event event, sf::Window *window) {
     int row =
         (sf::Mouse::getPosition(*window).y - m_boarder_size.y) / m_cell_size.y;

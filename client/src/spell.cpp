@@ -1,4 +1,5 @@
 #include "spell.hpp"
+#include "game.hpp"
 
 namespace game_interface {
 Spell::Spell(
@@ -31,11 +32,11 @@ void Spell::update(sf::Event event, Window *window) {
     if (event_type == EventType::FirstPress || event_type == EventType::SecondPress) {
         update_data();
         if (is_name_showed) {
-//            get_game_state()->get_board()->remove_enable_spell_book_cells();
+            get_game_state()->get_board()->remove_enable_for_spelling_cells();
         } else {
-            auto enable_cells = Client::select_spell(m_id);
+            std::vector<std::pair<int, int>> enable_cells = Client::select_spell(m_id);
             // todo send to board enable cells
-            //            get_game_state()->get_board()->add_enable_spell_book_cells();
+            get_game_state()->get_board()->add_enable_for_spelling_cells(enable_cells);
         }
     }
 }

@@ -25,6 +25,8 @@ public:
     void set_unit(Unit *unit);
     void add_selection();
     void remove_selection();
+    void add_spelling();
+    void remove_spelling();
     void handling_event(
         Unit **selected_unit,
         Board *board,
