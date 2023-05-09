@@ -37,6 +37,8 @@ public:
 
     static void skip_turn();
 
+    static int get_mana();
+
     static void get_hero();
     static void get_opponent();
 
