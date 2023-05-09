@@ -149,3 +149,12 @@ int Client::get_mana() {
         return get_client_state()->m_game_state.second_user_mana();
     }
 }
+
+int Client::get_opponent_mana() {
+    if (get_client_state()->m_game_state.first_user() == get_client_state()->m_user.user().id()){
+        return get_client_state()->m_game_state.second_user_mana();
+    }
+    else{
+        return get_client_state()->m_game_state.first_user_mana();
+    }
+}
