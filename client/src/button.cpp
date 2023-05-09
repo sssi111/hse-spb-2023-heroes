@@ -8,7 +8,7 @@ Button::Button(sf::Vector2f position, sf::Vector2f size) {
     m_button.setPosition(position);
 }
 
-game_interface::CellEventType
+game_interface::EventType
 Button::handling_event(sf::Event event, const sf::Window *window) {
     sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
     auto button_size = sf::Vector2i(m_button.getSize());
@@ -21,10 +21,10 @@ Button::handling_event(sf::Event event, const sf::Window *window) {
         mouse_position.y <= button_position.y + button_size.y) {
         if (event.type == sf::Event::MouseButtonPressed &&
             event.mouseButton.button == sf::Mouse::Left) {
-            return game_interface::CellEventType::FirstPress;
+            return game_interface::EventType::FirstPress;
         }
-        return game_interface::CellEventType::Targeting;
+        return game_interface::EventType::Targeting;
     }
-    return game_interface::CellEventType::Nothing;
+    return game_interface::EventType::Nothing;
 }
 }  // namespace interface

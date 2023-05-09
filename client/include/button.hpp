@@ -11,7 +11,7 @@ public:
     ~Button() = default;
     Button(sf::Vector2f position, sf::Vector2f size);
 
-    game_interface::CellEventType
+    game_interface::EventType
     handling_event(sf::Event event, const sf::Window *window);
 
 private:

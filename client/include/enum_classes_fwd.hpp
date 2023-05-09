@@ -7,13 +7,13 @@
 namespace game_interface {
 enum class UnitType { Empty, UnitType1, UnitType2 };
 
-enum class CellType { Default, Broken, Selected, Enemy, Attack };
+enum class CellType { Default, Broken, Selected, Enemy, Attack, EnableForSpellbinding };
 
 enum class TextureType { MenuBackground };
 
-enum class CellEventType { FirstPress, SecondPress, Move, Targeting, Nothing };
+enum class EventType { FirstPress, SecondPress, Move, Targeting, Nothing };
 
-enum class ButtonType { None, Play, Pass, Menu, Exit, Skip, GiveUp };
+enum class ButtonType { None, Play, Pass, Menu, Exit, Skip, GiveUp, Spell };
 }  // namespace game_interface
 
 namespace menu_interface {

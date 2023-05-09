@@ -25,13 +25,15 @@ public:
     void set_unit(Unit *unit);
     void add_selection();
     void remove_selection();
+    void add_spelling();
+    void remove_spelling();
     void handling_event(
         Unit **selected_unit,
         Board *board,
         sf::Event event,
         sf::Window *window
     );
-    CellEventType is_mouse_target(sf::Window *window);
+    EventType is_mouse_target(sf::Window *window);
     void update_cell(const namespace_proto::Cell &cell);
     void render(sf::RenderWindow *window);
 
@@ -41,7 +43,7 @@ private:
     Coords m_coords;
     CellType m_cell_type{CellType::Default};
     Unit *m_unit{nullptr};
-    int m_strength{};
+    int m_durability{};
     bool m_is_available_for_moving{};
     interface::Button m_button;
     sf::Text m_label;

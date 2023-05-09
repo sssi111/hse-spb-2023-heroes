@@ -16,6 +16,10 @@ public:
         std::vector<std::pair<int, int>> selected_cells
     );
     void remove_available_for_moving_cells();
+    void add_enable_for_spelling_cells(
+        std::vector<std::pair<int, int>> selected_cells
+    );
+    void remove_enable_for_spelling_cells();
     void handling_event(sf::Event event, sf::Window *window);
     void update_board(const namespace_proto::GameState &game_state);
     void render(sf::RenderWindow *window);
@@ -31,6 +35,7 @@ private:
     std::vector<bool> m_unit_is_alive;
     Unit *selected_unit;
     std::vector<std::pair<int, int>> m_available_for_moving_cells;
+    std::vector<std::pair<int, int>> m_enable_for_spelling_cells;
 };
 }  // namespace game_interface
 #endif  // BATTLE_OF_HEROES_BOARD_HPP

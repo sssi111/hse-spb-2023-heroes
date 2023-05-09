@@ -18,7 +18,7 @@ public:
 
     void update(
         const std::string &text,
-        game_interface::CellEventType event_type,
+        game_interface::EventType event_type,
         const sf::Window *window
     );
     void render(sf::RenderWindow *window);

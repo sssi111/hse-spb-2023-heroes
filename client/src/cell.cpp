@@ -24,7 +24,7 @@ Cell::Cell(
     m_cell.setOrigin(size.x / 2, size.y / 2);
 
     m_button = interface::Button(position, size);
-    m_strength = strength;
+    m_durability = strength;
     m_unit = unit;
 }
 
@@ -70,14 +70,31 @@ void Cell::remove_selection() {
     }
 }
 
+void Cell::add_spelling() {
+    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::EnableForSpellbinding
+    ));
+}
+
+void Cell::remove_spelling() {
+    if (is_have_unit() &&
+        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy)
+        );
+    } else {
+        m_cell.setTexture(
+            resource_manager()->load_cell_texture(CellType::Default)
+        );
+    }
+}
+
 void Cell::update_cell(const namespace_proto::Cell &cell) {
-    m_strength = cell.durability();
+    m_durability = cell.durability();
 
     m_unit = nullptr;
 
     m_label.setFont(resource_manager()->load_font(interface::Fonts::CaptionFont)
     );
-    m_label.setString(std::to_string(m_strength));
+    m_label.setString(std::to_string(m_durability));
     m_label.setCharacterSize(24);
 
     sf::FloatRect label_bounds = m_label.getLocalBounds();
@@ -111,23 +128,23 @@ void Cell::handling_event(
     sf::Window *window
 ) {
     auto result = m_button.handling_event(event, window);
-    if (result == CellEventType::FirstPress) {
+    if (result == EventType::FirstPress) {
         if (is_have_unit() &&
             m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
             if (*selected_unit != m_unit) {
                 EventManager::update_cell(
-                    CellEventType::FirstPress, selected_unit, &m_unit, m_coords,
+                    EventType::FirstPress, selected_unit, &m_unit, m_coords,
                     board
                 );
             } else {
                 EventManager::update_cell(
-                    CellEventType::SecondPress, selected_unit, &m_unit,
+                    EventType::SecondPress, selected_unit, &m_unit,
                     m_coords, board
                 );
             }
         } else if (*selected_unit && m_is_available_for_moving) {
             EventManager::update_cell(
-                CellEventType::Move, selected_unit, &m_unit, m_coords, board
+                EventType::Move, selected_unit, &m_unit, m_coords, board
             );
         }
     }
@@ -146,18 +163,19 @@ void Cell::render(sf::RenderWindow *window) {
     return m_unit;
 }
 
-CellEventType Cell::is_mouse_target(sf::Window *window) {
+EventType Cell::is_mouse_target(sf::Window *window) {
     sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
     auto cell_position = m_cell.getPosition();
-    mouse_position.x += m_cell_size.x / 2;
-    mouse_position.y += m_cell_size.y / 2;
+//    mouse_position.x += m_cell_size.x / 2;
+//    mouse_position.y += m_cell_size.y / 2;
     mouse_position.x -= cell_position.x;
     mouse_position.y -= cell_position.y;
     if (mouse_position.x >= 0 && mouse_position.x <= m_cell_size.x &&
-        mouse_position.y >= 0 && mouse_position.y <= m_cell_size.y) {
-        return CellEventType::Targeting;
+        mouse_position.y >= 0 && mouse_position.y <= m_cell_size.y &&
+        sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+        return EventType::Targeting;
     }
-    return CellEventType::Nothing;
+    return EventType::Nothing;
 }
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell) {

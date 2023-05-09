@@ -46,7 +46,7 @@ void Board::add_available_for_moving_cells(
     std::vector<std::pair<int, int>> selected_cells
 ) {
     remove_available_for_moving_cells();
-    m_available_for_moving_cells = selected_cells;
+    m_available_for_moving_cells = std::move(selected_cells);
     for (auto [row, column] : m_available_for_moving_cells) {
         bool is_second =
             (get_client_state()->m_game_state.second_user() ==
@@ -67,6 +67,35 @@ void Board::remove_available_for_moving_cells() {
             column = 9 - column;
         }
         m_board[row][column].remove_selection();
+    }
+    m_available_for_moving_cells.clear();
+}
+
+void Board::add_enable_for_spelling_cells(
+    std::vector<std::pair<int, int>> enable_cells
+) {
+    remove_enable_for_spelling_cells();
+    m_enable_for_spelling_cells = std::move(enable_cells);
+    for (auto [row, column] : m_enable_for_spelling_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
+            column = 9 - column;
+        }
+        m_board[row][column].add_spelling();
+    }
+}
+
+void Board::remove_enable_for_spelling_cells() {
+    for (auto [row, column] : m_enable_for_spelling_cells) {
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
+            column = 9 - column;
+        }
+        m_board[row][column].remove_spelling();
     }
     m_available_for_moving_cells.clear();
 }
