@@ -175,11 +175,13 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     ) {
         game_model::game *model_game = game_session_res->get_model_game();
         game_model::cell cell = model_game->get_cell(coordinates);
-        game_model::unit model_unit =
-            model_game->get_player(cell.get_player_index())
-                ->get_unit(cell.get_unit_index());
-        unit->set_sum_of_health(model_unit.get_health());
-        unit->set_amount_unit(model_unit.get_number());
+        if (cell.get_unit_index() != -1 && cell.get_player_index() != -1) {
+            game_model::unit model_unit =
+                model_game->get_player(cell.get_player_index())
+                    ->get_unit(cell.get_unit_index());
+            unit->set_sum_of_health(model_unit.get_health());
+            unit->set_amount_unit(model_unit.get_number());
+        }
     }
 
     static void update_cell(

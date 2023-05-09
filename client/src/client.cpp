@@ -103,12 +103,14 @@ std::vector<std::pair<int, int>> Client::select_spell(int spell_id) {
     return enable_set;
 }
 
-void Client::do_spell(int spell_id, const namespace_proto::Cell &cell) {
+void Client::do_spell(int spell_id, namespace_proto::Cell cell) {
     grpc::ClientContext context;
     namespace_proto::DoSpellRequest request;
     request.set_game_id(get_client_state()->m_user.game_id());
     request.set_player_id(get_client_state()->m_user.user().id());
     request.set_spell_id(spell_id);
+    auto request_cell = new namespace_proto::Cell(std::move(cell));
+    request.set_allocated_cell(request_cell);
     namespace_proto::GameState response;
     get_client_state()->m_stub->DoSpell(&context, request, &response);
     get_client_state()->m_game_state = response;

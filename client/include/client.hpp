@@ -45,7 +45,7 @@ public:
     static void get_opponent();
 
     static std::vector<std::pair<int, int>> select_spell(int spell_id);
-    static void do_spell(int spell_id, const namespace_proto::Cell &cell);
+    static void do_spell(int spell_id, namespace_proto::Cell cell);
 };
 
 #endif  // CLIENT_HPP_
