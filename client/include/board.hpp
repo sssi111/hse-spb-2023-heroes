@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "cell.hpp"
+#include "spell.hpp"
 
 namespace game_interface {
 class Board {

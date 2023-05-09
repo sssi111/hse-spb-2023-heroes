@@ -13,6 +13,7 @@ public:
     void render();
     [[nodiscard]] Window *get_window();
     [[nodiscard]] Board *get_board();
+    [[nodiscard]] GameMenuBar *get_game_menu_bar();
 
 private:
     Window m_window;

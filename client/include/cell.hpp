@@ -48,6 +48,7 @@ private:
     interface::Button m_button;
     sf::Text m_label;
     int m_spell_id{-1};
+    int m_spell_hero_id{-1};
 };
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell);

@@ -115,4 +115,10 @@ void GameMenuBar::render(sf::RenderWindow *window) {
         spell.render(window);
     }
 }
+
+void GameMenuBar::set_spells_to_default() {
+    for (auto &spell : m_spells) {
+        spell.set_name();
+    }
+}
 }  // namespace game_interface

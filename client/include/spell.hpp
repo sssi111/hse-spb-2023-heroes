@@ -16,10 +16,12 @@ public:
     );
     ~Spell() = default;
 
+    void remove();
+    void set_name();
     void update(sf::Event event, Window *window);
     void render(sf::RenderWindow *window);
-
 private:
+
     sf::RectangleShape m_table;
     sf::Text m_data;
     interface::Button m_button;
@@ -27,7 +29,7 @@ private:
     std::string m_name;
     std::string m_description;
     int m_mana;
-    bool is_name_showed;
+    bool m_is_name_showed;
 
     void update_data();
 };

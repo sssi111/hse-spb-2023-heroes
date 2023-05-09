@@ -1,5 +1,4 @@
 #include "event_manager.hpp"
-#include <iostream>
 #include "client.hpp"
 
 namespace game_interface {

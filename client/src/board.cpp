@@ -1,4 +1,5 @@
 #include "board.hpp"
+#include "game.hpp"
 #include <utility>
 #include "resource_manager.hpp"
 
@@ -97,7 +98,8 @@ void Board::remove_enable_for_spelling_cells() {
         }
         m_board[row][column].remove_spelling();
     }
-    m_available_for_moving_cells.clear();
+    m_enable_for_spelling_cells.clear();
+
 }
 
 void Board::handling_event(sf::Event event, sf::Window *window) {

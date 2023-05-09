@@ -136,7 +136,8 @@ void Cell::handling_event(
         if (m_cell_type == CellType::EnableForSpellbinding) {
             EventManager::apply_spell(m_spell_id, m_coords.get_row(), m_coords.get_column());
             get_game_state()->get_board()->remove_enable_for_spelling_cells();
-            board->update_board(get_client_state()->m_game_state);
+            get_game_state()->get_game_menu_bar()->set_spells_to_default();
+//            board->update_board(get_client_state()->m_game_state);
         } else if (is_have_unit() &&
             m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
             if (*selected_unit != m_unit) {

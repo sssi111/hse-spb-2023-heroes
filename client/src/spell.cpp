@@ -21,7 +21,7 @@ Spell::Spell(
 
     m_data.setFont(resource_manager()->load_font(interface::Fonts::CaptionFont)
     );
-    is_name_showed = false;
+    m_is_name_showed = false;
     update_data();
     m_data.setPosition(position);
 }
@@ -31,7 +31,7 @@ void Spell::update(sf::Event event, Window *window) {
         m_button.handling_event(event, window->get_render_window());
     if (event_type == EventType::FirstPress || event_type == EventType::SecondPress) {
         update_data();
-        if (is_name_showed) {
+        if (m_is_name_showed) {
             get_game_state()->get_board()->remove_enable_for_spelling_cells();
         } else {
             std::vector<std::pair<int, int>> enable_cells = Client::select_spell(m_id);
@@ -40,24 +40,34 @@ void Spell::update(sf::Event event, Window *window) {
     }
 }
 
+void Spell::remove() {
+    update_data();
+}
+
 void Spell::render(sf::RenderWindow *window) {
     window->draw(m_table);
     window->draw(m_data);
 }
 
 void Spell::update_data() {
-    if (is_name_showed) {
+    if (m_is_name_showed) {
         m_data.setString(m_description);
         m_data.setCharacterSize(18);
     } else {
         m_data.setString(m_name);
         m_data.setCharacterSize(22);
     }
-    is_name_showed = !is_name_showed;
+    m_is_name_showed = !m_is_name_showed;
     sf::FloatRect data_bounds = m_data.getLocalBounds();
     m_data.setOrigin(
         data_bounds.left + data_bounds.width / 2.0f,
         data_bounds.top + data_bounds.height / 2.0f
     );
+}
+
+void Spell::set_name() {
+    if (!m_is_name_showed) {
+        update_data();
+    }
 }
 }  // namespace game_interface

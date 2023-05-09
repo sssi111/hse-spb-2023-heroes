@@ -10,6 +10,7 @@ public:
     GameMenuBar(sf::Vector2f wind_size, float menu_height);
     ~GameMenuBar() = default;
 
+    void set_spells_to_default();
     void update(sf::Event event, Window *window);
     void render(sf::RenderWindow *window);
 private:

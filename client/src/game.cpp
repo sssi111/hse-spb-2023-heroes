@@ -5,7 +5,7 @@ namespace game_interface {
 Game::Game()
     : m_window("Battle of Heroes and Villains", sf::Vector2u(1920, 1080)),
       m_game_menu_bar(sf::Vector2f(1920, 1080), 100),
-      m_board(sf::Vector2i(1920, 980))  // '- 100' is subtraction of menu_height
+      m_board(sf::Vector2i(1920, 980))
 {
     m_background.setTexture(
         game_interface::resource_manager()->load_cell_texture(
@@ -38,6 +38,10 @@ void Game::render() {
 
 [[nodiscard]] Board *Game::get_board() {
     return &m_board;
+}
+
+[[nodiscard]] GameMenuBar *Game::get_game_menu_bar() {
+    return &m_game_menu_bar;
 }
 
 [[nodiscard]] Game *get_game_state() {
