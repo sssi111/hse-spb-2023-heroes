@@ -39,6 +39,8 @@ public:
 
     static int get_mana();
 
+    static int get_opponent_mana();
+
     static void get_hero();
     static void get_opponent();
 
