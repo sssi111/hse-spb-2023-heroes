@@ -1,8 +1,8 @@
 #include "cell.hpp"
-#include "game.hpp"
 #include <string>
 #include "client.hpp"
 #include "event_manager.hpp"
+#include "game.hpp"
 
 namespace game_interface {
 Cell::Cell(
@@ -53,9 +53,7 @@ void Cell::add_selection() {
     } else {
         m_cell_type = CellType::Selected;
     }
-    m_cell.setTexture(
-        resource_manager()->load_cell_texture(m_cell_type)
-    );
+    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
 }
 
 void Cell::remove_selection() {
@@ -66,14 +64,13 @@ void Cell::remove_selection() {
     } else {
         m_cell_type = CellType::Default;
     }
-    m_cell.setTexture(
-        resource_manager()->load_cell_texture(m_cell_type)
-    );
+    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
 }
 
 void Cell::add_spelling(int spell_id) {
-    m_cell.setTexture(resource_manager()->load_cell_texture(CellType::EnableForSpellbinding
-    ));
+    m_cell.setTexture(
+        resource_manager()->load_cell_texture(CellType::EnableForSpellbinding)
+    );
     m_cell_type = CellType::EnableForSpellbinding;
     m_spell_id = spell_id;
 }
@@ -85,9 +82,7 @@ void Cell::remove_spelling() {
     } else {
         m_cell_type = CellType::Default;
     }
-    m_cell.setTexture(
-        resource_manager()->load_cell_texture(m_cell_type)
-    );
+    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
     m_spell_id = -1;
 }
 
@@ -134,7 +129,9 @@ void Cell::handling_event(
     // work version
     if (result == EventType::FirstPress) {
         if (m_cell_type == CellType::EnableForSpellbinding) {
-            EventManager::apply_spell(m_spell_id, m_coords.get_row(), m_coords.get_column());
+            EventManager::apply_spell(
+                m_spell_id, m_coords.get_row(), m_coords.get_column()
+            );
             get_game_state()->get_board()->remove_enable_for_spelling_cells();
             get_game_state()->get_game_menu_bar()->set_spells_to_default();
 //            board->update_board(get_client_state()->m_game_state);
@@ -147,8 +144,8 @@ void Cell::handling_event(
                 );
             } else {
                 EventManager::update_cell(
-                    EventType::SecondPress, selected_unit, &m_unit,
-                    m_coords, board
+                    EventType::SecondPress, selected_unit, &m_unit, m_coords,
+                    board
                 );
             }
         } else if (*selected_unit && m_is_available_for_moving) {
