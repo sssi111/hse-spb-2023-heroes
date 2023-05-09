@@ -25,7 +25,7 @@ public:
     void set_unit(Unit *unit);
     void add_selection();
     void remove_selection();
-    void add_spelling();
+    void add_spelling(int spell_id);
     void remove_spelling();
     void handling_event(
         Unit **selected_unit,
@@ -47,6 +47,7 @@ private:
     bool m_is_available_for_moving{};
     interface::Button m_button;
     sf::Text m_label;
+    int m_spell_id{-1};
 };
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell);

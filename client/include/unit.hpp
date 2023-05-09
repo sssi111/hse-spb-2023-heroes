@@ -37,6 +37,7 @@ public:
     [[nodiscard]] std::string get_unit_info() const;
     void update_statistic(EventType event_type, const sf::Window *window);
     void render(sf::RenderWindow *window);
+    void render_statistic(sf::RenderWindow *window);
 
 private:
     UnitType m_type;

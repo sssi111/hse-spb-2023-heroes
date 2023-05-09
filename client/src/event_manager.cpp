@@ -62,4 +62,13 @@ void EventManager::update_game_menu(ButtonType button_type, Window *window) {
         window->set_is_done();
     }
 }
+
+void EventManager::apply_spell(int spell_id, int row, int column) {
+    if (Client::get_mana() >= get_client_state()->m_hero.spells(spell_id).mana()) {
+        namespace_proto::Cell cell;
+        cell.set_row(row);
+        cell.set_column(column);
+        Client::do_spell(spell_id, cell);
+    }
+}
 }  // namespace game_interface

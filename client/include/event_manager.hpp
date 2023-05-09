@@ -15,6 +15,7 @@ public:
         Board *board = nullptr
     );
     static void update_game_menu(ButtonType event_type, Window *window);
+    static void apply_spell(int spell_id, int row, int column);
 };
 }  // namespace game_interface
 

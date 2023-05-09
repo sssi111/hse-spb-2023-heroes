@@ -72,7 +72,7 @@ void Board::remove_available_for_moving_cells() {
 }
 
 void Board::add_enable_for_spelling_cells(
-    std::vector<std::pair<int, int>> enable_cells
+    std::vector<std::pair<int, int>> enable_cells, int spell_id
 ) {
     remove_enable_for_spelling_cells();
     m_enable_for_spelling_cells = std::move(enable_cells);
@@ -83,7 +83,7 @@ void Board::add_enable_for_spelling_cells(
         if (is_second) {
             column = 9 - column;
         }
-        m_board[row][column].add_spelling();
+        m_board[row][column].add_spelling(spell_id);
     }
 }
 
@@ -127,6 +127,12 @@ void Board::render(sf::RenderWindow *window) {
     for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {
         if (m_unit_is_alive[unit_id]) {
             m_units[unit_id].render(window);
+        }
+    }
+
+    for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {
+        if (m_unit_is_alive[unit_id]) {
+            m_units[unit_id].render_statistic(window);
         }
     }
 }

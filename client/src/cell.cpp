@@ -1,4 +1,5 @@
 #include "cell.hpp"
+#include "game.hpp"
 #include <string>
 #include "client.hpp"
 #include "event_manager.hpp"
@@ -48,48 +49,50 @@ void Cell::add_selection() {
     m_is_available_for_moving = true;
     if (is_have_unit() &&
         m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Attack
-        ));
+        m_cell_type = CellType::Attack;
     } else {
-        m_cell.setTexture(
-            resource_manager()->load_cell_texture(CellType::Selected)
-        );
+        m_cell_type = CellType::Selected;
     }
+    m_cell.setTexture(
+        resource_manager()->load_cell_texture(m_cell_type)
+    );
 }
 
 void Cell::remove_selection() {
     m_is_available_for_moving = false;
     if (is_have_unit() &&
         m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy)
-        );
+        m_cell_type = CellType::Enemy;
     } else {
-        m_cell.setTexture(
-            resource_manager()->load_cell_texture(CellType::Default)
-        );
+        m_cell_type = CellType::Default;
     }
+    m_cell.setTexture(
+        resource_manager()->load_cell_texture(m_cell_type)
+    );
 }
 
-void Cell::add_spelling() {
+void Cell::add_spelling(int spell_id) {
     m_cell.setTexture(resource_manager()->load_cell_texture(CellType::EnableForSpellbinding
     ));
+    m_cell_type = CellType::EnableForSpellbinding;
+    m_spell_id = spell_id;
 }
 
 void Cell::remove_spelling() {
     if (is_have_unit() &&
         m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy)
-        );
+        m_cell_type = CellType::Enemy;
     } else {
-        m_cell.setTexture(
-            resource_manager()->load_cell_texture(CellType::Default)
-        );
+        m_cell_type = CellType::Default;
     }
+    m_cell.setTexture(
+        resource_manager()->load_cell_texture(m_cell_type)
+    );
+    m_spell_id = -1;
 }
 
 void Cell::update_cell(const namespace_proto::Cell &cell) {
     m_durability = cell.durability();
-
     m_unit = nullptr;
 
     m_label.setFont(resource_manager()->load_font(interface::Fonts::CaptionFont)
@@ -128,8 +131,13 @@ void Cell::handling_event(
     sf::Window *window
 ) {
     auto result = m_button.handling_event(event, window);
+    // work version
     if (result == EventType::FirstPress) {
-        if (is_have_unit() &&
+        if (m_cell_type == CellType::EnableForSpellbinding) {
+            EventManager::apply_spell(m_spell_id, m_coords.get_row(), m_coords.get_column());
+            get_game_state()->get_board()->remove_enable_for_spelling_cells();
+            board->update_board(get_client_state()->m_game_state);
+        } else if (is_have_unit() &&
             m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
             if (*selected_unit != m_unit) {
                 EventManager::update_cell(
@@ -166,8 +174,6 @@ void Cell::render(sf::RenderWindow *window) {
 EventType Cell::is_mouse_target(sf::Window *window) {
     sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
     auto cell_position = m_cell.getPosition();
-//    mouse_position.x += m_cell_size.x / 2;
-//    mouse_position.y += m_cell_size.y / 2;
     mouse_position.x -= cell_position.x;
     mouse_position.y -= cell_position.y;
     if (mouse_position.x >= 0 && mouse_position.x <= m_cell_size.x &&

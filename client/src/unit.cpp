@@ -32,6 +32,9 @@ void Unit::render(sf::RenderWindow *window) {
     window->draw(m_unit);
     window->draw(m_table);
     window->draw(m_label);
+}
+
+void Unit::render_statistic(sf::RenderWindow *window) {
     m_statistic.render(window);
 }
 

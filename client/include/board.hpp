@@ -17,7 +17,7 @@ public:
     );
     void remove_available_for_moving_cells();
     void add_enable_for_spelling_cells(
-        std::vector<std::pair<int, int>> selected_cells
+        std::vector<std::pair<int, int>> selected_cells, int spell_id
     );
     void remove_enable_for_spelling_cells();
     void handling_event(sf::Event event, sf::Window *window);
