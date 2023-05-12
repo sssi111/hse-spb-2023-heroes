@@ -119,6 +119,16 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->game_id()]);
         switch_turn(game_session_ref);
+        if (request->user().id() !=
+            game_session_ref->get_first_player().get_id()) {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_first_player().get_id()]
+                .push(*(game_session_ref->get_game_state()));
+        } else {
+            (*(game_session_ref->get_response_queues())
+            )[game_session_ref->get_second_player().get_id()]
+                .push(*(game_session_ref->get_game_state()));
+        }
         *response = *(game_session_ref->get_game_state());
         return grpc::Status::OK;
     }
