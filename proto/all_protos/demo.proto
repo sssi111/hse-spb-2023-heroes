@@ -111,6 +111,7 @@ service Server {
   rpc AddToLobby(User) returns(GameIdAndHero) {}
 
   rpc SwitchTurn(UserState) returns(GameState) {}
+  rpc EndSession(UserState) returns(google.protobuf.Empty) {}
 
 
   rpc MoveUnit(MoveFromTo) returns(GameState) {}

@@ -15,17 +15,23 @@ class Player final {
     int id;
     int hero_id;
     ::grpc::ServerWriter<namespace_proto::GameState> *stream;
+    ::grpc::ServerContext *context;
 
 public:
-    Player(int id, int hero_id, ::grpc::ServerWriter<namespace_proto::GameState> *stream)
-        : id(id), hero_id(hero_id), stream(stream) {
+    Player(
+        int id,
+        int hero_id,
+        ::grpc::ServerWriter<namespace_proto::GameState> *stream,
+        ::grpc::ServerContext *context
+    )
+        : id(id), hero_id(hero_id), stream(stream), context(context) {
     }
 
     [[nodiscard]] int get_id() const {
         return id;
     }
 
-    [[nodiscard]] int get_hero_id() const{
+    [[nodiscard]] int get_hero_id() const {
         return hero_id;
     }
 
@@ -33,6 +39,10 @@ public:
     ) const {
         return stream;
     }
+
+    [[nodiscard]] ::grpc::ServerContext *get_context(){
+        return context;
+    };
 };
 
 class GameSession {
@@ -40,6 +50,7 @@ class GameSession {
     Player second_player;
     std::unordered_map<int, TSQueue<namespace_proto::GameState>>
         response_queues;
+    int game_result{-1};
     namespace_proto::GameState game_state;
     game_model::game model_game;
     interactors::mover mover;
@@ -99,14 +110,13 @@ public:
         return &attack_selecter;
     }
 
-    interactors::spell_selecter *get_spell_selecter(){
+    interactors::spell_selecter *get_spell_selecter() {
         return &spell_selecter;
     }
 
-    interactors::speller *get_speller(){
+    interactors::speller *get_speller() {
         return &speller;
     }
-
 };
 
 void start_game_session(int game_id);

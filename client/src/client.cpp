@@ -143,6 +143,15 @@ void Client::skip_turn() {
     get_client_state()->m_game_state = response;
 }
 
+void Client::end_session() {
+    grpc::ClientContext context;
+    auto *request_user = new namespace_proto::UserState;
+    *request_user = (get_client_state()->m_user);
+    request_user->set_hero_id(get_client_state()->m_hero.type());
+    google::protobuf::Empty response;
+    get_client_state()->m_stub->EndSession(&context, *request_user, &response);
+}
+
 int Client::get_mana() {
     if (get_client_state()->m_game_state.first_user() == get_client_state()->m_user.user().id()){
         return get_client_state()->m_game_state.first_user_mana();

@@ -5,8 +5,9 @@ ServerState *get_server_state() {
     return &server_state;
 }
 
-int rand(int min, int max){
-    if (min == max) return min;
+int rand(int min, int max) {
+    if (min == max)
+        return min;
     return min + rand() % (max - min);
 }
 

@@ -123,14 +123,25 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         return grpc::Status::OK;
     }
 
+    ::grpc::Status EndSession(
+        grpc::ServerContext *context,
+        const namespace_proto::UserState *request,
+        google::protobuf::Empty *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        game_session_ref->get_first_player().get_context()->TryCancel();
+        game_session_ref->get_second_player().get_context()->TryCancel();
+    }
+
     ::grpc::Status CallServer(
         ::grpc::ServerContext *context,
         const namespace_proto::UserState *request,
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
         get_server_state()->wait_list.push(Player{
-            request->user().id(), request->hero_id(), response});
-        while (true) {
+            request->user().id(), request->hero_id(), response, context});
+        while (!context->IsCancelled()) {
         }
         return ::grpc::Status::OK;
     }

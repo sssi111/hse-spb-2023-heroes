@@ -36,6 +36,7 @@ public:
     static void sign_up(std::string nickname, std::string password);
 
     static void skip_turn();
+    static void end_session();
 
     static int get_mana();
 
