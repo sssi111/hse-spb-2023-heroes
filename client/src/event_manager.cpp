@@ -63,6 +63,10 @@ void EventManager::update_game_menu(ButtonType button_type, Window *window) {
 }
 
 void EventManager::apply_spell(int spell_id, int row, int column) {
+    if (get_client_state()->m_user.user().id() !=
+        get_client_state()->m_game_state.move_turn()) {
+        return;
+    }
     if (Client::get_mana() >= get_client_state()->m_hero.spells(spell_id).mana()) {
         namespace_proto::Cell cell;
         cell.set_row(row);

@@ -22,9 +22,16 @@ Cell::Cell(
         size.y / m_cell.getTexture()->getSize().y
     );
     m_cell.setPosition(position);
-    m_cell.setOrigin(size.x / 2, size.y / 2);
+//    m_cell_frame.setTexture(resource_manager()->load_cell_frame_texture(CellType::Default));
+//    m_cell.scale(
+//        size.x / m_cell.getTexture()->getSize().x,
+//        size.y / m_cell.getTexture()->getSize().y
+//    );
+//    m_cell.setPosition(position);
 
-    m_button = interface::Button(position, size);
+    m_button = interface::Button(
+        {position.x + m_cell_size.x / 2, position.y + m_cell_size.y / 2}, size
+    );
     m_durability = strength;
     m_unit = unit;
 }
@@ -33,15 +40,37 @@ bool Cell::is_have_unit() const {
     return m_unit != nullptr;
 }
 
+//void update_cell_texture(CellType type) {
+//    if (type == CellType::Selected) {
+//        if ()
+//    } else if (type == CellType::EnableForSpellbinding) {
+//
+//    } else {
+//
+//    }
+//}
+
 void Cell::set_unit(Unit *unit) {
     m_unit = unit;
     if (unit == nullptr) {
-        m_cell.setTexture(
-            resource_manager()->load_cell_texture(CellType::Default)
-        );
+        set_default_grass();
     } else if (!m_is_available_for_moving && m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell.setTexture(resource_manager()->load_cell_texture(CellType::Enemy)
-        );
+        m_cell_type = CellType::Enemy;
+    }
+    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type)
+    );
+}
+
+void Cell::set_default_grass() {
+    m_durability =
+        get_client_state()
+            ->m_game_state
+            .game_cells(m_coords.get_row() * 10 + m_coords.get_column())
+            .durability();
+    if (m_durability < 10) {
+        m_cell_type = CellType::Broken;
+    } else {
+        m_cell_type = CellType::Default;
     }
 }
 
@@ -62,7 +91,7 @@ void Cell::remove_selection() {
         m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
         m_cell_type = CellType::Enemy;
     } else {
-        m_cell_type = CellType::Default;
+        set_default_grass();
     }
     m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
 }
@@ -79,8 +108,10 @@ void Cell::remove_spelling() {
     if (is_have_unit() &&
         m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
         m_cell_type = CellType::Enemy;
+    } else if (m_is_available_for_moving) {
+        m_cell_type = CellType::Selected;
     } else {
-        m_cell_type = CellType::Default;
+        set_default_grass();
     }
     m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
     m_spell_id = -1;
@@ -108,14 +139,11 @@ void Cell::update_cell(const namespace_proto::Cell &cell) {
 
     if (is_have_unit()) {
         if (m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-            m_cell.setTexture(
-                resource_manager()->load_cell_texture(CellType::Enemy)
-            );
+            m_cell_type = CellType::Enemy;
         } else if (!m_is_available_for_moving) {
-            m_cell.setTexture(
-                resource_manager()->load_cell_texture(CellType::Default)
-            );
+            set_default_grass();
         }
+        m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
     }
 }
 
@@ -126,7 +154,6 @@ void Cell::handling_event(
     sf::Window *window
 ) {
     auto result = m_button.handling_event(event, window);
-    // work version
     if (result == EventType::FirstPress) {
         if (m_cell_type == CellType::EnableForSpellbinding) {
             EventManager::apply_spell(
@@ -134,7 +161,9 @@ void Cell::handling_event(
             );
             get_game_state()->get_board()->remove_enable_for_spelling_cells();
             get_game_state()->get_game_menu_bar()->set_spells_to_default();
-//            board->update_board(get_client_state()->m_game_state);
+            get_game_state()->get_board()->update_board(
+                get_client_state()->m_game_state
+            );
         } else if (is_have_unit() &&
             m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
             if (*selected_unit != m_unit) {

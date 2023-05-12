@@ -21,9 +21,9 @@ Board::Board(sf::Vector2i window_size) {
             m_board[row][column] = Cell(
                 Coords(row, column), CellType::Default,
                 sf::Vector2f(
-                    m_boarder_size.x + m_cell_size.x / 4 +
+                    m_boarder_size.x +
                         m_cell_size.x * column,
-                    m_boarder_size.y + m_cell_size.y / 4 + m_cell_size.y * row
+                    m_boarder_size.y + m_cell_size.y * row
                 ),
                 sf::Vector2f(m_cell_size)
             );
@@ -34,11 +34,11 @@ Board::Board(sf::Vector2i window_size) {
 [[nodiscard]] sf::Vector2f Board::get_cell_position(Coords coords) const {
     return {
         static_cast<float>(
-            m_boarder_size.x + m_cell_size.x / 4.0f +
+            m_boarder_size.x + m_cell_size.x / 2 +
             m_cell_size.x * coords.get_column()
         ),
         static_cast<float>(
-            m_boarder_size.y + m_cell_size.y / 4 +
+            m_boarder_size.y + m_cell_size.y / 2 +
             m_cell_size.y * coords.get_row()
         )};
 }

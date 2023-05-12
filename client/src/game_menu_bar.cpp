@@ -11,7 +11,7 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
     m_turn_label.setSize(label_size);
     m_turn_label.setFillColor(sf::Color(71, 78, 50));
     m_turn_label.setOrigin(label_size.x / 2.0f, label_size.y / 2.0f);
-    m_turn_label.setPosition(wind_size.x / 2, 50);
+    m_turn_label.setPosition(wind_size.x / 2, 40.0f);
 
     m_data.setFont(game_interface::resource_manager()->load_font(
         interface::Fonts::CaptionFont
@@ -25,7 +25,7 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
         data_bounds.left + data_bounds.width / 2.0f,
         data_bounds.top + data_bounds.height / 2.0f
     );
-    m_data.setPosition(wind_size.x / 2, 50);
+    m_data.setPosition(wind_size.x / 2, 40.0f);
 
     m_buttons.resize(3);
 
@@ -38,7 +38,7 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
     labels[2] = "menu";
 
     m_buttons[0] = MenuButton(
-        {wind_size.x * 0.07f + 8 + button_size.x / 2, button_pos.y},
+        {wind_size.x * 0.07f + button_size.x / 2, button_pos.y},
         button_size, sf::Color(71, 78, 50), interface::Fonts::CaptionFont, 22,
         labels[0], button_types[0]
     );
@@ -79,8 +79,14 @@ void GameMenuBar::update_turn(const std::string &new_label) {
 }
 
 void GameMenuBar::update(sf::Event event, Window *window) {
-    for (auto &button : m_buttons) {
-        button.update(event, window);
+    if (m_buttons[0].update(event, window) == ButtonType::Skip) {
+        Client::skip_turn();
+    }
+    if (m_buttons[1].update(event, window) == ButtonType::GiveUp) {
+        Client::end_session();
+    }
+    if (m_buttons[2].update(event, window) == ButtonType::Menu) {
+        // menu
     }
     for (auto &spell : m_spells) {
         spell.update(event, window);
@@ -96,9 +102,20 @@ void GameMenuBar::update(sf::Event event, Window *window) {
     if (get_client_state()->m_opponent.type() == -1 &&
         get_client_state()->m_game_state.move_turn() != 0) {
         Client::get_opponent();
-        // read opponent's spells ?
         m_opponents_spells_amount =
             get_client_state()->m_opponent.spells_size();
+        sf::Vector2f spell_size{130, 80};
+        float distance = 100.0f;
+        float start_position_y = 540.0f -
+                                 spell_size.y / 2 * (m_opponents_spells_amount % 2) -
+                                 (m_opponents_spells_amount / 2) * (spell_size.y + distance);
+
+        m_opponents_spells.resize(m_opponents_spells_amount);
+        for (int spell_id = 0; spell_id < m_opponents_spells_amount; spell_id++) {
+            auto current_spell = get_client_state()->m_opponent.spells(spell_id);
+            m_opponents_spells[spell_id] = Spell({1853.0f, start_position_y  + spell_id * (spell_size.y + distance)}, spell_size,
+                                       current_spell);
+        }
     }
 }
 
