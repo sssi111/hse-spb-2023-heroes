@@ -152,6 +152,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             &(get_server_state()->game_sessions[request->game_id()]);
         game_session_ref->get_first_player().get_context()->TryCancel();
         game_session_ref->get_second_player().get_context()->TryCancel();
+        return grpc::Status::OK;
     }
 
     ::grpc::Status CallServer(
