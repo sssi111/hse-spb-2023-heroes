@@ -18,6 +18,9 @@ class Player final {
     ::grpc::ServerContext *context;
 
 public:
+    Player(int hero_id) : id(-1), hero_id(hero_id) {
+    }
+
     Player(
         int id,
         int hero_id,
@@ -40,7 +43,7 @@ public:
         return stream;
     }
 
-    [[nodiscard]] ::grpc::ServerContext *get_context(){
+    [[nodiscard]] ::grpc::ServerContext *get_context() {
         return context;
     };
 };
@@ -48,6 +51,7 @@ public:
 class GameSession {
     Player first_player;
     Player second_player;
+    bool is_single{false};
     std::unordered_map<int, TSQueue<namespace_proto::GameState>>
         response_queues;
     int game_result{-1};
@@ -79,6 +83,18 @@ public:
 
     Player get_second_player() const {
         return second_player;
+    }
+
+    bool *get_type() {
+        return &is_single;
+    }
+
+    int get_game_result() const{
+        return game_result;
+    }
+
+    void set_game_result(int new_winner) {
+        game_result = new_winner;
     }
 
     std::unordered_map<int, TSQueue<namespace_proto::GameState>>

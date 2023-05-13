@@ -44,6 +44,7 @@ message UserState{
   int32 game_id = 1;
   User user = 2;
   int32 hero_id = 3;
+  bool is_single = 4;
 }
 
 message GameIdAndHero{
@@ -84,16 +85,13 @@ message Spell{
 }
 
 message SelectSpellRequest{
-  int32 player_id = 1;
-  int32 spell_id = 2;
-  int32 game_id = 3;
-}
+  UserState user = 1;
+  int32 spell_id = 2;}
 
 message DoSpellRequest{
-  int32 player_id = 1;
+  UserState user = 1;
   int32 spell_id = 2;
   Cell cell = 3;
-  int32 game_id = 4;
 }
 
 message Hero{
