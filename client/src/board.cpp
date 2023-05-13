@@ -19,7 +19,7 @@ Board::Board(sf::Vector2i window_size) {
     for (int row = 0; row < m_cell_amount; row++) {
         for (int column = 0; column < m_cell_amount; column++) {
             m_board[row][column] = Cell(
-                Coords(row, column), CellType::Default,
+                Coords(row, column),
                 sf::Vector2f(
                     m_boarder_size.x +
                         m_cell_size.x * column,
@@ -84,7 +84,7 @@ void Board::add_enable_for_spelling_cells(
         if (is_second) {
             column = 9 - column;
         }
-        m_board[row][column].add_spelling(spell_id);
+        m_board[row][column].add_spell(spell_id);
     }
 }
 
@@ -96,7 +96,7 @@ void Board::remove_enable_for_spelling_cells() {
         if (is_second) {
             column = 9 - column;
         }
-        m_board[row][column].remove_spelling();
+        m_board[row][column].remove_spell();
     }
     m_enable_for_spelling_cells.clear();
 
@@ -110,7 +110,7 @@ void Board::handling_event(sf::Event event, sf::Window *window) {
     if (column >= 0 && row >= 0 && row < m_cell_amount &&
         column < m_cell_amount) {
         m_board[row][column].handling_event(
-            &selected_unit, this, event, window
+            event, &selected_unit
         );
     }
 }
@@ -151,7 +151,7 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
             column = 9 - column;
             server_cell = reverse_cell(server_cell);
         }
-        m_board[row][column].update_cell(server_cell);
+        m_board[row][column].update_cell();
         if (server_cell.is_unit()) {
             int unit_id = server_cell.unit().id_unit();
             auto server_unit = game_state.game_cells(cell_index).unit();

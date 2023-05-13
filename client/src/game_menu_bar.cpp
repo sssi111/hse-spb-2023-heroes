@@ -13,6 +13,22 @@ GameMenuBar::GameMenuBar(sf::Vector2f wind_size, float menu_height) {
     m_turn_label.setOrigin(label_size.x / 2.0f, label_size.y / 2.0f);
     m_turn_label.setPosition(wind_size.x / 2, 40.0f);
 
+    m_mana.setFont(game_interface::resource_manager()->load_font(
+        interface::Fonts::CaptionFont
+    ));
+    m_mana.setFillColor(sf::Color::White);
+    m_mana.setCharacterSize(24);
+    m_mana.setPosition({20.0f, 50.0f});
+    m_mana.setString("");
+
+    m_opponent_mana.setFont(game_interface::resource_manager()->load_font(
+        interface::Fonts::CaptionFont
+    ));
+    m_opponent_mana.setFillColor(sf::Color::White);
+    m_opponent_mana.setCharacterSize(24);
+    m_opponent_mana.setPosition({1900.0f, 50.0f});
+    m_opponent_mana.setString("");
+
     m_data.setFont(game_interface::resource_manager()->load_font(
         interface::Fonts::CaptionFont
     ));
@@ -88,6 +104,10 @@ void GameMenuBar::update(sf::Event event, Window *window) {
     if (m_buttons[2].update(event, window) == ButtonType::Menu) {
         // menu
     }
+
+    m_mana.setString(std::to_string(Client::get_mana()));
+    m_opponent_mana.setString(std::to_string(Client::get_opponent_mana()));
+
     for (auto &spell : m_spells) {
         spell.update(event, window);
     }
@@ -121,6 +141,8 @@ void GameMenuBar::update(sf::Event event, Window *window) {
 
 void GameMenuBar::render(sf::RenderWindow *window) {
     window->draw(m_turn_label);
+    window->draw(m_mana);
+    window->draw(m_opponent_mana);
     window->draw(m_data);
     for (auto &button : m_buttons) {
         button.render(window);
@@ -133,9 +155,11 @@ void GameMenuBar::render(sf::RenderWindow *window) {
     }
 }
 
-void GameMenuBar::set_spells_to_default() {
+void GameMenuBar::apply_spell() {
     for (auto &spell : m_spells) {
         spell.set_name();
     }
+    m_mana.setString(std::to_string(Client::get_mana()));
+    m_opponent_mana.setString(std::to_string(Client::get_opponent_mana()));
 }
 }  // namespace game_interface

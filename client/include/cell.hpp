@@ -13,45 +13,46 @@ public:
     Cell() = default;
     explicit Cell(
         Coords coords,
-        CellType type,
         sf::Vector2f position,
-        sf::Vector2f size,
-        int strength = 0,
-        Unit *unit = nullptr
+        sf::Vector2f size
     );
 
     bool is_have_unit() const;
+    bool is_available_for_moving() const;
     [[nodiscard]] Unit *get_unit();
+
     void set_unit(Unit *unit);
+
+    void update_cell_durability();
     void update_cell_texture(CellType type);
+
     void add_selection();
     void remove_selection();
-    void add_spelling(int spell_id);
-    void remove_spelling();
+    void add_spell(int spell_id);
+    void remove_spell();
+
     void handling_event(
-        Unit **selected_unit,
-        Board *board,
         sf::Event event,
-        sf::Window *window
+        Unit **selected_unit
     );
     EventType is_mouse_target(sf::Window *window);
-    void update_cell(const namespace_proto::Cell &cell);
+
+    void update_cell();
     void render(sf::RenderWindow *window);
 
 private:
-    sf::Sprite m_cell;
-    sf::Sprite m_cell_frame;
-    interface::Button m_button;
     sf::Vector2f m_cell_size;
     Coords m_coords;
-    CellType m_cell_type{CellType::Default};
-    CellType m_cell_frame_type{CellType::Default};
+    CellType m_cell_type;
+    CellType m_cell_property_type;
+    int m_durability;
+    int m_spell_id;
+
+    sf::Sprite m_cell;
+    sf::Sprite m_cell_property;
+    interface::Button m_button;
     Unit *m_unit{nullptr};
-    int m_durability{};
-    bool m_is_available_for_moving{};
     sf::Text m_label;
-    int m_spell_id{-1};
-    int m_spell_hero_id{-1};
 };
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell);

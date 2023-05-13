@@ -9,25 +9,6 @@ int Unit::get_hero_id() const {
     return m_hero_id;
 }
 
-int Unit::get_unit_id() const {
-    return m_hero_id;
-}
-
-void Unit::set_coords(
-    Coords new_position,
-    sf::Vector2f position,
-    sf::Vector2f size
-) {
-    m_coords = new_position;
-    m_unit.setPosition(position);
-    m_label.setPosition(
-        sf::Vector2f(position.x + 13 * size.x / 16, position.y + 3 * size.y / 4)
-    );
-    m_table.setPosition(
-        sf::Vector2f(position.x + 3 * size.x / 4, position.y + 3 * size.y / 4)
-    );
-}
-
 void Unit::render(sf::RenderWindow *window) {
     window->draw(m_unit);
     window->draw(m_table);
@@ -63,7 +44,7 @@ void Unit::update_unit(
 ) {
 //    new_position.x -= size.x / 4;
     new_position.y -= 10;
-    if (unit.type_unit() != 0) {  // then initialize unit
+    if (unit.type_unit() != 0) {
         if (m_type != static_cast<UnitType>(unit.type_unit())) {
             m_type = static_cast<UnitType>(unit.type_unit());
             m_unit.setTexture(resource_manager()->load_unit_texture(m_type));
