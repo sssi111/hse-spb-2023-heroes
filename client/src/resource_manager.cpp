@@ -55,9 +55,12 @@ ResourceManager::ResourceManager() {
     m_fonts[interface::Fonts::CaptionFont].loadFromFile(
         interface::source_dir + "caption_font.otf"
     );
-
     m_fonts[interface::Fonts::TittleFont].loadFromFile(
         interface::source_dir + "tittle_font.otf"
+    );
+
+    m_cursors[CursorType::Attack].loadFromFile(
+        interface::source_dir + "sword.png"
     );
 }
 
@@ -94,5 +97,9 @@ ResourceManager::ResourceManager() {
     TextureType texture
 ) {
     return m_textures[texture];
+}
+
+const sf::Image &ResourceManager::load_cursor(CursorType cursor) {
+    return m_cursors[cursor];
 }
 }  // namespace game_interface

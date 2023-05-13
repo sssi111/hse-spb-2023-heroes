@@ -117,6 +117,7 @@ void Board::handling_event(sf::Event event, sf::Window *window) {
 }
 
 void Board::render(sf::RenderWindow *window) {
+    bool is_cursor_changed = false;
     for (auto &row : m_board) {
         for (auto &cell : row) {
             if (cell.is_have_unit()) {
@@ -124,8 +125,13 @@ void Board::render(sf::RenderWindow *window) {
                     cell.is_mouse_target(window), window
                 );
             }
+            is_cursor_changed = is_cursor_changed || cell.change_cursor(window);
             cell.render(window);
         }
+    }
+    if (!is_cursor_changed) {
+        get_cursor().loadFromSystem(sf::Cursor::Arrow);
+        window->setMouseCursor(get_cursor());
     }
     for (int unit_id = 0; unit_id < m_units.size(); unit_id++) {
         if (m_unit_is_alive[unit_id]) {

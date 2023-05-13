@@ -22,6 +22,8 @@ enum class TextureType { MenuBackground };
 enum class EventType { FirstPress, SecondPress, Move, Targeting, Nothing };
 
 enum class ButtonType { None, Play, Pass, Menu, Exit, Skip, GiveUp, Spell };
+
+enum class CursorType { Attack };
 }  // namespace game_interface
 
 namespace menu_interface {

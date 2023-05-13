@@ -23,6 +23,8 @@ public:
 
     const sf::Font &load_font(interface::Fonts font);
 
+    const sf::Image &load_cursor(CursorType cursor);
+
 private:
     std::unordered_map<CellType, sf::Texture> m_cell_textures;
     std::unordered_map<CellType, sf::Texture> m_cell_property_textures;
@@ -30,6 +32,7 @@ private:
     std::unordered_map<UnitType, sf::Texture> m_selected_unit_textures;
     std::unordered_map<TextureType, sf::Texture> m_textures;
     std::unordered_map<interface::Fonts, sf::Font> m_fonts;
+    std::unordered_map<CursorType, sf::Image> m_cursors;
 };
 
 ResourceManager *resource_manager();

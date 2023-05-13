@@ -3,6 +3,7 @@
 #include "client.hpp"
 #include "event_manager.hpp"
 #include "game.hpp"
+#include "resource_manager.hpp"
 
 namespace game_interface {
 Cell::Cell(Coords coords, sf::Vector2f position, sf::Vector2f size) {
@@ -193,6 +194,25 @@ void Cell::add_selection() {
 
 void Cell::remove_selection() {
     update_cell_texture(CellType::Default);
+}
+
+bool Cell::change_cursor(sf::Window *window) {
+    sf::Vector2i mouse_position = sf::Mouse::getPosition(*window);
+    auto cell_position = m_cell.getPosition();
+    mouse_position.x -= cell_position.x;
+    mouse_position.y -= cell_position.y;
+    if (mouse_position.x >= 0 && mouse_position.x <= m_cell_size.x &&
+        mouse_position.y >= 0 && mouse_position.y <= m_cell_size.y &&
+        m_cell_property_type == CellType::Attack) {
+        get_cursor().loadFromPixels(
+            resource_manager()->load_cursor(CursorType::Attack).getPixelsPtr(),
+            resource_manager()->load_cursor(CursorType::Attack).getSize(),
+            sf::Vector2u(0, 0)
+        );
+        window->setMouseCursor(get_cursor());
+        return true;
+    }
+    return false;
 }
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell) {
