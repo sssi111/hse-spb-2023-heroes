@@ -1,6 +1,6 @@
 #include "coordinates.hpp"
 
-namespace game_view {
+namespace game_interface {
 [[nodiscard]] int Coords::get_row() const {
     return m_row;
 }
@@ -8,4 +8,4 @@ namespace game_view {
 [[nodiscard]] int Coords::get_column() const {
     return m_column;
 }
-}  // namespace game_view
+}  // namespace game_interface

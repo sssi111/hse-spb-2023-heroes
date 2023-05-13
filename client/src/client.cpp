@@ -7,6 +7,14 @@
     return &clientState;
 }
 
+namespace_proto::UserState *dump_user_state(
+    namespace_proto::UserState *request_user
+) {
+    *request_user = (get_client_state()->m_user);
+    request_user->set_hero_id(get_client_state()->m_hero.type());
+    return request_user;
+}
+
 void Client::log_in(std::string nickname, std::string password) {
     namespace_proto::LogInData request;
     request.set_name(nickname);
@@ -25,9 +33,6 @@ void Client::sign_up(std::string nickname, std::string password) {
     get_client_state()->m_stub->SignUp(
         &context, request, get_client_state()->m_user.mutable_user()
     );
-    if (get_client_state()->m_user.user().id() == -1){
-        std::cout << "try again\n";
-    }
 }
 
 void Client::run_receiver() {
@@ -42,14 +47,13 @@ void Client::run_receiver() {
         {
             std::unique_lock lock{get_client_state()->m_mutex};
             get_client_state()->m_game_state = response;
-            game_view::get_game_state()->get_board()->update_board(
+            game_interface::get_game_state()->get_board()->update_board(
                 get_client_state()->m_game_state
             );
         }
         get_client_state()->m_user.set_game_id(
             get_client_state()->m_game_state.game_id()
         );
-        std::cout << get_client_state()->m_game_state.game_id() << '\n';
     }
 }
 
@@ -60,11 +64,10 @@ void Client::move_unit(namespace_proto::Cell from, namespace_proto::Cell to) {
     auto *request_to = new namespace_proto::Cell;
     *request_from = from;
     *request_to = to;
-    auto *request_user = new namespace_proto::UserState;
-    *request_user = (get_client_state()->m_user);
     request.set_allocated_start(request_from);
     request.set_allocated_finish(request_to);
-    request.set_allocated_user(request_user);
+    auto *request_user = new namespace_proto::UserState;
+    request.set_allocated_user(dump_user_state(request_user));
     namespace_proto::GameState response;
     get_client_state()->m_stub->MoveUnit(&context, request, &response);
     get_client_state()->m_game_state = response;
@@ -79,8 +82,7 @@ std::vector<std::pair<int, int>> Client::select_unit(
     *request_cell = selected;
     request.set_allocated_unit(request_cell);
     auto *request_user = new namespace_proto::UserState;
-    *request_user = (get_client_state()->m_user);
-    request.set_allocated_user(request_user);
+    request.set_allocated_user(dump_user_state(request_user));
     namespace_proto::EnableCell response;
     get_client_state()->m_stub->SelectUnit(&context, request, &response);
     std::vector<std::pair<int, int>> enable_set;
@@ -88,4 +90,89 @@ std::vector<std::pair<int, int>> Client::select_unit(
         enable_set.emplace_back(cell.row(), cell.column());
     }
     return enable_set;
+}
+
+std::vector<std::pair<int, int>> Client::select_spell(int spell_id) {
+    grpc::ClientContext context;
+    namespace_proto::SelectSpellRequest request;
+    auto *request_user = new namespace_proto::UserState;
+    request.set_allocated_user(dump_user_state(request_user));
+    request.set_spell_id(spell_id);
+    namespace_proto::EnableCell response;
+    get_client_state()->m_stub->SelectSpell(&context, request, &response);
+    std::vector<std::pair<int, int>> enable_set;
+    for (const auto &cell : response.cells()) {
+        enable_set.emplace_back(cell.row(), cell.column());
+    }
+    return enable_set;
+}
+
+void Client::do_spell(int spell_id, namespace_proto::Cell cell) {
+    grpc::ClientContext context;
+    namespace_proto::DoSpellRequest request;
+    //    request.set_game_id(get_client_state()->m_user.game_id());
+    //    request.set_player_id(get_client_state()->m_user.user().id());
+
+    request.set_spell_id(spell_id);
+    auto request_cell = new namespace_proto::Cell(std::move(cell));
+    request.set_allocated_cell(request_cell);
+    auto *request_user = new namespace_proto::UserState;
+    request.set_allocated_user(dump_user_state(request_user));
+    namespace_proto::GameState response;
+    get_client_state()->m_stub->DoSpell(&context, request, &response);
+    get_client_state()->m_game_state = response;
+}
+
+void Client::get_hero() {
+    grpc::ClientContext context;
+    namespace_proto::Hero response;
+    get_client_state()->m_stub->GetHero(
+        &context, google::protobuf::Empty{}, &response
+    );
+    get_client_state()->m_hero = response;
+}
+
+void Client::get_opponent() {
+    grpc::ClientContext context;
+
+    auto *request_user = new namespace_proto::UserState;
+    dump_user_state(request_user);
+    namespace_proto::Hero response;
+    get_client_state()->m_stub->GetOpponent(&context, *request_user, &response);
+    get_client_state()->m_opponent = response;
+}
+
+void Client::skip_turn() {
+    grpc::ClientContext context;
+    auto *request_user = new namespace_proto::UserState;
+    dump_user_state(request_user);
+    namespace_proto::GameState response;
+    get_client_state()->m_stub->SwitchTurn(&context, *request_user, &response);
+    get_client_state()->m_game_state = response;
+}
+
+void Client::end_session() {
+    grpc::ClientContext context;
+    auto *request_user = new namespace_proto::UserState;
+    dump_user_state(request_user);
+    google::protobuf::Empty response;
+    get_client_state()->m_stub->EndSession(&context, *request_user, &response);
+}
+
+int Client::get_mana() {
+    if (get_client_state()->m_game_state.first_user() ==
+        get_client_state()->m_user.user().id()) {
+        return get_client_state()->m_game_state.first_user_mana();
+    } else {
+        return get_client_state()->m_game_state.second_user_mana();
+    }
+}
+
+int Client::get_opponent_mana() {
+    if (get_client_state()->m_game_state.first_user() ==
+        get_client_state()->m_user.user().id()) {
+        return get_client_state()->m_game_state.second_user_mana();
+    } else {
+        return get_client_state()->m_game_state.first_user_mana();
+    }
 }

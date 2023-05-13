@@ -1,7 +1,7 @@
 #include "window.hpp"
 #include <utility>
 
-namespace game_view {
+namespace game_interface {
 Window::Window(std::string title, const sf::Vector2u &size) {
     setup(std::move(title), size);
 }
@@ -30,18 +30,6 @@ void Window::destroy() {
     m_window.close();
 }
 
-void Window::update(sf::Event event) {
-    if (event.type == sf::Event::Closed) {
-        m_is_done = true;
-    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
-        toggle_fullscreen();
-    }
-}
-
-[[nodiscard]] sf::RenderWindow *Window::get_render_window() {
-    return &m_window;
-}
-
 void Window::begin_draw() {
     m_window.clear(sf::Color::Black);
 }
@@ -50,8 +38,17 @@ void Window::end_draw() {
     m_window.display();
 }
 
-void Window::draw(sf::Drawable &drawable_object) {
-    m_window.draw(drawable_object);
+[[nodiscard]] sf::RenderWindow *Window::get_render_window() {
+    return &m_window;
+}
+
+[[nodiscard]] bool Window::is_done() const {
+    return m_is_done;
+}
+
+void Window::set_is_done() {
+    m_is_done = true;
+    destroy();
 }
 
 void Window::toggle_fullscreen() {
@@ -60,16 +57,15 @@ void Window::toggle_fullscreen() {
     create();
 }
 
-[[nodiscard]] bool Window::is_done() const {
-    return m_is_done;
+void Window::update(sf::Event event) {
+    if (event.type == sf::Event::Closed) {
+        m_is_done = true;
+    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F5) {
+        toggle_fullscreen();
+    }
 }
 
-[[nodiscard]] bool Window::is_fullscreen() const {
-    return m_is_fullscreen;
+void Window::render(sf::Drawable &l_drawable) {
+    m_window.draw(l_drawable);
 }
-
-void Window::set_is_done() {
-    m_is_done = true;
-    destroy();
-}
-}  // namespace game_view
+}  // namespace game_interface

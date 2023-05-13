@@ -11,6 +11,8 @@ class ClientState final {
 public:
     std::unique_ptr<namespace_proto::Server::Stub> m_stub = nullptr;
     namespace_proto::UserState m_user;
+    namespace_proto::Hero m_hero;
+    namespace_proto::Hero m_opponent;
     namespace_proto::GameState m_game_state;
     mutable std::mutex m_mutex;
 };
@@ -32,6 +34,19 @@ public:
     );
     static void log_in(std::string nickname, std::string password);
     static void sign_up(std::string nickname, std::string password);
+
+    static void skip_turn();
+    static void end_session();
+
+    static int get_mana();
+
+    static int get_opponent_mana();
+
+    static void get_hero();
+    static void get_opponent();
+
+    static std::vector<std::pair<int, int>> select_spell(int spell_id);
+    static void do_spell(int spell_id, namespace_proto::Cell cell);
 };
 
 #endif  // CLIENT_HPP_

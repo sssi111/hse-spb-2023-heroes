@@ -1,17 +1,19 @@
 #include "event_manager.hpp"
-#include <iostream>
 #include "client.hpp"
+#include "game.hpp"
 
-namespace game_view {
+namespace game_interface {
 void EventManager::update_cell(
-    CellEventType event_type,
+    EventType event_type,
     Unit **selected_unit,
     Unit **unit,
-    Coords clicked_position,
-    Board *board
+    Coords clicked_position
 ) {
-    if (event_type == CellEventType::FirstPress) {
-        std::cout << "FirstPress is caught!\n";
+    if (get_client_state()->m_user.user().id() !=
+        get_client_state()->m_game_state.move_turn()) {
+        return;
+    }
+    if (event_type == EventType::FirstPress) {
         namespace_proto::Cell selected_cell;
         selected_cell.set_row(clicked_position.get_row());
         selected_cell.set_column(clicked_position.get_column());
@@ -21,25 +23,19 @@ void EventManager::update_cell(
         if (is_second) {
             selected_cell = reverse_cell(selected_cell);
         }
-        board->add_available_for_moving_cells(Client::select_unit(selected_cell)
+        get_game_state()->get_board()->add_available_for_moving_cells(
+            Client::select_unit(selected_cell)
         );
-        std::cout << '\n' << "received\n";
-        // selected_unit_id = unit_id;
-        // board[row][column].set_selection(selected_unit_id);
         if (*selected_unit != nullptr) {
             (*selected_unit)->disable_selection();
         }
         *selected_unit = *unit;
         (*unit)->set_selection();
-    } else if (event_type == CellEventType::SecondPress) {
-        std::cout << "SecondPress is caught!\n";
-        // send to server position of our unit to deactivate unit (?)
-        board->remove_available_for_moving_cells();
-
+    } else if (event_type == EventType::SecondPress) {
+        get_game_state()->get_board()->remove_available_for_moving_cells();
         *selected_unit = nullptr;
         (*unit)->disable_selection();
-    } else if (event_type == CellEventType::Move) {
-        std::cout << "You wanna move?\n";
+    } else if (event_type == EventType::Move) {
         namespace_proto::Cell to;
         to.set_row(clicked_position.get_row());
         to.set_column(clicked_position.get_column());
@@ -54,22 +50,38 @@ void EventManager::update_cell(
             to = reverse_cell(to);
         }
         Client::move_unit(from, to);
-        board->remove_available_for_moving_cells();
-        board->update_board(get_client_state()->m_game_state);
+        get_game_state()->get_board()->remove_available_for_moving_cells();
+        get_game_state()->get_board()->update_board(
+            get_client_state()->m_game_state
+        );
         (*selected_unit)->disable_selection();
         *selected_unit = nullptr;
-    } else if (event_type == CellEventType::Targeting) {
-        std::cout << "Show statistic\n";
-//        (*unit)->update_stastictic(); ?
-
     }
 }
 
 void EventManager::update_game_menu(ButtonType button_type, Window *window) {
     if (button_type == ButtonType::Exit) {
         window->set_is_done();
-    } else if (button_type != ButtonType::None) {
-        std::cout << "FirstPress is caught!\n";
     }
 }
-}  // namespace game_view
+
+void EventManager::apply_spell(int spell_id, int row, int column) {
+    if (get_client_state()->m_user.user().id() !=
+        get_client_state()->m_game_state.move_turn()) {
+        return;
+    }
+    if (Client::get_mana() >=
+        get_client_state()->m_hero.spells(spell_id).mana()) {
+        namespace_proto::Cell cell;
+        cell.set_row(row);
+        cell.set_column(column);
+        bool is_second =
+            (get_client_state()->m_game_state.second_user() ==
+             get_client_state()->m_user.user().id());
+        if (is_second) {
+            cell = reverse_cell(cell);
+        }
+        Client::do_spell(spell_id, cell);
+    }
+}
+}  // namespace game_interface

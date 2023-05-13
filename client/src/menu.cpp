@@ -1,253 +1,405 @@
 #include "menu.hpp"
+#include "caption.hpp"
 
-namespace menu_view {
-Menu::Menu() : m_window(
+namespace menu_interface {
+MenuButton::MenuButton(
+    sf::Vector2f position,
+    sf::Vector2f size,
+    sf::Color color,
+    interface::Fonts font,
+    unsigned int character_size,
+    const std::string &tittle,
+    PageType current_page,
+    PageType next_page,
+    sf::Color font_color = sf::Color::White
+) {
+    m_table.setSize(size);
+    m_table.setFillColor(color);
+    m_table.setOrigin(size.x / 2.0f, size.y / 2.0f);
+    m_table.setPosition(position);
+
+    m_button = interface::Button(position, size);
+
+    m_current_page = current_page;
+    m_next_page = next_page;
+
+    m_data.setFont(game_interface::resource_manager()->load_font(font));
+    m_data.setFillColor(font_color);
+    m_data.setString(sf::String(tittle));
+    m_data.setCharacterSize(character_size);
+
+    sf::FloatRect rect = m_data.getLocalBounds();
+    m_data.setOrigin(
+        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
+    );
+
+    m_data.setPosition(position);
+}
+
+PageType MenuButton::get_current_page() const {
+    return m_current_page;
+}
+
+PageType MenuButton::get_next_page() const {
+    return m_next_page;
+}
+
+void MenuButton::update_tittle(std::string new_tittle) {
+    m_data.setString(sf::String(new_tittle));
+    sf::FloatRect rect = m_data.getLocalBounds();
+    m_data.setOrigin(
+        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
+    );
+}
+
+bool MenuButton::update(sf::Event event, game_interface::Window *window) {
+    if (m_button.handling_event(event, window->get_render_window()) ==
+        game_interface::EventType::FirstPress) {
+        return true;
+    }
+    return false;
+}
+
+void MenuButton::render(sf::RenderWindow *window) {
+    window->draw(m_table);
+    window->draw(m_data);
+}
+
+Menu::Menu()
+    : m_window(
           "Menu: Battle of Heroes and Villains",
           sf::Vector2u(1920, 1080)
       ) {
     m_current_page = PageType::Entry;
 
     m_buttons.resize(10);
-    m_captions.resize(3);
+    m_captions.resize(5);
 
-    sf::Vector2u window_size = m_window.get_render_window()->getSize();
+    sf::Vector2f window_size =
+        static_cast<sf::Vector2f>(m_window.get_render_window()->getSize());
     sf::Vector2f button_size = sf::Vector2f(200.0f, 60.0f);
+    sf::Color button_color = sf::Color(71, 78, 50);
 
+    m_background.setTexture(game_interface::resource_manager()->load_texture(
+        game_interface::TextureType::MenuBackground
+    ));
+    m_background.setPosition(0, 0);
 
-    m_error = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 + button_size.y * 0.3), button_size,
-                            game_view::Fonts::Montserrat, 24, "", PageType::Entry);
     // entry page
-    m_captions[0] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 3 * button_size.y), button_size,
-                            game_view::Fonts::Montserrat, 48, "Battle of Heroes and Villains", PageType::Entry);
-
-    m_captions[1] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 4 * button_size.y), button_size,
-                            game_view::Fonts::Montserrat, 48, "Login", PageType::Login);
-
-    m_captions[2] = Caption(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 4 * button_size.y), button_size,
-                            game_view::Fonts::Montserrat, 48, "Register", PageType::Registration);
+    m_captions[0] = Caption(
+        sf::Vector2f(window_size.x / 2, window_size.y / 2 - 5 * button_size.y),
+        {0, 0}, interface::Fonts::TittleFont, 70,
+        "Battle of Heroes and Villains", PageType::Entry
+    );
 
     m_buttons[0] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2 - 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "login", PageType::Entry,
-        PageType::Login
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 - 1.5 * button_size.y
+        ),
+        button_size, button_color, interface::Fonts::CaptionFont, 24, "sign up",
+        PageType::Entry, PageType::SignUp
     );
     m_buttons[1] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "registration", PageType::Entry,
-        PageType::Registration
+        sf::Vector2f(window_size.x / 2, window_size.y / 2), button_size,
+        button_color, interface::Fonts::CaptionFont, 24, "registration",
+        PageType::Entry, PageType::Registration
+    );
+    m_buttons[2] = MenuButton(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y
+        ),
+        button_size, button_color, interface::Fonts::CaptionFont, 24, "exit",
+        PageType::Entry, PageType::Exit
+    );
+
+    // sign up page
+    m_captions[1] = Caption(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 - 3.25 * button_size.y
+        ),
+        {0, 0}, interface::Fonts::TittleFont, 48, "Sign up", PageType::SignUp
+    );
+
+    m_signup_login = TextBox(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 - 1.75 * button_size.y
+        ),
+        sf::Vector2f(800, 60), interface::Fonts::CaptionFont, 24, true
+    );
+    m_signup_password = TextBox(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 - 0.25 * button_size.y
+        ),
+        sf::Vector2f(800, 60), interface::Fonts::CaptionFont, 24, false
+    );
+    m_captions[2] = Caption(
+        sf::Vector2f(
+            window_size.x / 2 - 25, window_size.y / 2 + 1.05 * button_size.y
+        ),
+        {0, 225}, interface::Fonts::CaptionFont, 24, "Show password",
+        PageType::SignUp
+    );
+    m_show_signup_password = MenuButton(
+        sf::Vector2f(
+            window_size.x / 2 + 112.5,
+            window_size.y / 2 + 1.05 * button_size.y - 2
+        ),
+        sf::Vector2f(25, 25), sf::Color::White, interface::Fonts::CaptionFont,
+        30, "", PageType::SignUp, PageType::SignUp, sf::Color(129, 143, 92)
+    );
+    m_signup_password.hide_data();
+    m_signup_error = Caption(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 + 2.05 * button_size.y
+        ),
+        {0, 0}, interface::Fonts::CaptionFont, 24, "", PageType::SignUp
     );
 
     m_buttons[3] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "exit", PageType::Entry,
-        PageType::Exit
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 + 3.25 * button_size.y
+        ),
+        button_size, button_color, interface::Fonts::CaptionFont, 24, "submit",
+        PageType::SignUp, PageType::GameChoose
     );
-
-    // login page
     m_buttons[4] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "submit", PageType::Login,
-        PageType::GameChoose
+        sf::Vector2f(50, 50), sf::Vector2f(60, 60), button_color,
+        interface::Fonts::CaptionFont, 20, "back", PageType::SignUp,
+        PageType::Entry
     );
 
+    // registration page
+    m_captions[3] = Caption(
+        sf::Vector2f(window_size.x / 2, window_size.y / 2 - 4 * button_size.y),
+        {0, 0}, interface::Fonts::TittleFont, 48, "Registration",
+        PageType::Registration
+    );
+
+    m_registration_login = TextBox(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 - 2.5 * button_size.y
+        ),
+        sf::Vector2f(800, 60), interface::Fonts::CaptionFont, 24, true
+    );
+    m_registration_password = TextBox(
+        sf::Vector2f(window_size.x / 2, window_size.y / 2 - button_size.y),
+        sf::Vector2f(800, 60), interface::Fonts::CaptionFont, 24, false
+    );
+    m_registration_password.hide_data();
+    m_registration_password_checker = TextBox(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 + 0.5 * button_size.y
+        ),
+        sf::Vector2f(800, 60), interface::Fonts::CaptionFont, 24, false
+    );
+    m_registration_password_checker.hide_data();
+    m_registration_error = Caption(
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 + 2.8 * button_size.y
+        ),
+        {0, 0}, interface::Fonts::CaptionFont, 24, "", PageType::Registration
+    );
+    m_show_registration_password = MenuButton(
+        sf::Vector2f(
+            window_size.x / 2 + 112.5,
+            window_size.y / 2 + 1.8 * button_size.y - 2
+        ),
+        sf::Vector2f(25, 25), sf::Color::White, interface::Fonts::CaptionFont,
+        30, "", PageType::Registration, PageType::Registration,
+        sf::Color(129, 143, 92)
+    );
+
+    m_captions[4] = Caption(
+        sf::Vector2f(
+            window_size.x / 2 - 25, window_size.y / 2 + 1.8 * button_size.y
+        ),
+        {225, 0}, interface::Fonts::CaptionFont, 24, "Show password",
+        PageType::Registration
+    );
     m_buttons[5] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "submit", PageType::Registration,
-        PageType::GameChoose
+        sf::Vector2f(window_size.x / 2, window_size.y / 2 + 4 * button_size.y),
+        button_size, button_color, interface::Fonts::CaptionFont, 24, "submit",
+        PageType::Registration, PageType::GameChoose
+    );
+    m_buttons[6] = MenuButton(
+        sf::Vector2f(50, 50), sf::Vector2f(60, 60), button_color,
+        interface::Fonts::CaptionFont, 20, "back", PageType::Registration,
+        PageType::Entry
     );
 
     // game choose page
-    m_buttons[6] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2 - 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "single player", PageType::GameChoose,
-        PageType::Hehe
-    );
     m_buttons[7] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "multi player", PageType::GameChoose,
-        PageType::Hehe
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 - 1.5 * button_size.y
+        ),
+        button_size, button_color, interface::Fonts::CaptionFont, 24,
+        "single player", PageType::GameChoose, PageType::Game
     );
     m_buttons[8] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 24, "exit", PageType::GameChoose,
-        PageType::Exit
+        sf::Vector2f(window_size.x / 2, window_size.y / 2), button_size,
+        button_color, interface::Fonts::CaptionFont, 24, "multi player",
+        PageType::GameChoose, PageType::Game
     );
-
     m_buttons[9] = MenuButton(
-        sf::Vector2f(window_size.x / 2, window_size.y / 2), button_size, sf::Color(139, 69, 19),
-        game_view::Fonts::Montserrat, 48, "the end))))", PageType::Hehe,
-        PageType::Hehe
+        sf::Vector2f(
+            window_size.x / 2, window_size.y / 2 + 1.5 * button_size.y
+        ),
+        button_size, button_color, interface::Fonts::CaptionFont, 24, "exit",
+        PageType::GameChoose, PageType::Exit
     );
-
-    m_login = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2 - 2.5 * button_size.y), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, true);
-    m_password = TextBox(sf::Vector2f(window_size.x / 2, window_size.y / 2 - button_size.y), sf::Vector2f(800, 60), game_view::Fonts::Montserrat, 24, false);
 }
 
-
+game_interface::Window *Menu::get_window() {
+    return &m_window;
+}
 
 void Menu::change_page(PageType next_page) {
     m_current_page = next_page;
-    if (m_current_page == PageType::Hehe) {
+    if (m_current_page == PageType::Game) {
         m_window.set_is_done();
+    }
+}
+
+void Menu::print_error() {
+    if (m_current_page == PageType::SignUp) {
+        m_signup_error.render(m_window.get_render_window());
+    } else if (m_current_page == PageType::Registration) {
+        m_registration_error.render(m_window.get_render_window());
+    } else {
+        m_signup_error.update_text("");
+        m_registration_error.update_text("");
+        m_signup_login.clear();
+        m_signup_password.clear();
+        m_registration_login.clear();
+        m_registration_password.clear();
+        m_registration_password_checker.clear();
     }
 }
 
 void Menu::render() {
     m_window.begin_draw();
+
+    m_window.get_render_window()->draw(m_background);
+
     print_error();
-    for (int caption = 0; caption < m_captions.size(); caption++) {
-        if (m_current_page == m_captions[caption].m_current_page) {
-            m_captions[caption].draw(m_window.get_render_window());
+    for (const auto &m_caption : m_captions) {
+        if (m_current_page == m_caption.get_current_page()) {
+            m_caption.render(m_window.get_render_window());
         }
     }
-    for (int button = 0; button < m_buttons.size(); button++) {
-        if (m_current_page == m_buttons[button].m_current_page) {
-            m_buttons[button].draw(m_window.get_render_window());
+    for (auto &m_button : m_buttons) {
+        if (m_current_page == m_button.get_current_page()) {
+            m_button.render(m_window.get_render_window());
         }
     }
-    if (m_current_page == PageType::Registration || m_current_page == PageType::Login) {
-        m_login.draw(m_window.get_render_window());
-        m_password.draw(m_window.get_render_window());
+    if (m_current_page == PageType::SignUp) {
+        m_signup_login.render(m_window.get_render_window());
+        m_signup_password.render(m_window.get_render_window());
+        m_show_signup_password.render(m_window.get_render_window());
+    }
+    if (m_current_page == PageType::Registration) {
+        m_registration_login.render(m_window.get_render_window());
+        m_registration_password.render(m_window.get_render_window());
+        m_registration_password_checker.render(m_window.get_render_window());
+        m_show_registration_password.render(m_window.get_render_window());
     }
     m_window.end_draw();
-}
-
-game_view::Window *Menu::get_window()  {
-    return &m_window;
 }
 
 void Menu::update() {
     sf::Event event{};
     while (m_window.get_render_window()->pollEvent(event)) {
-        bool flag1 = m_login.update(event, &m_window);
-        bool flag2 = m_password.update(event, &m_window);
-        if (m_login.is_active() && m_password.is_active()) {
-            if (flag2) {
-                m_login.set_is_active();
-            } else if (flag1) {
-                m_password.set_is_active();
+        if (m_current_page == PageType::SignUp) {
+            bool is_login_chosen = m_signup_login.update(event, &m_window);
+            bool is_password_chosen =
+                m_signup_password.update(event, &m_window);
+            if (m_signup_login.is_active() && m_signup_password.is_active()) {
+                if (is_login_chosen) {
+                    m_signup_password.activate();
+                } else if (is_password_chosen) {
+                    m_signup_login.activate();
+                }
+            }
+        } else if (m_current_page == PageType::Registration) {
+            bool is_login_chosen =
+                m_registration_login.update(event, &m_window);
+            bool is_password_chosen =
+                m_registration_password.update(event, &m_window);
+            bool is_password_checker_chosen =
+                m_registration_password_checker.update(event, &m_window);
+            if (is_login_chosen) {
+                m_registration_password.activate();
+                m_registration_password_checker.activate();
+            } else if (is_password_chosen) {
+                m_registration_login.activate();
+                m_registration_password_checker.activate();
+            } else if (is_password_checker_chosen) {
+                m_registration_login.activate();
+                m_registration_password.activate();
             }
         }
-        for (int button = 0; button < m_buttons.size(); button++) {
-            if (m_current_page == m_buttons[button].m_current_page) {
-                if (m_buttons[button].update(event, this, &m_window)) {
-                    if (m_current_page == PageType::Login || m_current_page == PageType::Registration) {
-                        if (m_current_page == PageType::Login) {
-                            Client::log_in(
-                                m_login.get_input(), m_password.get_input()
-                            );
-                        }
-                        else {
-                            Client::sign_up(
-                                m_login.get_input(), m_password.get_input()
-                            );
-                        }
+        if (m_show_signup_password.update(event, &m_window)) {
+            if (m_signup_password.is_showed()) {
+                m_signup_password.hide_data();
+                m_show_signup_password.update_tittle("");
+            } else {
+                m_signup_password.show_data();
+                m_show_signup_password.update_tittle("+");
+            }
+        }
+        if (m_show_registration_password.update(event, &m_window)) {
+            if (m_registration_password.is_showed()) {
+                m_registration_password.hide_data();
+                m_registration_password_checker.hide_data();
+                m_show_registration_password.update_tittle("");
+            } else {
+                m_registration_password.show_data();
+                m_registration_password_checker.show_data();
+                m_show_registration_password.update_tittle("+");
+            }
+        }
+        for (auto &m_button : m_buttons) {
+            if (m_current_page == m_button.get_current_page()) {
+                if (m_button.update(event, &m_window)) {
+                    if (m_current_page == PageType::SignUp &&
+                        m_button.get_next_page() == PageType::GameChoose) {
+                        Client::log_in(
+                            m_signup_login.get_data(),
+                            m_signup_password.get_data()
+                        );
                         if (get_client_state()->m_user.user().id() == -1) {
-                            m_login.clear();
-                            m_password.clear();
-                            m_error.set_text("Wrong data from user");
+                            m_signup_login.clear();
+                            m_signup_password.clear();
+                            m_signup_error.update_text("Wrong data from user");
+                            break;
+                        }
+                    } else if (m_current_page == PageType::Registration && m_button.get_next_page() == PageType::GameChoose) {
+                        if (m_registration_password.get_data() !=
+                            m_registration_password_checker.get_data()) {
+                            m_registration_error.update_text(
+                                "Passwords are different"
+                            );
+                            break;
+                        }
+                        Client::sign_up(
+                            m_registration_login.get_data(),
+                            m_registration_password.get_data()
+                        );
+                        if (get_client_state()->m_user.user().id() == -1) {
+                            m_registration_login.clear();
+                            m_registration_password.clear();
+                            m_registration_password_checker.clear();
+                            m_registration_error.update_text(
+                                "Wrong data from user"
+                            );
                             break;
                         }
                     }
-                    change_page(m_buttons[button].m_next_page);
+                    change_page(m_button.get_next_page());
                     break;
                 }
             }
         }
     }
 }
-
-void Menu::print_error() {
-    if (m_current_page == PageType::Login || m_current_page == PageType::Registration) {
-        m_error.draw(m_window.get_render_window());
-    }
-}
-
-MenuButton::MenuButton(
-    sf::Vector2f position,
-    sf::Vector2f size,
-    sf::Color color,
-    game_view::Fonts font,
-    unsigned int character_size,
-    const std::string &label,
-    PageType current_page,
-    PageType next_page
-) {
-    m_rect.setSize(size);
-    m_rect.setFillColor(color);
-    m_rect.setOrigin(size.x / 2.0f, size.y / 2.0f);
-    m_rect.setPosition(position);
-
-    m_button = game_view::Button(position, size);
-
-    m_current_page = current_page;
-    m_next_page = next_page;
-
-    m_label.setFont(game_view::resource_manager()->load_font(font));
-    m_label.setString(sf::String(label));
-    m_label.setCharacterSize(character_size);
-
-    sf::FloatRect rect = m_label.getLocalBounds();
-    m_label.setOrigin(
-        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
-    );
-
-    m_label.setPosition(position);
-}
-
-bool MenuButton::update(sf::Event event, Menu *menu, game_view::Window *window) {
-    if (m_button.event_processing(event, window->get_render_window()) == game_view::CellEventType::FirstPress) {
-        //EventManager::update_game_menu(m_button_location, window);
-        std::cout << "Pressed\n";
-        return true;
-    }
-    return false;
-}
-
-void MenuButton::draw(sf::RenderWindow *window) {
-    window->draw(m_rect);
-    window->draw(m_label);
-}
-
-Caption::Caption(
-    sf::Vector2f position,
-    sf::Vector2f size,
-    game_view::Fonts font,
-    unsigned int character_size,
-    std::string text,
-    PageType current_page
-) {
-    m_rect.setSize(size);
-    m_rect.setFillColor(sf::Color::Black);
-    m_rect.setOrigin(size.x / 2.0f, size.y / 2.0f);
-    m_rect.setPosition(position);
-
-    m_current_page = current_page;
-
-    m_label.setFont(game_view::resource_manager()->load_font(font));
-    m_label.setString(sf::String(text));
-    m_label.setFillColor(sf::Color::White);
-    m_label.setCharacterSize(character_size);
-
-    sf::FloatRect rect = m_label.getLocalBounds();
-    m_label.setOrigin(
-        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
-    );
-
-    m_label.setPosition(position);
-}
-
-void Caption::draw(sf::RenderWindow *window) const {
-    window->draw(m_rect);
-    window->draw(m_label);
-}
-
-void Caption::set_text(std::string text) {
-    m_label.setString(text);
-    sf::FloatRect rect = m_label.getLocalBounds();
-    m_label.setOrigin(
-        rect.left + rect.width / 2.0f, rect.top + rect.height / 2.0f
-    );
-    m_label.setPosition(m_rect.getPosition());
-}
-}// namespace menu_view
+}  // namespace menu_interface

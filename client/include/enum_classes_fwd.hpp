@@ -4,26 +4,36 @@
 #include <string>
 #include "config.hpp"
 
-namespace game_view {
-enum class UnitType { Empty, Mushroom, Mushroom1 };
+namespace game_interface {
+enum class UnitType { Empty, UnitType1, UnitType2 };
 
-enum class CellType { Default, Broken, Selected };
+enum class CellType {
+    Default,
+    Broken,
+    Move,
+    Enemy,
+    Attack,
+    Spell,
+    AttackSpell
+};
 
-enum class Fonts { Montserrat };
+enum class TextureType { MenuBackground };
 
-enum class CellEventType { FirstPress, SecondPress, Move, Targeting, Nothing };
+enum class EventType { FirstPress, SecondPress, Move, Targeting, Nothing };
 
-enum class ButtonType { None, Play, Pass, Menu, Exit };
+enum class ButtonType { None, Play, Pass, Menu, Exit, Skip, GiveUp, Spell };
 
+enum class CursorType { Attack };
+}  // namespace game_interface
+
+namespace menu_interface {
+enum class PageType { Game, Exit, Entry, SignUp, Registration, GameChoose };
+}  // namespace menu_interface
+
+namespace interface {
 static std::string source_dir = RESOURCE_PATH;
-}  // namespace game_view
 
-namespace menu_view {
-
-enum class PageType { Hehe, Exit, Entry, Login, Registration, GameChoose };
-
-
-
-}
+enum class Fonts { TittleFont, CaptionFont };
+}  // namespace interface
 
 #endif  // BATTLE_OF_HEROES_ENUM_CLASSES_FWD_HPP

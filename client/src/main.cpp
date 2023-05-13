@@ -12,19 +12,21 @@ int main() {
         std::make_unique<namespace_proto::Server::Stub>(channel);
     get_client_state()->m_user.mutable_user()->set_id(-1);
 
-    menu_view::Menu main_menu{};
+    menu_interface::Menu main_menu{};
     while (!main_menu.get_window()->is_done()) {
         main_menu.update();
         main_menu.render();
     }
-    std::cout << get_client_state()->m_user.user().id() << '\n';
+
+    Client::get_hero();
+    get_client_state()->m_opponent.set_type(-1);
     std::thread receiver(&Client::run_receiver);
-    while (!game_view::get_game_state()->get_window()->is_done()) {
+    while (!game_interface::get_game_state()->get_window()->is_done()) {
         {
             std::unique_lock lock{get_client_state()->m_mutex};
-            game_view::get_game_state()->update();
+            game_interface::get_game_state()->update();
         }
-        game_view::get_game_state()->render();
+        game_interface::get_game_state()->render();
     }
     receiver.join();
     return 0;

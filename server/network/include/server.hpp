@@ -15,17 +15,21 @@
 #include <vector>
 #include "db_interface.hpp"
 #include "game_session.hpp"
+#include "heroes_list.hpp"
 
 class ServerState {
 public:
     db data_base;
     std::vector<GameSession> game_sessions;
+    TSQueue<Player> pairing_wait_list;
     TSQueue<Player> wait_list;
     mutable std::mutex server_mutex;
     mutable std::mutex db_mutex;
 };
 
 ServerState *get_server_state();
+
+int my_rand();
 
 class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status SignUp(
@@ -61,14 +65,109 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         return grpc::Status::OK;
     }
 
+    static namespace_proto::GameState *handle_diff(
+        GameSession *game_session_ref,
+        const namespace_proto::User &user
+    ) {
+        if ((game_session_ref->get_type())) {
+            if (user.id() != game_session_ref->get_first_player().get_id()) {
+                (*(game_session_ref->get_response_queues())
+                )[game_session_ref->get_first_player().get_id()]
+                    .push(*(game_session_ref->get_game_state()));
+            } else {
+                (*(game_session_ref->get_response_queues())
+                )[game_session_ref->get_second_player().get_id()]
+                    .push(*(game_session_ref->get_game_state()));
+            }
+        } else {
+            // TODO run bot, update everything
+        }
+        return game_session_ref->get_game_state();
+    }
+
+    static void dump_hero(int hero_id, namespace_proto::Hero *hero) {
+        const game_model::hero *model_hero =
+            &const_game_info::HEROES_LIST[hero_id];
+        hero->set_type(model_hero->get_id());
+        const std::vector<game_model::spell> spells = model_hero->get_spells();
+        for (const auto &item : spells) {
+            auto spell = hero->add_spells();
+            spell->set_id(item.get_id());
+            spell->set_name(item.get_name());
+            spell->set_description(item.get_description());
+            spell->set_mana(item.get_mana_cost());
+        }
+    }
+
+    ::grpc::Status GetHero(
+        ::grpc::ServerContext *context,
+        const google::protobuf::Empty *request,
+        namespace_proto::Hero *response
+    ) override {
+        int rand_id = my_rand();
+        dump_hero(rand_id, response);
+        return ::grpc::Status::OK;
+    }
+
+    ::grpc::Status GetOpponent(
+        grpc::ServerContext *context,
+        const namespace_proto::UserState *request,
+        namespace_proto::Hero *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        namespace_proto::GameState *game_state_ref =
+            game_session_ref->get_game_state();
+        if (request->user().id() ==
+            game_session_ref->get_first_player().get_id()) {
+            dump_hero(
+                game_session_ref->get_second_player().get_hero_id(), response
+            );
+        } else {
+            dump_hero(
+                game_session_ref->get_first_player().get_hero_id(), response
+            );
+        }
+        return grpc::Status::OK;
+    }
+
+    ::grpc::Status SwitchTurn(
+        grpc::ServerContext *context,
+        const namespace_proto::UserState *request,
+        namespace_proto::GameState *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        switch_turn(game_session_ref);
+        *response = *handle_diff(game_session_ref, request->user());
+        return grpc::Status::OK;
+    }
+
+    ::grpc::Status EndSession(
+        grpc::ServerContext *context,
+        const namespace_proto::UserState *request,
+        google::protobuf::Empty *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->game_id()]);
+        game_session_ref->get_first_player().get_context()->TryCancel();
+        game_session_ref->get_second_player().get_context()->TryCancel();
+        return grpc::Status::OK;
+    }
+
     ::grpc::Status CallServer(
         ::grpc::ServerContext *context,
         const namespace_proto::UserState *request,
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
-        get_server_state()->wait_list.push(Player{
-            request->user().id(), response});
-        while (true) {
+        if (!(request->is_single())) {
+            get_server_state()->pairing_wait_list.push(Player{
+                request->user().id(), request->hero_id(), response, context});
+        } else {
+            get_server_state()->wait_list.push(Player{
+                request->user().id(), request->hero_id(), response, context});
+        }
+        while (!context->IsCancelled()) {
         }
         return ::grpc::Status::OK;
     }
@@ -87,6 +186,31 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         cell2->set_column(temp_column);
     }
 
+    static void update_mana(GameSession *game) {
+        int first_player_mana =
+            game->get_model_game()->get_player(0)->get_mana();
+        int second_player_mana =
+            game->get_model_game()->get_player(1)->get_mana();
+        game->get_game_state()->set_first_user_mana(first_player_mana);
+        game->get_game_state()->set_second_user_mana(second_player_mana);
+    }
+
+    static void switch_turn(GameSession *game) {
+        if (game->get_game_state()->move_turn() ==
+            game->get_game_state()->first_user()) {
+            game->get_model_game()->get_player(0)->decrease_mana(-1);
+            game->get_game_state()->set_move_turn(
+                game->get_game_state()->second_user()
+            );
+        } else {
+            game->get_model_game()->get_player(1)->decrease_mana(-1);
+            game->get_game_state()->set_move_turn(
+                game->get_game_state()->first_user()
+            );
+        }
+        update_mana(game);
+    }
+
     static void update_unit(
         namespace_proto::Unit *unit,
         const game_model::coordinates &coordinates,
@@ -94,11 +218,13 @@ class ServerServices final : public ::namespace_proto::Server::Service {
     ) {
         game_model::game *model_game = game_session_res->get_model_game();
         game_model::cell cell = model_game->get_cell(coordinates);
-        game_model::unit model_unit =
-            model_game->get_player(cell.get_player_index())
-                ->get_unit(cell.get_unit_index());
-        unit->set_sum_of_health(model_unit.get_health());
-        unit->set_amount_unit(model_unit.get_number());
+        if (cell.get_unit_index() != -1 && cell.get_player_index() != -1) {
+            game_model::unit model_unit =
+                model_game->get_player(cell.get_player_index())
+                    ->get_unit(cell.get_unit_index());
+            unit->set_sum_of_health(model_unit.get_health());
+            unit->set_amount_unit(model_unit.get_number());
+        }
     }
 
     static void update_cell(
@@ -111,19 +237,11 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         cell->set_durability(model_cell.get_durability());
     }
 
-    static void switch_turn(namespace_proto::GameState *game) {
-        game->set_move_turn((game->move_turn() + 1) % 2);
-    }
-
     ::grpc::Status MoveUnit(
         ::grpc::ServerContext *context,
         const ::namespace_proto::MoveFromTo *request,
         ::namespace_proto::GameState *response
     ) override {
-        std::cout << request->start().row() << ' ' << request->start().column()
-                  << '\n';
-        std::cout << request->finish().row() << ' '
-                  << request->finish().column() << '\n';
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->user().game_id()]);
         namespace_proto::GameState *game_state_ref =
@@ -141,7 +259,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             (*game_session_ref->get_mover())(from, to);
             swapUnits(cell_from, cell_to);
         } else {
-            std::cout << "attack selected\n";
             (*game_session_ref->get_attacker())(from, to);
             if (game_session_ref->get_model_game()->get_cell(to).get_unit_index(
                 ) == -1) {
@@ -161,19 +278,10 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         }
         update_cell(cell_from, from, game_session_ref);
         update_cell(cell_to, to, game_session_ref);
-        switch_turn(game_state_ref);
 
-        if (request->user().user().id() !=
-            game_session_ref->get_first_player().get_id()) {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_first_player().get_id()]
-                .push(*game_state_ref);
-        } else {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_second_player().get_id()]
-                .push(*game_state_ref);
-        }
-        *response = *game_state_ref;
+        switch_turn(game_session_ref);
+
+        *response = *handle_diff(game_session_ref, request->user().user());
 
         return ::grpc::Status::OK;
     }
@@ -188,7 +296,6 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         game_model::coordinates selected(request->unit());
         auto enable_cells = (*game_session_ref->get_move_selecter()
         )(selected, request->user().user().id());
-        std::cout << enable_cells.size() << '\n';
         for (auto cell : enable_cells) {
             namespace_proto::Cell *new_cell = response->add_cells();
             new_cell->set_row(cell.get().get_coordinates().get_row());
@@ -202,7 +309,45 @@ class ServerServices final : public ::namespace_proto::Server::Service {
             new_cell->set_column(cell.get().get_coordinates().get_column());
             new_cell->set_is_attack(true);
         }
-        std::cout << enable_cells.size() << '\n';
+        return ::grpc::Status::OK;
+    }
+
+    ::grpc::Status SelectSpell(
+        ::grpc::ServerContext *context,
+        const ::namespace_proto::SelectSpellRequest *request,
+        ::namespace_proto::EnableCell *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->user().game_id()]);
+        auto enable_cells = (*game_session_ref->get_spell_selecter()
+        )(request->user().user().id(), request->spell_id());
+        for (auto cell : enable_cells) {
+            namespace_proto::Cell *new_cell = response->add_cells();
+            new_cell->set_row(cell.get().get_coordinates().get_row());
+            new_cell->set_column(cell.get().get_coordinates().get_column());
+            new_cell->set_is_attack(true);
+        }
+        return ::grpc::Status::OK;
+    }
+
+    ::grpc::Status DoSpell(
+        ::grpc::ServerContext *context,
+        const ::namespace_proto::DoSpellRequest *request,
+        ::namespace_proto::GameState *response
+    ) override {
+        GameSession *game_session_ref =
+            &(get_server_state()->game_sessions[request->user().game_id()]);
+        (*game_session_ref->get_speller()
+        )(game_model::coordinates{request->cell()}, request->user().user().id(),
+          request->spell_id());
+        int index = 10 * request->cell().row() + request->cell().column();
+        namespace_proto::Cell *cell =
+            game_session_ref->get_game_state()->mutable_game_cells(index);
+        namespace_proto::Unit *unit = cell->mutable_unit();
+        update_cell(cell, game_model::coordinates{*cell}, game_session_ref);
+        update_unit(unit, game_model::coordinates{*cell}, game_session_ref);
+        update_mana(game_session_ref);
+        *response = *handle_diff(game_session_ref, request->user().user());
         return ::grpc::Status::OK;
     }
 };

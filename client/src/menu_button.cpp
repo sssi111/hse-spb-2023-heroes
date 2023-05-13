@@ -1,11 +1,11 @@
 #include "menu_button.hpp"
 
-namespace game_view {
+namespace game_interface {
 MenuButton::MenuButton(
     sf::Vector2f position,
     sf::Vector2f size,
     sf::Color color,
-    Fonts font,
+    interface::Fonts font,
     unsigned int character_size,
     const std::string &label,
     ButtonType button_type
@@ -15,7 +15,7 @@ MenuButton::MenuButton(
     m_rect.setOrigin(size.x / 2.0f, size.y / 2.0f);
     m_rect.setPosition(position);
 
-    m_button = Button(position, size);
+    m_button = interface::Button(position, size);
 
     m_button_type = button_type;
 
@@ -32,14 +32,16 @@ MenuButton::MenuButton(
 }
 
 ButtonType MenuButton::update(sf::Event event, Window *window) {
-    if (m_button.event_processing(event, window->get_render_window()) == CellEventType::FirstPress) {
+    if (m_button.handling_event(event, window->get_render_window()) ==
+        EventType::FirstPress) {
         EventManager::update_game_menu(m_button_type, window);
+        return m_button_type;
     }
     return ButtonType::None;
 }
 
-void MenuButton::draw(sf::RenderWindow *window) {
+void MenuButton::render(sf::RenderWindow *window) {
     window->draw(m_rect);
     window->draw(m_label);
 }
-}  // namespace game_view
+}  // namespace game_interface
