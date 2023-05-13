@@ -5,11 +5,7 @@
 #include "game.hpp"
 
 namespace game_interface {
-Cell::Cell(
-    Coords coords,
-    sf::Vector2f position,
-    sf::Vector2f size
-) {
+Cell::Cell(Coords coords, sf::Vector2f position, sf::Vector2f size) {
     m_coords = coords;
     m_durability = 0;
     m_spell_id = -1;
@@ -128,11 +124,10 @@ void Cell::update_cell() {
     }
 }
 
-void Cell::handling_event(
-    sf::Event event,
-    Unit **selected_unit
-) {
-    auto result = m_button.handling_event(event, get_game_state()->get_window()->get_render_window());
+void Cell::handling_event(sf::Event event, Unit **selected_unit) {
+    auto result = m_button.handling_event(
+        event, get_game_state()->get_window()->get_render_window()
+    );
     if (result == EventType::FirstPress) {
         if (m_cell_property_type == CellType::Spell ||
             m_cell_property_type == CellType::AttackSpell) {
@@ -163,7 +158,9 @@ void Cell::handling_event(
     }
     if (is_have_unit() &&
         m_unit->get_hero_id() == get_client_state()->m_user.user().id()) {
-        m_unit->update_statistic(result, get_game_state()->get_window()->get_render_window());
+        m_unit->update_statistic(
+            result, get_game_state()->get_window()->get_render_window()
+        );
     }
 }
 

@@ -7,9 +7,15 @@
 namespace game_interface {
 enum class UnitType { Empty, UnitType1, UnitType2 };
 
-enum class CellType { Default, Broken,
-    Move, Enemy, Attack,
-    Spell, AttackSpell };
+enum class CellType {
+    Default,
+    Broken,
+    Move,
+    Enemy,
+    Attack,
+    Spell,
+    AttackSpell
+};
 
 enum class TextureType { MenuBackground };
 

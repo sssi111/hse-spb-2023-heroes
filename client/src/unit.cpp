@@ -42,7 +42,7 @@ void Unit::update_unit(
     sf::Vector2f new_position,
     sf::Vector2f size
 ) {
-//    new_position.x -= size.x / 4;
+    //    new_position.x -= size.x / 4;
     new_position.y -= 10;
     if (unit.type_unit() != 0) {
         if (m_type != static_cast<UnitType>(unit.type_unit())) {
@@ -125,9 +125,7 @@ std::string Unit::get_unit_info() const {
            std::to_string(m_weight);
 }
 
-void Unit::update_statistic(EventType event_type,
-    const sf::Window *window
-) {
+void Unit::update_statistic(EventType event_type, const sf::Window *window) {
     m_statistic.update(get_unit_info(), event_type, window);
 }
 }  // namespace game_interface

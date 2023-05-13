@@ -1,6 +1,6 @@
 #include "board.hpp"
-#include "game.hpp"
 #include <utility>
+#include "game.hpp"
 #include "resource_manager.hpp"
 
 namespace game_interface {
@@ -21,8 +21,7 @@ Board::Board(sf::Vector2i window_size) {
             m_board[row][column] = Cell(
                 Coords(row, column),
                 sf::Vector2f(
-                    m_boarder_size.x +
-                        m_cell_size.x * column,
+                    m_boarder_size.x + m_cell_size.x * column,
                     m_boarder_size.y + m_cell_size.y * row
                 ),
                 sf::Vector2f(m_cell_size)
@@ -41,6 +40,10 @@ Board::Board(sf::Vector2i window_size) {
             m_boarder_size.y + m_cell_size.y / 2 +
             m_cell_size.y * coords.get_row()
         )};
+}
+
+sf::Vector2i Board::get_boarder_size() const {
+    return m_boarder_size;
 }
 
 void Board::add_available_for_moving_cells(
@@ -73,7 +76,8 @@ void Board::remove_available_for_moving_cells() {
 }
 
 void Board::add_enable_for_spelling_cells(
-    std::vector<std::pair<int, int>> enable_cells, int spell_id
+    std::vector<std::pair<int, int>> enable_cells,
+    int spell_id
 ) {
     remove_enable_for_spelling_cells();
     m_enable_for_spelling_cells = std::move(enable_cells);
@@ -99,7 +103,6 @@ void Board::remove_enable_for_spelling_cells() {
         m_board[row][column].remove_spell();
     }
     m_enable_for_spelling_cells.clear();
-
 }
 
 void Board::handling_event(sf::Event event, sf::Window *window) {
@@ -109,9 +112,7 @@ void Board::handling_event(sf::Event event, sf::Window *window) {
         (sf::Mouse::getPosition(*window).x - m_boarder_size.x) / m_cell_size.x;
     if (column >= 0 && row >= 0 && row < m_cell_amount &&
         column < m_cell_amount) {
-        m_board[row][column].handling_event(
-            event, &selected_unit
-        );
+        m_board[row][column].handling_event(event, &selected_unit);
     }
 }
 

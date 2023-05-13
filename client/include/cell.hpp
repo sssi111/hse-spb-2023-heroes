@@ -11,11 +11,7 @@ class Board;
 class Cell {
 public:
     Cell() = default;
-    explicit Cell(
-        Coords coords,
-        sf::Vector2f position,
-        sf::Vector2f size
-    );
+    explicit Cell(Coords coords, sf::Vector2f position, sf::Vector2f size);
 
     bool is_have_unit() const;
     bool is_available_for_moving() const;
@@ -31,10 +27,7 @@ public:
     void add_spell(int spell_id);
     void remove_spell();
 
-    void handling_event(
-        sf::Event event,
-        Unit **selected_unit
-    );
+    void handling_event(sf::Event event, Unit **selected_unit);
     EventType is_mouse_target(sf::Window *window);
 
     void update_cell();

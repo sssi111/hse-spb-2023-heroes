@@ -28,7 +28,7 @@ void PopUpWindow::update(
     if (event_type == game_interface::EventType::Targeting) {
         m_is_active = true;
         auto mouse_position = sf::Mouse::getPosition(*window);
-        m_table.setPosition(mouse_position.x + 20.0f, mouse_position.y+ 20.0f);
+        m_table.setPosition(mouse_position.x + 20.0f, mouse_position.y + 20.0f);
         m_data.setPosition(mouse_position.x + 30.0f, mouse_position.y + 22.0f);
         m_data.setString(text);
     } else {
