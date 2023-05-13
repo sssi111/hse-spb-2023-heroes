@@ -23,7 +23,7 @@ public:
     bool is_have_unit() const;
     [[nodiscard]] Unit *get_unit();
     void set_unit(Unit *unit);
-    void set_default_grass();
+    void update_cell_texture(CellType type);
     void add_selection();
     void remove_selection();
     void add_spelling(int spell_id);
@@ -45,6 +45,7 @@ private:
     sf::Vector2f m_cell_size;
     Coords m_coords;
     CellType m_cell_type{CellType::Default};
+    CellType m_cell_frame_type{CellType::Default};
     Unit *m_unit{nullptr};
     int m_durability{};
     bool m_is_available_for_moving{};

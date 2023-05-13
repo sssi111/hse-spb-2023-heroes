@@ -14,17 +14,21 @@ ResourceManager::ResourceManager() {
     m_cell_textures[CellType::Broken].loadFromFile(
         interface::source_dir + "grass_broken.jpg"
     );
-    m_cell_textures[CellType::Selected].loadFromFile(
-        interface::source_dir + "selected_grass.jpg"
+
+    m_cell_frame_textures[CellType::Default].loadFromFile(
+        interface::source_dir + "default.png"
     );
-    m_cell_textures[CellType::Enemy].loadFromFile(
-        interface::source_dir + "enemy_grass.jpg"
+    m_cell_frame_textures[CellType::Selected].loadFromFile(
+        interface::source_dir + "move.png"
     );
-    m_cell_textures[CellType::Attack].loadFromFile(
-        interface::source_dir + "attack_grass.jpg"
+    m_cell_frame_textures[CellType::Enemy].loadFromFile(
+        interface::source_dir + "enemy.png"
     );
-    m_cell_textures[CellType::EnableForSpellbinding].loadFromFile(
-        interface::source_dir + "spellbind_grass.jpg"
+    m_cell_frame_textures[CellType::Attack].loadFromFile(
+        interface::source_dir + "attack.png"
+    );
+    m_cell_frame_textures[CellType::EnableForSpellbinding].loadFromFile(
+        interface::source_dir + "spell.png"
     );
 
     m_unit_textures[UnitType::UnitType1].loadFromFile(
@@ -58,6 +62,12 @@ ResourceManager::ResourceManager() {
     CellType texture
 ) {
     return m_cell_textures[texture];
+}
+
+[[nodiscard]] const sf::Texture &ResourceManager::load_cell_frame_texture(
+    CellType texture
+) {
+    return m_cell_frame_textures[texture];
 }
 
 [[nodiscard]] const sf::Texture &ResourceManager::load_unit_texture(

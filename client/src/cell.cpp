@@ -22,12 +22,12 @@ Cell::Cell(
         size.y / m_cell.getTexture()->getSize().y
     );
     m_cell.setPosition(position);
-//    m_cell_frame.setTexture(resource_manager()->load_cell_frame_texture(CellType::Default));
-//    m_cell.scale(
-//        size.x / m_cell.getTexture()->getSize().x,
-//        size.y / m_cell.getTexture()->getSize().y
-//    );
-//    m_cell.setPosition(position);
+    m_cell_frame.setTexture(resource_manager()->load_cell_frame_texture(CellType::Default));
+    m_cell_frame.scale(
+        size.x / m_cell.getTexture()->getSize().x,
+        size.y / m_cell.getTexture()->getSize().y
+    );
+    m_cell_frame.setPosition(position);
 
     m_button = interface::Button(
         {position.x + m_cell_size.x / 2, position.y + m_cell_size.y / 2}, size
@@ -40,81 +40,51 @@ bool Cell::is_have_unit() const {
     return m_unit != nullptr;
 }
 
-//void update_cell_texture(CellType type) {
-//    if (type == CellType::Selected) {
-//        if ()
-//    } else if (type == CellType::EnableForSpellbinding) {
-//
-//    } else {
-//
-//    }
-//}
-
-void Cell::set_unit(Unit *unit) {
-    m_unit = unit;
-    if (unit == nullptr) {
-        set_default_grass();
-    } else if (!m_is_available_for_moving && m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell_type = CellType::Enemy;
+void Cell::update_cell_texture(CellType type) {
+    m_cell_frame_type = type;
+    if (is_have_unit() &&
+        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+        m_cell_frame_type = CellType::Enemy;
     }
-    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type)
-    );
-}
-
-void Cell::set_default_grass() {
+    if (type == CellType::Selected) {
+        if (is_have_unit() &&
+            m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
+            m_cell_frame_type = CellType::Attack;
+        } else {
+            m_cell_frame_type = CellType::Selected;
+        }
+    }
+    int column = m_coords.get_column();
+    if (get_client_state()->m_game_state.second_user() ==
+        get_client_state()->m_user.user().id()) {
+        column = 9 - column;
+    }
     m_durability =
         get_client_state()
-            ->m_game_state
-            .game_cells(m_coords.get_row() * 10 + m_coords.get_column())
+            ->m_game_state.game_cells(m_coords.get_row() * 10 + column)
             .durability();
     if (m_durability < 10) {
         m_cell_type = CellType::Broken;
     } else {
         m_cell_type = CellType::Default;
     }
+    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
+    m_cell_frame.setTexture(resource_manager()->load_cell_frame_texture(m_cell_frame_type));
 }
 
-void Cell::add_selection() {
-    m_is_available_for_moving = true;
-    if (is_have_unit() &&
-        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell_type = CellType::Attack;
-    } else {
-        m_cell_type = CellType::Selected;
-    }
-    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
-}
-
-void Cell::remove_selection() {
-    m_is_available_for_moving = false;
-    if (is_have_unit() &&
-        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell_type = CellType::Enemy;
-    } else {
-        set_default_grass();
-    }
-    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
+void Cell::set_unit(Unit *unit) {
+    m_unit = unit;
+    update_cell_texture(CellType::Default);
 }
 
 void Cell::add_spelling(int spell_id) {
-    m_cell.setTexture(
-        resource_manager()->load_cell_texture(CellType::EnableForSpellbinding)
-    );
-    m_cell_type = CellType::EnableForSpellbinding;
     m_spell_id = spell_id;
+    update_cell_texture(CellType::EnableForSpellbinding);
 }
 
 void Cell::remove_spelling() {
-    if (is_have_unit() &&
-        m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-        m_cell_type = CellType::Enemy;
-    } else if (m_is_available_for_moving) {
-        m_cell_type = CellType::Selected;
-    } else {
-        set_default_grass();
-    }
-    m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
     m_spell_id = -1;
+    update_cell_texture(CellType::Default);
 }
 
 void Cell::update_cell(const namespace_proto::Cell &cell) {
@@ -138,12 +108,7 @@ void Cell::update_cell(const namespace_proto::Cell &cell) {
     );
 
     if (is_have_unit()) {
-        if (m_unit->get_hero_id() != get_client_state()->m_user.user().id()) {
-            m_cell_type = CellType::Enemy;
-        } else if (!m_is_available_for_moving) {
-            set_default_grass();
-        }
-        m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
+        update_cell_texture(CellType::Default);
     }
 }
 
@@ -191,6 +156,7 @@ void Cell::handling_event(
 
 void Cell::render(sf::RenderWindow *window) {
     window->draw(m_cell);
+    window->draw(m_cell_frame);
     window->draw(m_label);
 }
 
@@ -209,6 +175,16 @@ EventType Cell::is_mouse_target(sf::Window *window) {
         return EventType::Targeting;
     }
     return EventType::Nothing;
+}
+
+void Cell::add_selection() {
+    m_is_available_for_moving = true;
+    update_cell_texture(CellType::Selected);
+}
+
+void Cell::remove_selection() {
+    m_is_available_for_moving = false;
+    update_cell_texture(CellType::Default);
 }
 
 namespace_proto::Cell reverse_cell(namespace_proto::Cell cell) {
