@@ -12,8 +12,9 @@ else ()
     set(RESOURCE_PATH "${CMAKE_INSTALL_PREFIX}/share/${CMAKE_PROJECT_NAME}/client/content/")
 endif ()
 
-#add_link_options(-fsanitize=address)
-#add_compile_options(-O0 -fsanitize=address)
+#add_link_options(-fsanitize=undefined)
+#add_compile_options(-O0 -fsanitize=undefined)
+#add_compile_options(-O3)
 
 configure_file(client/include/config.hpp.in config.hpp)
 

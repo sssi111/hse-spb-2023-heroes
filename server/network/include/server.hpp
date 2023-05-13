@@ -21,6 +21,7 @@ class ServerState {
 public:
     db data_base;
     std::vector<GameSession> game_sessions;
+    TSQueue<Player> pairing_wait_list;
     TSQueue<Player> wait_list;
     mutable std::mutex server_mutex;
     mutable std::mutex db_mutex;
@@ -28,7 +29,7 @@ public:
 
 ServerState *get_server_state();
 
-int rand(int min, int max);
+int my_rand();
 
 class ServerServices final : public ::namespace_proto::Server::Service {
     ::grpc::Status SignUp(
@@ -64,6 +65,26 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         return grpc::Status::OK;
     }
 
+    static namespace_proto::GameState *handle_diff(
+        GameSession *game_session_ref,
+        const namespace_proto::User &user
+    ) {
+        if ((game_session_ref->get_type())) {
+            if (user.id() != game_session_ref->get_first_player().get_id()) {
+                (*(game_session_ref->get_response_queues())
+                )[game_session_ref->get_first_player().get_id()]
+                    .push(*(game_session_ref->get_game_state()));
+            } else {
+                (*(game_session_ref->get_response_queues())
+                )[game_session_ref->get_second_player().get_id()]
+                    .push(*(game_session_ref->get_game_state()));
+            }
+        } else {
+            // TODO run bot, update everything
+        }
+        return game_session_ref->get_game_state();
+    }
+
     static void dump_hero(int hero_id, namespace_proto::Hero *hero) {
         const game_model::hero *model_hero =
             &const_game_info::HEROES_LIST[hero_id];
@@ -83,8 +104,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         const google::protobuf::Empty *request,
         namespace_proto::Hero *response
     ) override {
-        int rand_id =
-            rand(0, static_cast<int>(const_game_info::HEROES_LIST.size() - 1));
+        int rand_id = my_rand();
         dump_hero(rand_id, response);
         return ::grpc::Status::OK;
     }
@@ -119,17 +139,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         GameSession *game_session_ref =
             &(get_server_state()->game_sessions[request->game_id()]);
         switch_turn(game_session_ref);
-        if (request->user().id() !=
-            game_session_ref->get_first_player().get_id()) {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_first_player().get_id()]
-                .push(*(game_session_ref->get_game_state()));
-        } else {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_second_player().get_id()]
-                .push(*(game_session_ref->get_game_state()));
-        }
-        *response = *(game_session_ref->get_game_state());
+        *response = *handle_diff(game_session_ref, request->user());
         return grpc::Status::OK;
     }
 
@@ -149,8 +159,13 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         const namespace_proto::UserState *request,
         ::grpc::ServerWriter<::namespace_proto::GameState> *response
     ) override {
-        get_server_state()->wait_list.push(Player{
-            request->user().id(), request->hero_id(), response, context});
+        if (!(request->is_single())) {
+            get_server_state()->pairing_wait_list.push(Player{
+                request->user().id(), request->hero_id(), response, context});
+        } else {
+            get_server_state()->wait_list.push(Player{
+                request->user().id(), request->hero_id(), response, context});
+        }
         while (!context->IsCancelled()) {
         }
         return ::grpc::Status::OK;
@@ -170,23 +185,29 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         cell2->set_column(temp_column);
     }
 
+    static void update_mana(GameSession *game) {
+        int first_player_mana =
+            game->get_model_game()->get_player(0)->get_mana();
+        int second_player_mana =
+            game->get_model_game()->get_player(1)->get_mana();
+        game->get_game_state()->set_first_user_mana(first_player_mana);
+        game->get_game_state()->set_second_user_mana(second_player_mana);
+    }
+
     static void switch_turn(GameSession *game) {
         if (game->get_game_state()->move_turn() ==
             game->get_game_state()->first_user()) {
             game->get_model_game()->get_player(0)->decrease_mana(-1);
-            int mana = game->get_model_game()->get_player(0)->get_mana();
-            game->get_game_state()->set_first_user_mana(mana);
             game->get_game_state()->set_move_turn(
                 game->get_game_state()->second_user()
             );
         } else {
             game->get_model_game()->get_player(1)->decrease_mana(-1);
-            int mana = game->get_model_game()->get_player(1)->get_mana();
-            game->get_game_state()->set_second_user_mana(mana);
             game->get_game_state()->set_move_turn(
                 game->get_game_state()->first_user()
             );
         }
+        update_mana(game);
     }
 
     static void update_unit(
@@ -259,17 +280,7 @@ class ServerServices final : public ::namespace_proto::Server::Service {
 
         switch_turn(game_session_ref);
 
-        if (request->user().user().id() !=
-            game_session_ref->get_first_player().get_id()) {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_first_player().get_id()]
-                .push(*game_state_ref);
-        } else {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_second_player().get_id()]
-                .push(*game_state_ref);
-        }
-        *response = *game_state_ref;
+        *response = *handle_diff(game_session_ref, request->user().user());
 
         return ::grpc::Status::OK;
     }
@@ -306,9 +317,9 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         ::namespace_proto::EnableCell *response
     ) override {
         GameSession *game_session_ref =
-            &(get_server_state()->game_sessions[request->game_id()]);
+            &(get_server_state()->game_sessions[request->user().game_id()]);
         auto enable_cells = (*game_session_ref->get_spell_selecter()
-        )(request->player_id(), request->spell_id());
+        )(request->user().user().id(), request->spell_id());
         for (auto cell : enable_cells) {
             namespace_proto::Cell *new_cell = response->add_cells();
             new_cell->set_row(cell.get().get_coordinates().get_row());
@@ -324,9 +335,9 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         ::namespace_proto::GameState *response
     ) override {
         GameSession *game_session_ref =
-            &(get_server_state()->game_sessions[request->game_id()]);
+            &(get_server_state()->game_sessions[request->user().game_id()]);
         (*game_session_ref->get_speller()
-        )(game_model::coordinates{request->cell()}, request->player_id(),
+        )(game_model::coordinates{request->cell()}, request->user().user().id(),
           request->spell_id());
         int index = 10 * request->cell().row() + request->cell().column();
         namespace_proto::Cell *cell =
@@ -334,17 +345,8 @@ class ServerServices final : public ::namespace_proto::Server::Service {
         namespace_proto::Unit *unit = cell->mutable_unit();
         update_cell(cell, game_model::coordinates{*cell}, game_session_ref);
         update_unit(unit, game_model::coordinates{*cell}, game_session_ref);
-        if (request->player_id() !=
-            game_session_ref->get_first_player().get_id()) {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_first_player().get_id()]
-                .push(*(game_session_ref->get_game_state()));
-        } else {
-            (*(game_session_ref->get_response_queues())
-            )[game_session_ref->get_second_player().get_id()]
-                .push(*(game_session_ref->get_game_state()));
-        }
-        *response = *(game_session_ref->get_game_state());
+        update_mana(game_session_ref);
+        *response = *handle_diff(game_session_ref, request->user().user());
         return ::grpc::Status::OK;
     }
 };
