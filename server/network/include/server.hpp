@@ -80,7 +80,15 @@ class ServerServices final : public ::namespace_proto::Server::Service {
                     .push(*(game_session_ref->get_game_state()));
             }
         } else {
-            // TODO run bot, update everything
+            auto diff = (*game_session_ref->get_game_bot())();
+            for (auto item : diff){
+                if (item.get().get_type() == bot::bot_response_type::SINGLE_CELL){
+                    // update cell && unit
+                }
+                else{
+                    // do switch && update cells
+                }
+            }
         }
         return game_session_ref->get_game_state();
     }

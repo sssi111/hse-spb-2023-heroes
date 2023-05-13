@@ -10,10 +10,12 @@
 #include "proto/all_protos/demo.grpc.pb.h"
 #include "spell_interactor.hpp"
 #include "spell_select_interactor.hpp"
+#include "game_bot.hpp"
 
 class Player final {
     int id;
     int hero_id;
+    std::string name;
     ::grpc::ServerWriter<namespace_proto::GameState> *stream;
     ::grpc::ServerContext *context;
 
@@ -63,6 +65,7 @@ class GameSession {
     interactors::attack_selecter attack_selecter;
     interactors::speller speller;
     interactors::spell_selecter spell_selecter;
+    bot::game_bot game_bot;
 
 public:
     GameSession(Player first_player_, Player second_player_)
@@ -74,7 +77,8 @@ public:
           attacker(model_game),
           attack_selecter(model_game),
           speller(model_game),
-          spell_selecter(model_game) {
+          spell_selecter(model_game),
+          game_bot(model_game) {
     }
 
     Player get_first_player() const {
@@ -132,6 +136,10 @@ public:
 
     interactors::speller *get_speller() {
         return &speller;
+    }
+
+    bot::game_bot *get_game_bot(){
+        return &game_bot;
     }
 };
 
