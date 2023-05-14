@@ -20,11 +20,15 @@ void Unit::render_statistic(sf::RenderWindow *window) {
 }
 
 void Unit::set_selection() {
+    auto old_scale = m_unit.getScale();
     m_unit.setTexture(resource_manager()->load_selected_unit_texture(m_type));
+    m_unit.setScale(old_scale);
 }
 
 void Unit::disable_selection() {
+    auto old_scale =  m_unit.getScale();
     m_unit.setTexture(resource_manager()->load_unit_texture(m_type));
+    m_unit.setScale(old_scale);
 }
 
 void Unit::update_characteristics(const namespace_proto::Unit &unit) {
@@ -42,15 +46,14 @@ void Unit::update_unit(
     sf::Vector2f new_position,
     sf::Vector2f size
 ) {
-    //    new_position.x -= size.x / 4;
     new_position.y -= 10;
     if (unit.type_unit() != 0) {
         if (m_type != static_cast<UnitType>(unit.type_unit())) {
             m_type = static_cast<UnitType>(unit.type_unit());
             m_unit.setTexture(resource_manager()->load_unit_texture(m_type));
             m_unit.setScale(
-                0.75f * size.y / m_unit.getTexture()->getSize().y,
-                0.75f * size.y / m_unit.getTexture()->getSize().y
+                0.9f * size.y / m_unit.getGlobalBounds().height,
+                0.9f * size.y / m_unit.getGlobalBounds().height
             );
         }
         m_coords = {cell.row(), cell.column()};
@@ -61,11 +64,7 @@ void Unit::update_unit(
         update_characteristics(unit);
 
         m_unit.setPosition(new_position);
-        m_unit.setOrigin(size.x / 2, size.y / 2);
-        m_unit.setScale(
-            0.9f * size.y / m_unit.getTexture()->getSize().y,
-            0.9f * size.y / m_unit.getTexture()->getSize().y
-        );
+        m_unit.move(-m_unit.getGlobalBounds().width / 2, -m_unit.getGlobalBounds().height / 2);
 
         m_table.setSize(sf::Vector2f(size.x / 4, size.y / 4));
         m_table.setFillColor(sf::Color(139, 69, 19));

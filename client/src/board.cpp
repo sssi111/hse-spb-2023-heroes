@@ -33,11 +33,11 @@ Board::Board(sf::Vector2i window_size) {
 [[nodiscard]] sf::Vector2f Board::get_cell_position(Coords coords) const {
     return {
         static_cast<float>(
-            m_boarder_size.x + m_cell_size.x / 2 +
+            m_boarder_size.x +
             m_cell_size.x * coords.get_column()
         ),
         static_cast<float>(
-            m_boarder_size.y + m_cell_size.y / 2 +
+            m_boarder_size.y +
             m_cell_size.y * coords.get_row()
         )};
 }
@@ -163,7 +163,7 @@ void Board::update_board(const namespace_proto::GameState &game_state) {
             int unit_id = server_cell.unit().id_unit();
             auto server_unit = game_state.game_cells(cell_index).unit();
             m_units[unit_id].update_unit(
-                server_cell, server_unit, get_cell_position({row, column}),
+                server_cell, server_unit, m_board[row][column].get_cell_position(),
                 static_cast<sf::Vector2f>(m_cell_size)
             );
             m_board[row][column].set_unit(&m_units[unit_id]);

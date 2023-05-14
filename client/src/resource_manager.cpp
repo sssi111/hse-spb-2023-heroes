@@ -8,14 +8,14 @@ namespace game_interface {
 }
 
 ResourceManager::ResourceManager() {
-    m_cell_textures[CellType::Default].loadFromFile(
+    m_cell_textures[CellType::Type1].loadFromFile(
         interface::source_dir + "grass.jpg"
     );
     m_cell_textures[CellType::Broken].loadFromFile(
         interface::source_dir + "grass_broken.jpg"
     );
 
-    m_cell_property_textures[CellType::Default].loadFromFile(
+    m_cell_property_textures[CellType::Type1].loadFromFile(
         interface::source_dir + "default.png"
     );
     m_cell_property_textures[CellType::Move].loadFromFile(
@@ -34,18 +34,18 @@ ResourceManager::ResourceManager() {
         interface::source_dir + "attack.png"
     );
 
-    m_unit_textures[UnitType::UnitType1].loadFromFile(
-        interface::source_dir + "hero.png"
+    m_unit_textures[UnitType::Type1].loadFromFile(
+        interface::source_dir + "unit_type1.png"
     );
-    m_unit_textures[UnitType::UnitType2].loadFromFile(
-        interface::source_dir + "hero2.png"
+    m_unit_textures[UnitType::Type2].loadFromFile(
+        interface::source_dir + "unit_type2.png"
     );
 
-    m_selected_unit_textures[UnitType::UnitType1].loadFromFile(
-        interface::source_dir + "selected_hero.png"
+    m_selected_unit_textures[UnitType::Type1].loadFromFile(
+        interface::source_dir + "unit_type1_move.png"
     );
-    m_selected_unit_textures[UnitType::UnitType2].loadFromFile(
-        interface::source_dir + "selected_hero2.png"
+    m_selected_unit_textures[UnitType::Type2].loadFromFile(
+        interface::source_dir + "unit_type2_move.png"
     );
 
     m_textures[TextureType::MenuBackground].loadFromFile(
