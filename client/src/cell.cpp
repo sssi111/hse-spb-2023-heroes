@@ -16,7 +16,7 @@ Cell::Cell(Coords coords, sf::Vector2f position, sf::Vector2f size) {
     m_cell_size = size;
 
     m_cell.setTexture(resource_manager()->load_cell_texture(m_cell_type));
-    m_cell.scale(
+    m_cell.setScale(
         size.x / static_cast<float>(m_cell.getTexture()->getSize().x),
         size.y / static_cast<float>(m_cell.getTexture()->getSize().y)
     );
@@ -25,9 +25,9 @@ Cell::Cell(Coords coords, sf::Vector2f position, sf::Vector2f size) {
     m_cell_property.setTexture(
         resource_manager()->load_cell_property_texture(CellType::Type1)
     );
-    m_cell_property.scale(
-        size.x / static_cast<float>(m_cell.getTexture()->getSize().x),
-        size.y / static_cast<float>(m_cell.getTexture()->getSize().y)
+    m_cell_property.setScale(
+        size.x / static_cast<float>(m_cell_property.getTexture()->getSize().x),
+        size.y / static_cast<float>(m_cell_property.getTexture()->getSize().y)
     );
     m_cell_property.setPosition(position);
 

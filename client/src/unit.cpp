@@ -55,6 +55,11 @@ void Unit::update_unit(
                 0.9f * size.y / m_unit.getGlobalBounds().height,
                 0.9f * size.y / m_unit.getGlobalBounds().height
             );
+            if (unit.id_hero() != get_client_state()->m_user.user().id()) {
+                m_unit.setOrigin(m_unit.getTexture()->getSize().x,
+                                 0);
+                m_unit.scale(-1, 1);
+            }
         }
         m_coords = {cell.row(), cell.column()};
         m_amount_of_units = unit.amount_unit();
@@ -67,7 +72,7 @@ void Unit::update_unit(
         m_unit.move(-m_unit.getGlobalBounds().width / 2, -m_unit.getGlobalBounds().height / 2);
 
         m_table.setSize(sf::Vector2f(size.x / 4, size.y / 4));
-        m_table.setFillColor(sf::Color(139, 69, 19));
+        m_table.setFillColor(sf::Color(71, 78, 50));
         m_table.setOrigin(size.x / 2.0f, size.y / 2.0f);
         m_table.setPosition(sf::Vector2f(
             new_position.x + 3 * size.x / 4, new_position.y + 3 * size.y / 4

@@ -5,7 +5,7 @@
 #include "config.hpp"
 
 namespace game_interface {
-enum class UnitType { Empty, Type1, Type2 };
+enum class UnitType { Empty, Type1, Type2, Type3, Type4, Type5 };
 
 enum class CellType { Type1,
     Broken,

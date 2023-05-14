@@ -40,12 +40,30 @@ ResourceManager::ResourceManager() {
     m_unit_textures[UnitType::Type2].loadFromFile(
         interface::source_dir + "unit_type2.png"
     );
+    m_unit_textures[UnitType::Type3].loadFromFile(
+        interface::source_dir + "unit_type3.png"
+    );
+    m_unit_textures[UnitType::Type4].loadFromFile(
+        interface::source_dir + "unit_type4.png"
+    );
+    m_unit_textures[UnitType::Type5].loadFromFile(
+        interface::source_dir + "unit_type5.png"
+    );
 
     m_selected_unit_textures[UnitType::Type1].loadFromFile(
         interface::source_dir + "unit_type1_move.png"
     );
     m_selected_unit_textures[UnitType::Type2].loadFromFile(
         interface::source_dir + "unit_type2_move.png"
+    );
+    m_selected_unit_textures[UnitType::Type3].loadFromFile(
+        interface::source_dir + "unit_type3_move.png"
+    );
+    m_selected_unit_textures[UnitType::Type4].loadFromFile(
+        interface::source_dir + "unit_type4_move.png"
+    );
+    m_selected_unit_textures[UnitType::Type5].loadFromFile(
+        interface::source_dir + "unit_type5_move.png"
     );
 
     m_textures[TextureType::MenuBackground].loadFromFile(
