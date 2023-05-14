@@ -71,7 +71,7 @@ public:
     GameSession(Player first_player_, Player second_player_)
         : first_player(first_player_),
           second_player(second_player_),
-          model_game(first_player_.get_id(), 0, second_player_.get_id(), 0),
+          model_game(first_player_.get_id(), game_model::game::get_troop(), second_player_.get_id(), game_model::game::get_troop()),
           mover(model_game),
           move_selecter(model_game),
           attacker(model_game),
