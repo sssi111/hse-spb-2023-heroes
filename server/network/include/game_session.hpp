@@ -20,7 +20,7 @@ class Player final {
     ::grpc::ServerContext *context;
 
 public:
-    Player(int hero_id) : id(-1), hero_id(hero_id) {
+    Player(int hero_id) : id(-2), hero_id(hero_id) {
     }
 
     Player(
